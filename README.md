@@ -97,8 +97,8 @@ TODO
 First, clone the project:
 
 ```bash
-git clone https://github.com/LowIQCoder/KIZAK_Capstone
-cd KIZAK_Capstone
+git clone https://github.com/IU-Capstone-Project-2025/KIZAK
+cd KIZAK
 ```
 
 Now, create a **.env** file in the project root with the following content:
@@ -133,7 +133,7 @@ Visit [localhost](http://localhost) to access KIZAK.
 
 ## 🐞 Open Issues and Contribution
 
-Check the [Issues](https://github.com/yourusername/kizak/issues) tab to see current bugs, feature requests, and improvements.
+Check the [Issues](https://github.com/IU-Capstone-Project-2025/KIZAK/issues) tab to see current bugs, feature requests, and improvements.
 
 
 ### 👥 How to Contribute
@@ -143,7 +143,7 @@ We welcome contributions from the community! Here's how to get started:
 1. **Fork the repository and clone it:**
 
    ```bash
-   git clone https://github.com/yourusername/kizak.git
+   git clone https://github.com/IU-Capstone-Project-2025/KIZAK
    ```
 
 2. **Create a new feature branch:**
