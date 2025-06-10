@@ -47,9 +47,21 @@ KIZAK is an AI-powered learning assistant designed to guide users through their 
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠️ **Tech Stack**  
 
-TODO
+### **Backend**  
+- **Flask**  🐍  - A **lightweight** Python web framework for building scalable APIs and backend services.
+- **PostgreSQL** 🐘 - A **powerful**, open-source relational database with strong extensibility and SQL compliance.
+
+### **Frontend**  
+- **React** ⚛️ - **Fast and popular** JavaScript library for building dynamic, component-based user interfaces.
+- **Next.js** ▲ - React framework for **server-side renderin**g, static sites, and **scalable web apps**.
+- **Tailwind CSS** 🎨 - Utility-first CSS framework for **rapid UI development** with minimal custom CSS.
+- **Redux** 🔄 - **State management** library for predictable global state in JavaScript apps.
+
+### **ML / AI**  
+- **LLaMA** 🦙 - Meta’s open-source large language model for **advanced NLP** tasks.
+- **Transformers** 🤗 - Hugging Face’s library for state-of-the-art NLP models
 
 ---
 
