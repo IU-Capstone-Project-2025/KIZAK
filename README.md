@@ -113,28 +113,6 @@ git clone https://github.com/IU-Capstone-Project-2025/KIZAK
 cd KIZAK
 ```
 
-Now, create a **.env** file in the project root with the following content:
-```bash
-# ⚠️ Do NOT commit this file to version control
-
-# Deploy
-HOST_BASE="localhost"
-
-# Backend
-API_PORT="8000"
-
-# Frontend
-FRONT_PORT="80"
-
-# Database
-DB_HOST="localhost"
-DB_PORT="5432"
-DB_NAME="mydatabase"
-DB_USER="myuser"
-DB_PASSWORD="mypassword"
-```
-
-
 Then build and run the project using Docker Compose:
 
 ```bash
