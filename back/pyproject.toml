@@ -1,16 +1,15 @@
 [project]
-name = "back"
-version = "0.1.0"
-description = ""
+name = "kizak"
+version = "0.0.1"
+description = "KIZAK project"
 authors = [
-    {name = "LowIQCoder",email = "llamaetoia@yandex.ru"}
+    {name = "Your Name",email = "you@example.com"}
 ]
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.12,<4.0"
 dependencies = [
-    "fastapi (>=0.115.12,<0.116.0)",
-    "uvicorn (>=0.34.3,<0.35.0)",
-    "python-dotenv (>=1.1.0,<2.0.0)"
+    "flask (>=3.1.1,<4.0.0)",
+    "flask-cors (>=6.0.1,<7.0.0)"
 ]
 
 

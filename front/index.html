@@ -19,7 +19,7 @@
 
     <script>
         document.querySelector('input[type="button"]').addEventListener('click', function () {
-            fetch('http://localhost:8000/ping/')
+            fetch('http://localhost:8000/ping')
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById('api-response').textContent = "Response: " + data.message;

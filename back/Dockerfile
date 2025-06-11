@@ -5,7 +5,7 @@ ENV POETRY_VIRTUALENVS_CREATE=false
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     build-essential \
-    && pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir --upgrade --root-user-action=ignore pip \
     && curl -sSL https://install.python-poetry.org | python3 - \
     && ln -s ~/.local/bin/poetry /usr/local/bin/poetry \
     && apt-get remove -y curl build-essential \
@@ -22,4 +22,4 @@ COPY . .
 
 EXPOSE 8000
 
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["flask", "run", "--host", "0.0.0.0", "--port", "8000", "--debug"]
