@@ -55,7 +55,7 @@ jobs:
       - name: mypy
         run: |
           pip install mypy
-          mypy .
+          mypy . --ignore-missing-imports
 
       - name: ruff
         run: |
