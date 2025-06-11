@@ -31,9 +31,11 @@ jobs:
       - name: Install dependencies using uv
         working-directory: back
         run: |
+          source ../.venv/bin/activate
           uv pip install -r <(uv pip compile pyproject.toml)
 
       - name: Run ty check
         working-directory: back
         run: |
+          source ../.venv/bin/activate
           uvx ty check
