@@ -24,14 +24,13 @@ jobs:
           python -m pip install --upgrade pip
 
       - name: Install uv and uvx
-        run: |
-          curl -LsSf https://astral.sh/uv/install.sh | bash
-          echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
+        uses: astral-sh/setup-uv@v6
+        with:
+          activate-environment: true
 
       - name: Install dependencies using uv
         working-directory: back
         run: |
-          source ../.venv/bin/activate
           uv pip install -r <(uv pip compile pyproject.toml)
 
       - name: Run ty check
