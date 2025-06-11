@@ -1,0 +1,63 @@
+name: python Application
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    timeout-minutes: 15
+    runs-on: ubuntu-24.04
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: flake8
+        run: |
+          pip install flake8
+          flake8 .
+
+      - name: pyLint
+        run: |
+          pip install pylint
+          pylint . --disable=C0114,C0115,C0116
+
+      - name: black
+        run: |
+          pip install black
+          black --check .
+
+      - name: isort
+        run: |
+          pip install isort
+          isort .
+
+      - name: pycodestyle
+        run: |
+          pip install pycodestyle
+          pycodestyle .
+
+      - name: mypy
+        run: |
+          pip install mypy
+          mypy .
+
+      - name: ruff
+        run: |
+          pip install ruff
+          ruff check .
