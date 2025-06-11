@@ -1,3 +1,2 @@
-fastapi
 flask
-uvicorn
+flask_cors
