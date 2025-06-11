@@ -17,6 +17,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Set up Python venv
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install --upgrade pip
+
       - name: Install uv and uvx
         run: |
           curl -LsSf https://astral.sh/uv/install.sh | bash
@@ -25,7 +31,7 @@ jobs:
       - name: Install dependencies using uv
         working-directory: back
         run: |
-          uv pip install -r <(uv pip compile pyproject.toml) --system
+          uv pip install -r <(uv pip compile pyproject.toml)
 
       - name: Run ty check
         working-directory: back
