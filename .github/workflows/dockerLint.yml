@@ -1,4 +1,4 @@
-name: dockerLint
+name: Dockerfile Lint
 
 on:
   push:
@@ -10,29 +10,19 @@ on:
 
 jobs:
   dockerLint:
-    timeout-minutes: 15
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dockerfile:
+          - back/Dockerfile
+          - front/Dockerfile
+          - ml/Dockerfile
+
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Lint Back Dockerfile
-        uses: luke142367/Docker-Lint-Action@v1.0.0
+      - name: Lint ${{ matrix.dockerfile }}
+        uses: hadolint/hadolint-action@v3.1.0
         with:
-          target: back/Dockerfile
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Lint Front Dockerfile
-        uses: luke142367/Docker-Lint-Action@v1.0.0
-        with:
-          target: front/Dockerfile
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Lint ML Dockerfile
-        uses: luke142367/Docker-Lint-Action@v1.0.0
-        with:
-          target: ml/Dockerfile
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          dockerfile: ${{ matrix.dockerfile }}
