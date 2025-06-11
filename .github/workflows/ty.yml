@@ -12,25 +12,22 @@ jobs:
   ty:
     timeout-minutes: 15
     runs-on: ubuntu-24.04
-    steps:
 
+    steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Create virtual environment
-        run: python -m venv .venv
-
-      - name: Install dependencies
-        run: |
-          source .venv/bin/activate
-          python -m pip install -r requirements.txt
-
-      - name: install uv
+      - name: Install uv and uvx
         run: |
           curl -LsSf https://astral.sh/uv/install.sh | bash
           echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
 
-      - name: ty
+      - name: Install dependencies using uv
+        working-directory: back
         run: |
-          source .venv/bin/activate
+          uv pip install -r <(uv pip compile pyproject.toml)
+
+      - name: Run ty check
+        working-directory: back
+        run: |
           uvx ty check

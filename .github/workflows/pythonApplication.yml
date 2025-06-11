@@ -1,4 +1,4 @@
-name: python Application
+name: Python Application
 
 on:
   push:
@@ -22,42 +22,54 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install dependencies
+      - name: Install Poetry
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          curl -sSL https://install.python-poetry.org | python3 -
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Install dependencies using Poetry
+        working-directory: back
+        run: |
+          poetry install
 
       - name: flake8
+        working-directory: back
         run: |
-          pip install flake8
-          flake8 .
+          poetry run pip install flake8
+          poetry run flake8 .
 
-      - name: pyLint
+      - name: pylint
+        working-directory: back
         run: |
-          pip install pylint
-          pylint . --disable=C0114,C0115,C0116
+          poetry run pip install pylint
+          poetry run pylint . --disable=C0114,C0115,C0116
 
       - name: black
+        working-directory: back
         run: |
-          pip install black
-          black --check .
+          poetry run pip install black
+          poetry run black --check .
 
       - name: isort
+        working-directory: back
         run: |
-          pip install isort
-          isort .
+          poetry run pip install isort
+          poetry run isort .
 
       - name: pycodestyle
+        working-directory: back
         run: |
-          pip install pycodestyle
-          pycodestyle .
+          poetry run pip install pycodestyle
+          poetry run pycodestyle .
 
       - name: mypy
+        working-directory: back
         run: |
-          pip install mypy
-          mypy . --ignore-missing-imports
+          poetry run pip install mypy types-Flask-Cors
+          poetry run mypy . --ignore-missing-imports
 
       - name: ruff
+        working-directory: back
         run: |
-          pip install ruff
-          ruff check .
+          poetry run pip install ruff
+          poetry run ruff check .
