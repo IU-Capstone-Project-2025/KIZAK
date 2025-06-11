@@ -1,27 +1,16 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-import uvicorn
+from flask import Flask
+from flask_cors import CORS
 
-app = FastAPI()
+app = Flask(__name__)
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+CORS(app)
 
 
-@app.get("/")
+@app.route("/")
 def read_root():
     return {"message": "Hello World"}
 
 
-@app.get("/ping/")
+@app.route("/ping")
 def read_ping():
     return {"message": "Pong"}
-
-
-if __name__ == "__main__":
-    uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=False)
