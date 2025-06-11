@@ -30,7 +30,7 @@ jobs:
       - name: Install dependencies using Poetry
         working-directory: back
         run: |
-          poetry install
+          poetry install --no-root --no-interaction --no-ansi
 
       - name: flake8
         working-directory: back
