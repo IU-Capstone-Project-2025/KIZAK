@@ -16,5 +16,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Run ActionLint
-        uses: rhysd/actionlint@v1.7.7
+      - name: Lint Back Dockerfile
+        uses: luke142367/Docker-Lint-Action@v1.0.0
+        with:
+          target: back/Dockerfile
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Lint Front Dockerfile
+        uses: luke142367/Docker-Lint-Action@v1.0.0
+        with:
+          target: front/Dockerfile
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Lint ML Dockerfile
+        uses: luke142367/Docker-Lint-Action@v1.0.0
+        with:
+          target: ml/Dockerfile
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
