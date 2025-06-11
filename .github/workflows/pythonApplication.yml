@@ -52,7 +52,7 @@ jobs:
         working-directory: back
         run: |
           poetry run pip install isort
-          poetry run isort .
+          poetry run isort . --check
 
       - name: pycodestyle
         working-directory: back
