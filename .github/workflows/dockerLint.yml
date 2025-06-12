@@ -1,0 +1,28 @@
+name: Dockerfile Lint
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  dockerLint:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dockerfile:
+          - back/Dockerfile
+          - front/Dockerfile
+          - ml/Dockerfile
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Lint ${{ matrix.dockerfile }}
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: ${{ matrix.dockerfile }}

@@ -1,0 +1,40 @@
+name: ty
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  ty:
+    timeout-minutes: 15
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python venv
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install --upgrade pip
+
+      - name: Install uv and uvx
+        uses: astral-sh/setup-uv@v6
+        with:
+          activate-environment: true
+
+      - name: Install dependencies using uv
+        working-directory: back
+        run: |
+          uv pip install -r <(uv pip compile pyproject.toml)
+
+      - name: Run ty check
+        working-directory: back
+        run: |
+          source ../.venv/bin/activate
+          uvx ty check

@@ -1,0 +1,73 @@
+name: Python Application
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    timeout-minutes: 15
+    runs-on: ubuntu-24.04
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+
+      - name: Install dependencies using Poetry
+        working-directory: back
+        run: |
+          poetry install --no-root --no-interaction --no-ansi
+
+      - name: flake8
+        working-directory: back
+        run: |
+          poetry run pip install flake8
+          poetry run flake8 .
+
+      - name: pylint
+        working-directory: back
+        run: |
+          poetry run pip install pylint
+          poetry run pylint . --disable=C0114,C0115,C0116
+
+      - name: black
+        working-directory: back
+        run: |
+          poetry run pip install black
+          poetry run black --check .
+
+      - name: isort
+        working-directory: back
+        run: |
+          poetry run pip install isort
+          poetry run isort . --check
+
+      - name: pycodestyle
+        working-directory: back
+        run: |
+          poetry run pip install pycodestyle
+          poetry run pycodestyle .
+
+      - name: mypy
+        working-directory: back
+        run: |
+          poetry run pip install mypy types-Flask-Cors
+          poetry run mypy . --ignore-missing-imports
+
+      - name: ruff
+        working-directory: back
+        run: |
+          poetry run pip install ruff
+          poetry run ruff check .
