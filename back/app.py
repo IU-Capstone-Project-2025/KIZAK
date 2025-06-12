@@ -8,7 +8,7 @@ CORS(app)
 
 @app.route("/")
 def read_root():
-    return jsonify({"message": "Hello World"})
+    return {"message": "Hello World"}
 
 
 @app.route("/ping")
