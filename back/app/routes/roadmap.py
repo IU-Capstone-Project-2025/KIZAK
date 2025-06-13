@@ -7,13 +7,10 @@ class RoadmapAPI(Resource):
         return {
             "roadmap": [
                 {"milestone": "Step 1", "completed": False},
-                {"milestone": "Step 2", "completed": True}
+                {"milestone": "Step 2", "completed": True},
             ]
         }, 200
 
     def put(self):
         data = request.get_json()
-        return {
-            "message": "Roadmap updated",
-            "data": data
-        }, 200
+        return {"message": "Roadmap updated", "data": data}, 200

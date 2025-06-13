@@ -4,11 +4,7 @@ from flask_restful import Resource
 
 class UserAPI(Resource):
     def get(self, user_id):
-        return {
-            "id": user_id,
-            "name": "User Name",
-            "email": "user@mail.com"
-        }, 200
+        return {"id": user_id, "name": "User Name", "email": "user@mail.com"}, 200
 
     def post(self):
         return {"message": "User created"}, 201
@@ -18,7 +14,4 @@ class UserAPI(Resource):
 
     def put(self, user_id):
         data = request.get_json()
-        return {
-            "message": f"User {user_id} updated",
-            "data": data
-        }, 200
+        return {"message": f"User {user_id} updated", "data": data}, 200
