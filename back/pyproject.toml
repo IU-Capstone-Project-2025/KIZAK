@@ -8,10 +8,14 @@ authors = [
 requires-python = ">=3.12,<4.0"
 dependencies = [
     "flask (>=3.1.1,<4.0.0)",
-    "flask-cors (>=6.0.1,<7.0.0)"
+    "flask-cors (>=6.0.1,<7.0.0)",
+    "flask-restful (>=0.3.10,<1.0.0)"
 ]
 
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 79
