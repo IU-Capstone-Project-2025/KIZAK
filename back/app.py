@@ -1,16 +1,6 @@
-from flask import Flask
-from flask_cors import CORS
+from app import create_app
 
-app = Flask(__name__)
+app = create_app()
 
-CORS(app)
-
-
-@app.route("/")
-def read_root():
-    return {"message": "Hello World"}
-
-
-@app.route("/ping")
-def read_ping():
-    return {"message": "Pong"}
+if __name__ == '__main__':
+    app.run(debug=True)
