@@ -1,7 +1,8 @@
 from flask_restful import Api
-from .routes.user import UserAPI
-from .routes.roadmap import RoadmapAPI
+
 from .routes.cv import CVAPI
+from .routes.roadmap import RoadmapAPI
+from .routes.user import UserAPI
 
 
 def init_routes(app):
