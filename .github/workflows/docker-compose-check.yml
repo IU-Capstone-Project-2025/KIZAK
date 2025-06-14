@@ -25,13 +25,17 @@ jobs:
 
       - name: Wait for app to be healthy
         run: |
-          docker compose run --rm wait-for-it db:5432 -t 60
+          docker compose wait db --timeout 60
 
           curl --retry 12 --retry-delay 5 --retry-all-errors \
-            --fail http://localhost:8000/health
+            --fail http://localhost:8000
 
            curl --retry 12 --retry-delay 5 --retry-all-errors \
             --fail http://localhost:80
+
+      - name: Show logs if failed
+        if: failure()
+        run: docker compose logs
 
       - name: Stop containers
         if: always()
