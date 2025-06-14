@@ -9,8 +9,8 @@ services:
       - "8000:8000"
     depends_on:
       db:
-        condition: service_healthy      
-    volumes:
+        condition: service_healthy
+      volumes:
       - ./back:/app
     environment:
       - PYTHONUNBUFFERED=1
