@@ -17,20 +17,29 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Docker-compose
-        uses: docker/setup-compose-action@v1
-
       - name: Build and run services
         run: docker compose up --build -d
 
-      - name: Wait for app to be healthy
+      - name: Wait for services to become healthy
         run: |
-          docker compose wait db --timeout 60
+          sudo apt-get update
+          sudo apt-get install -y netcat
 
-          curl --retry 12 --retry-delay 5 --retry-all-errors \
-            --fail http://localhost:8000
+          echo "Waiting for database..."
+          timeout 60 bash -c 'until nc -z localhost 5432; do sleep 1; done'
 
-           curl --retry 12 --retry-delay 5 --retry-all-errors \
+          echo "Waiting for backend..."
+          timeout 30 bash -c 'until nc -z localhost 8000; do sleep 1; done'
+          
+          echo "Testing backend..."
+          curl --retry 5 --retry-delay 5 --retry-all-errors \
+            --fail http://localhost:8000/health
+
+          echo "Waiting for frontend..."
+          timeout 30 bash -c 'until nc -z localhost 80; do sleep 1; done'
+          
+          echo "Testing frontend..."
+          curl --retry 5 --retry-delay 5 --retry-all-errors \
             --fail http://localhost:80
 
       - name: Show logs if failed
