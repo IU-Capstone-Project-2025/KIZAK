@@ -26,10 +26,10 @@ jobs:
       - name: Wait for app to be healthy
         run: |
           docker compose run --rm wait-for-it db:5432 -t 60
-          
+
           curl --retry 12 --retry-delay 5 --retry-all-errors \
             --fail http://localhost:8000/health
-          
+
            curl --retry 12 --retry-delay 5 --retry-all-errors \
             --fail http://localhost:80
 
