@@ -10,7 +10,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
-      volumes:
+    volumes:
       - ./back:/app
     environment:
       - PYTHONUNBUFFERED=1
