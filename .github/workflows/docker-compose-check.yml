@@ -1,0 +1,31 @@
+name: Docker-compose Check
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  dockerCheck:
+    timeout-minutes: 15
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build and run services
+        run: docker compose up --build -d
+
+      - name: Wait for services to become healthy
+        run: |
+          sleep 10
+          curl --fail http://localhost:8000 || (docker compose logs && exit 1)
+          curl --fail http://localhost:80 || (docker compose logs && exit 1)
+
+      - name: Stop containers
+        if: always()
+        run: docker compose down
