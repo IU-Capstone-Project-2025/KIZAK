@@ -5,7 +5,7 @@ ENV POETRY_VIRTUALENVS_CREATE=false
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl=7.88.1-10+deb12u5 \
+    curl=7.88.1-10+deb12u12 \
     build-essential=12.9 \
     && pip install --no-cache-dir --upgrade --root-user-action=ignore pip==24.0 \
     && curl -sSL https://install.python-poetry.org | python3 - \
@@ -24,4 +24,4 @@ COPY . .
 
 EXPOSE 8000
 
-CMD ["flask", "run", "--app", "run.py", "--host", "0.0.0.0", "--port", "8000", "--debug"]
+CMD ["flask", "--app", "run.py", "run", "--host", "0.0.0.0", "--port", "8000", "--debug"]
