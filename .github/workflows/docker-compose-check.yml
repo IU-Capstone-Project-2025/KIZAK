@@ -1,0 +1,38 @@
+name: Docker-compose Check
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  dockerCheck:
+    timeout-minutes: 15
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker-compose
+        uses: docker/setup-compose-action@v1
+
+      - name: Build and run services
+        run: docker-compose up --build -d
+
+      - name: Wait for app to be healthy
+        run: |
+          docker compose run --rm wait-for-it db:5432 -t 60
+          
+          curl --retry 12 --retry-delay 5 --retry-all-errors \
+            --fail http://localhost:8000/health
+          
+           curl --retry 12 --retry-delay 5 --retry-all-errors \
+            --fail http://localhost:80
+
+      - name: Stop containers
+        if: always()
+        run: docker compose down
