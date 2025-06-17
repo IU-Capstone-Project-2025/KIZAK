@@ -21,7 +21,7 @@ app = FastAPI(
 )
 
 app.include_router(UserRouter, tags=['User'])
-app.include_router(RoadmapRouter, tags=['Roadmap'])
+app.include_router(RoadmapRouter)
 app.include_router(ResourceRouter, tags=['Resource'])
 
 if __name__ == "__main__":

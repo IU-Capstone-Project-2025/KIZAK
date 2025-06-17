@@ -1,8 +1,51 @@
 from fastapi.routing import APIRouter
-from fastapi import HTTPException
+from uuid import UUID
+from models.roadmap import RoadmapResponse,RoadmapCreate
+from models.roadmap import NodeResponse, NodeCreate, NodeUpdate
+from models.roadmap import LinkResponse, LinkCreate
+from db.roadmap import retrive_roadmap, create_roadmap, remove_roadmap
 
 router = APIRouter()
 
-@router.get("/roadmap/{roadmap_id}")
-async def get_roadmap(roadmap_id: str):
-    return HTTPException(status_code=501, detail="In progress")
+# Roadmap
+@router.get("/roadmap/{roadmap_id}", response_model=RoadmapResponse, tags=["Roadmap"])
+async def get_roadmap(roadmap_id: UUID) -> RoadmapResponse:
+    return await retrive_roadmap(roadmap_id)
+
+@router.post("/roadmap/", tags=["Roadmap"], response_model=RoadmapResponse)
+async def post_roadmap(roadmap: RoadmapCreate) -> RoadmapResponse:
+    return await create_roadmap(roadmap)
+
+@router.delete("/roadmap/{roadmap_id}", tags=["Roadmap"])
+async def get_roadmap(roadmap_id: UUID) -> None:
+    return await remove_roadmap(roadmap_id)
+
+# Nodes
+@router.get("/node/{node_id}", response_model=NodeResponse, tags=["Node"])
+async def get_node(node_id: UUID) -> NodeResponse:
+    pass
+
+@router.post("/node/", response_model=NodeResponse, tags=["Node"])
+async def post_node(node: NodeCreate) -> NodeResponse:
+    pass
+
+@router.put("/node/", response_model=NodeResponse, tags=["Node"])
+async def put_node(node: NodeUpdate) -> NodeResponse:
+    pass
+
+@router.delete("/node/", tags=["Node"])
+async def delete_node(node_id: UUID) -> None:
+    pass
+
+# Links
+@router.get("/link/{link_id}", response_model=LinkResponse, tags=["Link"])
+async def get_link(link_id: UUID) -> LinkResponse:
+    pass
+
+@router.post("/link/", response_model=LinkResponse, tags=["Link"])
+async def post_link(link: LinkCreate) -> LinkResponse:
+    pass
+
+@router.delete("/link/", tags=["Link"])
+async def delete_link(link_id: UUID) -> None:
+    pass
