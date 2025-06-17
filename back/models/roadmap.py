@@ -10,13 +10,13 @@ class NodeBase(BaseModel):
     progress: int
 
 class NodeResponse(NodeBase):
-    id: UUID
+    node_id: UUID
 
 class NodeCreate(NodeBase):
     pass
 
 class NodeUpdate(BaseModel):
-    id: UUID
+    node_id: UUID
     roadmap_id: Optional[UUID]
     title: Optional[str]
     summary: Optional[str]
@@ -29,7 +29,7 @@ class LinkBase(BaseModel):
     to_node: UUID
 
 class LinkResponse(LinkBase):
-    id: UUID
+    link_id: UUID
 
 class LinkCreate(LinkBase):
     pass
@@ -42,5 +42,8 @@ class RoadmapCreate(RoadmapBase):
 
 class RoadmapResponse(RoadmapBase):
     roadmap_id: UUID
+
+class RoadmapInfo(BaseModel):
+    roadmap_id: UUID
     nodes: List[NodeResponse]
-    links: List[NodeResponse]
+    links: List[LinkResponse]
