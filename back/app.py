@@ -4,7 +4,7 @@ from pathlib import Path
 
 from routers.user import router as UserRouter
 from routers.roadmap import router as RoadmapRouter
-
+from routers.resource import router as ResourceRouter
 
 app = FastAPI(
     title="KIZAK",
@@ -15,6 +15,7 @@ app = FastAPI(
 
 app.include_router(UserRouter, tags=['User'])
 app.include_router(RoadmapRouter, tags=['Roadmap'])
+app.include_router(ResourceRouter, tags=['Resource'])
 
 if __name__ == "__main__":
     uvicorn.run(app)

@@ -1,0 +1,42 @@
+from pydantic import BaseModel
+from typing import List, Optional
+from uuid import UUID
+
+class ResourceBase(BaseModel):
+    resource_type: str
+    title: str
+    summary: str
+    content: str
+    level: str
+    price: float
+    language: str
+    duration_hours: int
+    platform: str
+    rating: float
+    published_date: str
+    certificate_available: bool
+    skills_covered: List[str]
+
+class ResourceResponse(ResourceBase):
+    resource_id: UUID
+    summary_vecto: List[float]
+    skills_covered_vector: List[List[float]]
+
+class ResourseCreate(ResourceBase):
+    pass
+
+class ResourceUpdate(BaseModel):
+    resource_id: UUID
+    resource_type: Optional[str] = None 
+    title: Optional[str] = None 
+    summary: Optional[str] = None 
+    content: Optional[str] = None 
+    level: Optional[str] = None 
+    price: Optional[float] = None 
+    language: Optional[str] = None 
+    duration_hours: Optional[int] = None 
+    platform: Optional[str] = None 
+    rating: Optional[float] = None 
+    published_date: Optional[str] = None 
+    certificate_available: Optional[bool] = None 
+    skills_covered: Optional[List[str]] = None

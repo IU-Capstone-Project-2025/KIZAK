@@ -38,6 +38,47 @@ CREATE TABLE user_goals (
     PRIMARY KEY (user_id, goal)
 );
 
+-- Learning resources
+CREATE TABLE resource (
+    resource_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    resource_type VARCHAR(20) CHECK (resource_type IN ('Course', 'Article')),
+    title VARCHAR(100) NOT NULL,
+    summary TEXT,
+    summary_vector VECTOR(256),
+    content TEXT NOT NULL,
+    level VARCHAR(20) CHECK (level IN ('Beginner', 'Intermediate', 'Advanced', 'All Levels')),
+    price DECIMAL(10,2),
+    language VARCHAR(50) DEFAULT 'English',
+    duration_hours INTEGER,
+    platform VARCHAR(50),
+    rating DECIMAL(3,1) CHECK (rating BETWEEN 0 AND 5),
+    published_date DATE,
+    certificate_available BOOLEAN DEFAULT FALSE,
+    skills_covered VARCHAR(100)[],
+    skills_covered_vector VECTOR(256)[]
+);
+
+CREATE TABLE user_roadmap (
+    roadmap_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES Users(user_id) ON DELETE CASCADE
+);
+
+CREATE TABLE roadmap_node (
+    node_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    roadmap_id UUID REFERENCES User_Roadmap(roadmap_id) ON DELETE CASCADE,
+    title VARCHAR(100) NOT NULL,
+    summary TEXT,
+    resource_id UUID,
+    progress INTEGER CHECK (progress BETWEEN 0 AND 100) DEFAULT 0
+);
+
+CREATE TABLE roadmap_link (
+    link_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    roadmap_id UUID REFERENCES User_Roadmap(roadmap_id) ON DELETE CASCADE,
+    from_node UUID REFERENCES Roadmap_Node(node_id) ON DELETE CASCADE,
+    to_node UUID REFERENCES Roadmap_Node(node_id) ON DELETE CASCADE
+);
+
 -- Insert users
 INSERT INTO users (login, password) VALUES
 ('react_expert', 'hashed_password_1'),
