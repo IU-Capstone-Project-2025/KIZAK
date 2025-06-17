@@ -1,13 +1,13 @@
 from fastapi.routing import APIRouter
 from models.resource import ResourceResponse, ResourseCreate, ResourceUpdate
-from db.resource import retrive_resource, create_resource, update_resource, remove_resource
+from db.resource import retrieve_resource, create_resource, update_resource, remove_resource
 from uuid import UUID
 
 router = APIRouter()
 
 @router.get("/resource/{res_id}", response_model=ResourceResponse)
 async def get_resource(res_id: UUID):
-    return await retrive_resource(res_id)
+    return await retrieve_resource(res_id)
 
 @router.post("/resource/", response_model=ResourceResponse)
 async def post_resource(res: ResourseCreate):

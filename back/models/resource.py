@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from datetime import date
 from typing import List, Optional
 from uuid import UUID
 
@@ -13,14 +14,14 @@ class ResourceBase(BaseModel):
     duration_hours: int
     platform: str
     rating: float
-    published_date: str
+    published_date: date
     certificate_available: bool
     skills_covered: List[str]
 
 class ResourceResponse(ResourceBase):
     resource_id: UUID
-    summary_vecto: List[float]
-    skills_covered_vector: List[List[float]]
+    summary_vector: Optional[List[float]] = None
+    skills_covered_vector: Optional[List[List[float]]] = None
 
 class ResourseCreate(ResourceBase):
     pass
@@ -37,6 +38,6 @@ class ResourceUpdate(BaseModel):
     duration_hours: Optional[int] = None 
     platform: Optional[str] = None 
     rating: Optional[float] = None 
-    published_date: Optional[str] = None 
+    published_date: Optional[date] = None 
     certificate_available: Optional[bool] = None 
     skills_covered: Optional[List[str]] = None
