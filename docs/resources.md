@@ -12,7 +12,7 @@
 ## `POST /resource/`
 
 **Summary**: Post Resource  
-**Body**: `ResourseCreate`  
+**Body**: `ResourceCreate`  
 **Responses**:
 - `200`: `ResourceResponse`
 - `422`: Validation Error
