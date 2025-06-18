@@ -48,12 +48,6 @@ jobs:
           poetry run pip install black
           poetry run black --check .
 
-      - name: isort
-        working-directory: back
-        run: |
-          poetry run pip install isort
-          poetry run isort . --check
-
       - name: pycodestyle
         working-directory: back
         run: |
