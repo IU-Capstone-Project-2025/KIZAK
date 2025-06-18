@@ -1,11 +1,27 @@
 from uuid import UUID
 
-from db.roadmap import (create_link, create_node, create_roadmap, delete_link,
-                        delete_node, remove_roadmap, retrieve_link,
-                        retrieve_node, retrieve_roadmap, update_node)
+from db.roadmap import (
+    create_link,
+    create_node,
+    create_roadmap,
+    delete_link,
+    delete_node,
+    remove_roadmap,
+    retrieve_link,
+    retrieve_node,
+    retrieve_roadmap,
+    update_node,
+)
 from fastapi.routing import APIRouter
-from models.roadmap import (LinkCreate, LinkResponse, NodeCreate, NodeResponse,
-                            NodeUpdate, RoadmapCreate, RoadmapResponse)
+from models.roadmap import (
+    LinkCreate,
+    LinkResponse,
+    NodeCreate,
+    NodeResponse,
+    NodeUpdate,
+    RoadmapCreate,
+    RoadmapResponse,
+)
 
 router = APIRouter()
 
