@@ -25,7 +25,7 @@ jobs:
           sleep 10
           curl --fail http://localhost:8000/docs \
           || (docker compose logs && exit 1)
-          curl --fail http://localhost:80 \
+          curl --fail http://localhost:3000 \
           || (docker compose logs && exit 1)
 
       - name: Stop containers
