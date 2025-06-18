@@ -10,12 +10,12 @@ export const Header = () => {
       </div>
       <p className="uppercase text-3xl font-bold w-80 flex-center">kizak</p>
       <div className="flex items-center justify-end gap-x-5 text-lg w-80">
-        <Link className="font-light" href={"/sign-up"}>
+        <Link className="font-light" href={"/onboarding"}>
           Sign up
         </Link>
         <Link
           className="bg-brand-primary/80 py-2 px-3 rounded-md transition-all duration-300 hover:bg-brand-primary"
-          href={"/sign-up"}
+          href={"/onboarding"}
         >
           Open app
         </Link>

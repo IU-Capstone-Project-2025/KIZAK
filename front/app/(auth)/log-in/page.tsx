@@ -17,8 +17,8 @@ export default function Login() {
     <div className="flex items-center justify-center min-h-screen bg-white">
       <div className="w-full max-w-sm space-y-6 bg-white rounded ">
         <div className="flex justify-center mb-4">
-          <div className="w-16 h-16 rounded-full flex items-center justify-center">
-            <div className="w-12 h-12  rounded-full relative overflow-hidden">
+          <div className="w-18 h-18 rounded-full flex items-center justify-center">
+            <div className="w-18 h-18 rounded-full relative overflow-hidden">
               <Image
                 src="/logo.svg"
                 alt="KIZAK"
