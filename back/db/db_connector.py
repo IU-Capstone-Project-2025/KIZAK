@@ -1,9 +1,9 @@
+import asyncio
 import os
+import sys
 from contextlib import asynccontextmanager
 from typing import Any, Optional
 
-import sys
-import asyncio
 import asyncpg
 import dotenv
 
@@ -35,7 +35,7 @@ class DataBase:
                     database=self._db_config["database"],
                     host=self._db_config["host"],
                     port=self._db_config["port"],
-                    timeout=5
+                    timeout=5,
                 )
                 await test_conn.close()
                 print("Database is ready.")
@@ -63,6 +63,18 @@ class DataBase:
         conn = await self._pool.acquire()
         try:
             yield conn
+        finally:
+            await self._pool.release(conn)
+
+    @asynccontextmanager
+    async def transaction(self):
+        if not self._pool:
+            await self.connect()
+
+        conn = await self._pool.acquire()
+        try:
+            async with conn.transaction():
+                yield conn
         finally:
             await self._pool.release(conn)
 
