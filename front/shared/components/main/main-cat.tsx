@@ -8,12 +8,16 @@ interface Props {
 
 export const MainCat: React.FC<Props> = ({ className = "" }) => {
   return (
-    <div className={`w-full h-1/2 rounded-xl ${className}`}>
+    <div
+      className={`relative w-full pt-[56.25%] rounded-xl overflow-hidden ${className}`}
+    >
       <Image
-        className="object-cover w-full h-full rounded-xl"
         src={catImage}
-        alt={"catImage"}
-      ></Image>
+        alt="Cat"
+        fill
+        className="object-cover rounded-xl"
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+      />
     </div>
   );
 };
