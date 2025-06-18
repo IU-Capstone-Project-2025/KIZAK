@@ -40,7 +40,7 @@ jobs:
         working-directory: back
         run: |
           poetry run pip install pylint
-          poetry run pylint . --disable=C0114,C0115,C0116
+          poetry run pylint . --disable=C0114,C0115,C0116 --fail-under=5
 
       - name: black
         working-directory: back

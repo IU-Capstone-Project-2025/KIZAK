@@ -2,7 +2,7 @@ from uuid import UUID
 
 from db.db_connector import db
 from fastapi import HTTPException
-from models.resource import ResourceResponse, ResourceUpdate, ResourceCreate
+from models.resource import ResourceCreate, ResourceResponse, ResourceUpdate
 
 
 async def retrieve_resource(res_id: UUID) -> ResourceResponse:
