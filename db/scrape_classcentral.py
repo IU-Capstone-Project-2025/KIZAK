@@ -1,13 +1,15 @@
-
 import requests
 from bs4 import BeautifulSoup
 import json
 import re
+import os
+from datetime import datetime
 
 BASE_URL = "https://www.classcentral.com"
 
 
 def debug_print_jsonld(soup, max_chars=500):
+    # В отладочном режиме просто печатаем в stdout.
     scripts = soup.find_all("script", type="application/ld+json")
     for i, script in enumerate(scripts):
         text = script.string or ""
@@ -16,9 +18,6 @@ def debug_print_jsonld(soup, max_chars=500):
 
 
 def inspect_detail_selectors(html, keywords=("rating", "hours", "week", "Language", "Syllabus")):
-    """
-    For debugging: finds strings containing given keywords and prints the surrounding tag and a snippet.
-    """
     soup = BeautifulSoup(html, "html.parser")
     for kw in keywords:
         print(f"--- Searching for keyword '{kw}' ---")
@@ -241,36 +240,42 @@ def parse_classcentral_courses(html=None, debug=False, limit=5):
             return []
     soup = BeautifulSoup(html, "html.parser")
     courses = []
-    # The selector "h2.text-1.weight-semi" is based on observed structure; may need updating if site changes.
+    # Селектор может меняться, при необходимости адаптируйте
     for h2 in soup.select("h2.text-1.weight-semi")[:limit]:
         title = h2.get_text(strip=True)
         a = h2.find_parent("a", href=True)
         url = BASE_URL + a["href"] if a and a["href"].startswith("/course") else None
-        details = fetch_course_details(url, debug=debug) if url else {}
-        courses.append({
+        details = fetch_course_details(url, debug=debug) if url else {
+            "rating": None, "num_reviews": None, "language": None, "duration": None, "syllabus": None
+        }
+        course_entry = {
             "title": title,
             "url": url,
             **details
-        })
+        }
+        courses.append(course_entry)
     return courses
 
 
 if __name__ == "__main__":
-    # Example debug for a specific course
-    test_url = "https://www.classcentral.com/course/python-databases-4272"
-    print("=== Debug fetch_course_details ===")
-    details = fetch_course_details(test_url, debug=True)
-    print(details)
+    # Папка для результатов
+    results_dir = "results"
+    os.makedirs(results_dir, exist_ok=True)
 
-    # Parse top 5 courses
-    print("\n=== Parsing top 5 courses ===")
-    courses = parse_classcentral_courses(debug=True, limit=5)
-    for c in courses:
-        print("-" * 40)
-        print(f"Title:       {c['title']}")
-        print(f"URL:         {c['url']}")
-        print(f"Rating:      {c.get('rating')}")
-        print(f"Reviews:     {c.get('num_reviews')}")
-        print(f"Language:    {c.get('language')}")
-        print(f"Duration:    {c.get('duration')}")
-        print(f"Syllabus:    {c.get('syllabus')}")
+    # Пример: дебаг-режим можно включать по необходимости
+    debug_mode = False
+
+    # Собираем топ-5 курсов
+    courses = parse_classcentral_courses(debug=debug_mode, limit=5)
+
+    # Формируем имя файла с датой для уникальности
+    ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+    output_path = os.path.join(results_dir, f"classcentral_courses_{ts}.json")
+
+    # Сохраняем в JSON
+    try:
+        with open(output_path, "w", encoding="utf-8") as f:
+            json.dump(courses, f, ensure_ascii=False, indent=2)
+        print(f"Saved {len(courses)} courses to {output_path}")
+    except Exception as e:
+        print(f"Error saving JSON: {e}")
