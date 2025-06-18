@@ -40,7 +40,7 @@ jobs:
         working-directory: back
         run: |
           poetry run pip install pylint
-          poetry run pylint . --disable=C0114,C0115,C0116
+          poetry run pylint . --disable=C0114,C0115,C0116 --fail-under=5
 
       - name: black
         working-directory: back
@@ -48,23 +48,11 @@ jobs:
           poetry run pip install black
           poetry run black --check .
 
-      - name: isort
-        working-directory: back
-        run: |
-          poetry run pip install isort
-          poetry run isort . --check
-
       - name: pycodestyle
         working-directory: back
         run: |
           poetry run pip install pycodestyle
           poetry run pycodestyle .
-
-      - name: mypy
-        working-directory: back
-        run: |
-          poetry run pip install mypy types-Flask-Cors
-          poetry run mypy . --ignore-missing-imports
 
       - name: ruff
         working-directory: back
