@@ -24,4 +24,4 @@ COPY --from=builder /app/next.config.ts ./next.config.ts
 
 EXPOSE 80
 
-CMD ["npm", "start"]
+CMD ["npx", "next", "start", "-p", "80"]
