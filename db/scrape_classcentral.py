@@ -7,17 +7,18 @@ from datetime import datetime
 
 BASE_URL = "https://www.classcentral.com"
 
-
 def debug_print_jsonld(soup, max_chars=500):
-    # В отладочном режиме просто печатаем в stdout.
+    # In debug mode, print JSON-LD snippets from the page
     scripts = soup.find_all("script", type="application/ld+json")
     for i, script in enumerate(scripts):
         text = script.string or ""
         preview = text.strip().replace("\n", " ")[:max_chars]
         print(f"[JSON-LD #{i}] {preview}...")
 
-
 def inspect_detail_selectors(html, keywords=("rating", "hours", "week", "Language", "Syllabus")):
+    """
+    For debugging: find strings containing given keywords and print their parent tag and a snippet.
+    """
     soup = BeautifulSoup(html, "html.parser")
     for kw in keywords:
         print(f"--- Searching for keyword '{kw}' ---")
@@ -28,10 +29,9 @@ def inspect_detail_selectors(html, keywords=("rating", "hours", "week", "Languag
             print(f"Text: '{el.strip()}'  Tag: <{parent.name} class={classes}> snippet: {snippet}...")
         print()
 
-
 def fetch_course_details(course_url, debug=False):
     """
-    Given a Class Central course page URL, extracts:
+    Given a Class Central course page URL, extract:
     - rating: average rating (string or None)
     - num_reviews: number of reviews (string or None)
     - language: course language (string or None)
@@ -64,7 +64,7 @@ def fetch_course_details(course_url, debug=False):
     rating = num_reviews = language = duration = None
     syllabus = []
 
-    # 1) JSON-LD parsing
+    # 1) Parse JSON-LD
     for script in soup.find_all("script", type="application/ld+json"):
         if not script.string:
             continue
@@ -106,7 +106,7 @@ def fetch_course_details(course_url, debug=False):
         print("After JSON-LD parsing:", dict(rating=rating, num_reviews=num_reviews,
                                              language=language, duration=duration))
 
-    # 2) Rating / reviews from HTML if not found in JSON-LD
+    # 2) From HTML if JSON-LD missing rating/reviews
     if not (rating and num_reviews):
         tag = soup.find("span", attrs={"aria-label": re.compile(r"out of", re.I)})
         if tag:
@@ -145,7 +145,7 @@ def fetch_course_details(course_url, debug=False):
         if debug:
             print("After HTML parsing for language:", dict(language=language))
 
-    # 4) Duration from HTML panel if still missing
+    # 4) Duration from HTML if still missing
     if not duration:
         wd = soup.select_one("div[data-test='workload'], div.course-duration")
         if wd:
@@ -176,7 +176,6 @@ def fetch_course_details(course_url, debug=False):
                     title = li.get_text(" ", strip=True)
                     details = None
                 else:
-                    # Combine direct contents for title, skip the nested UL
                     title_parts = []
                     for x in li.contents:
                         if x is sub:
@@ -198,10 +197,9 @@ def fetch_course_details(course_url, debug=False):
         "syllabus": syllabus or None
     }
 
-
 def fetch_classcentral_html(save_path="classcentral_search.html", debug=False):
     """
-    Fetches HTML for a Class Central search for 'python' and optionally saves it to a file.
+    Fetch HTML for a Class Central search for 'python' and optionally save it locally.
     """
     url = f"{BASE_URL}/search?q=python"
     try:
@@ -226,13 +224,12 @@ def fetch_classcentral_html(save_path="classcentral_search.html", debug=False):
                 print(f"Failed to save search HTML to {save_path}: {e}")
     return html
 
-
 def parse_classcentral_courses(html=None, debug=False, limit=5):
     """
-    Parses Class Central search results HTML to extract top courses:
+    Parse Class Central search results HTML to extract top courses:
     - title
     - url
-    Then fetches details for each.
+    Then fetch details for each.
     """
     if html is None:
         html = fetch_classcentral_html(debug=debug)
@@ -240,7 +237,7 @@ def parse_classcentral_courses(html=None, debug=False, limit=5):
             return []
     soup = BeautifulSoup(html, "html.parser")
     courses = []
-    # Селектор может меняться, при необходимости адаптируйте
+    # Selector may change over time; adjust if needed
     for h2 in soup.select("h2.text-1.weight-semi")[:limit]:
         title = h2.get_text(strip=True)
         a = h2.find_parent("a", href=True)
@@ -248,31 +245,29 @@ def parse_classcentral_courses(html=None, debug=False, limit=5):
         details = fetch_course_details(url, debug=debug) if url else {
             "rating": None, "num_reviews": None, "language": None, "duration": None, "syllabus": None
         }
-        course_entry = {
+        entry = {
             "title": title,
             "url": url,
             **details
         }
-        courses.append(course_entry)
+        courses.append(entry)
     return courses
 
-
 if __name__ == "__main__":
-    # Папка для результатов
+    # Directory to store results
     results_dir = "results"
     os.makedirs(results_dir, exist_ok=True)
 
-    # Пример: дебаг-режим можно включать по необходимости
-    debug_mode = False
+    debug_mode = False  # set True if you want verbose debug output
 
-    # Собираем топ-5 курсов
+    # Collect top 5 courses
     courses = parse_classcentral_courses(debug=debug_mode, limit=5)
 
-    # Формируем имя файла с датой для уникальности
+    # Generate filename with timestamp to avoid overwriting
     ts = datetime.now().strftime("%Y%m%d_%H%M%S")
     output_path = os.path.join(results_dir, f"classcentral_courses_{ts}.json")
 
-    # Сохраняем в JSON
+    # Save to JSON
     try:
         with open(output_path, "w", encoding="utf-8") as f:
             json.dump(courses, f, ensure_ascii=False, indent=2)

@@ -96,10 +96,35 @@
   {
     "title": "Using Python to Access Web Data",
     "url": "https://www.classcentral.com/course/python-network-data-4343",
-    "rating": null,
-    "num_reviews": null,
+    "rating": "4.6775",
+    "num_reviews": "6000",
     "language": null,
-    "duration": null,
-    "syllabus": null
+    "duration": "10 weeks",
+    "syllabus": [
+      {
+        "title": "Getting Started",
+        "details": null
+      },
+      {
+        "title": "Regular Expressions (Chapter 11)",
+        "details": null
+      },
+      {
+        "title": "Networks and Sockets (Chapter 12)",
+        "details": null
+      },
+      {
+        "title": "Programs that Surf the Web (Chapter 12)",
+        "details": null
+      },
+      {
+        "title": "Web Services and XML (Chapter 13)",
+        "details": null
+      },
+      {
+        "title": "JSON and the REST Architecture (Chapter 13)",
+        "details": null
+      }
+    ]
   }
 ]
