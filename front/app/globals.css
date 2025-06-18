@@ -23,10 +23,8 @@
 }
 
 .dots {
-  background-image: radial-gradient(
-    circle,
-    rgba(31, 31, 31, 0.155) 1px,
-    transparent 1px
-  );
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(#1f1f1f27 1px, transparent 1px);
   background-size: 20px 20px;
 }
