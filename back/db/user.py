@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Any
 from uuid import UUID
 
-from db_connector import db
+from .db_connector import db
 from fastapi import HTTPException
 from models.user import UserCreate, UserResponse, UserUpdate
 

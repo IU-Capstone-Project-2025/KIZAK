@@ -2,6 +2,8 @@ import os
 from contextlib import asynccontextmanager
 from typing import Any, Optional
 
+import sys
+import asyncio
 import asyncpg
 import dotenv
 
@@ -22,7 +24,31 @@ class DataBase:
             "timeout": 30,
         }
 
-    async def connect(self):
+    async def connect(self, max_retries: int = 10, delay: float = 1):
+        """Wait for the database to be available, then create a connection pool"""
+        retries = 0
+        while retries < max_retries:
+            try:
+                test_conn = await asyncpg.connect(
+                    user=self._db_config["user"],
+                    password=self._db_config["password"],
+                    database=self._db_config["database"],
+                    host=self._db_config["host"],
+                    port=self._db_config["port"],
+                    timeout=5
+                )
+                await test_conn.close()
+                print("Database is ready.")
+                break
+            except Exception as e:
+                print(f"Waiting for DB... ({retries+1}/{max_retries}) - {e}")
+                await asyncio.sleep(delay)
+                retries += 1
+        else:
+            print("Database did not become available in time. Exiting.")
+            sys.exit(1)
+
+        # DB is ready, now initialize the connection pool
         self._pool = await asyncpg.create_pool(**self._db_config)
 
     async def close(self):
