@@ -19,5 +19,5 @@ build-backend = "poetry.core.masonry.api"
 [tool.black]
 line-length = 79
 
-[tool.ty.rules]
-missing-argument = false
+[tool.ty.rules.missing-argument]
+enabled = false
