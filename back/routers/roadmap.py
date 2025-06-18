@@ -40,7 +40,7 @@ async def post_roadmap(roadmap: RoadmapCreate) -> RoadmapResponse:
 
 
 @router.delete("/roadmap/{roadmap_id}", tags=["Roadmap"])
-async def get_roadmap(roadmap_id: UUID) -> None:
+async def delete_roadmap(roadmap_id: UUID) -> None:
     return await remove_roadmap(roadmap_id)
 
 
@@ -61,7 +61,7 @@ async def put_node(node: NodeUpdate) -> NodeResponse:
 
 
 @router.delete("/node/", tags=["Node"])
-async def delete_node(node_id: UUID) -> None:
+async def remove_node(node_id: UUID) -> None:
     return await delete_node(node_id)
 
 
@@ -77,5 +77,5 @@ async def post_link(link: LinkCreate) -> LinkResponse:
 
 
 @router.delete("/link/", tags=["Link"])
-async def delete_link(link_id: UUID) -> None:
+async def remove_link(link_id: UUID) -> None:
     return await delete_link(link_id)
