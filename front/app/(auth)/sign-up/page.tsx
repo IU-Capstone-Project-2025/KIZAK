@@ -1,31 +1,38 @@
-'use client';
-import Link from 'next/link';
+"use client";
+import Link from "next/link";
 
-import React, { useEffect, useState } from 'react';
-import Image from 'next/image';
+import React, { useEffect, useState } from "react";
+import Image from "next/image";
 
-const Login: React.FC = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [isValid, setValid] = useState<boolean>(false);
+export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isValid, setValid] = useState<boolean>(false);
 
-    useEffect(() => {
-        if (email.trim() !== '' && password.trim() !== '') setValid(true);
-        else setValid(false)
-    }, [email, password])
-    
+  useEffect(() => {
+    if (email.trim() !== "" && password.trim() !== "") setValid(true);
+    else setValid(false);
+  }, [email, password]);
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-white">
       <div className="w-full max-w-sm space-y-6 bg-white rounded ">
         <div className="flex justify-center mb-4">
           <div className="w-16 h-16 rounded-full flex items-center justify-center">
             <div className="w-12 h-12  rounded-full relative overflow-hidden">
-              <Image src="/logo.svg" alt="KIZAK" layout="fill" objectFit="contain" />
+              <Image
+                src="/logo.svg"
+                alt="KIZAK"
+                layout="fill"
+                objectFit="contain"
+              />
             </div>
           </div>
         </div>
 
-        <h2 className="text-center text-lg font-medium text-ui-dark">Create your account</h2>
+        <h2 className="text-center text-lg font-medium text-ui-dark">
+          Create your account
+        </h2>
 
         <form className="space-y-4 flex-center flex-col">
           <input
@@ -46,8 +53,8 @@ const Login: React.FC = () => {
             disabled={!isValid}
             className={`h-[50px] w-100 py-2 hover:bg-brand-primary text-white font-semibold rounded-md transition-all duration-300 ${
               isValid
-                ? 'bg-brand-primary hover:bg-brand-primary/90'
-                : 'bg-brand-primary/80 cursor-not-allowed'
+                ? "bg-brand-primary hover:bg-brand-primary/90"
+                : "bg-brand-primary/80 cursor-not-allowed"
             }`}
           >
             Continue
@@ -55,14 +62,11 @@ const Login: React.FC = () => {
         </form>
 
         <div className="flex justify-center text-xs text-ui-muted w-full mt-4">
-        <Link href="/log-in" className="hover:underline">
-  or Log in
-</Link>
-          
+          <Link href="/log-in" className="hover:underline">
+            or Log in
+          </Link>
         </div>
       </div>
     </div>
   );
-};
-
-export default Login;
+}
