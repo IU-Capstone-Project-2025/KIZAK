@@ -141,7 +141,7 @@ export const Tags: React.FC<TagsProps> = ({
             className={`h-[50px] w-50 py-2 hover:bg-brand-primary text-white font-semibold rounded-md transition-all duration-300 ${
               isValid
                 ? "bg-brand-primary hover:bg-brand-primary/90"
-                : "bg-brand-primary/80 cursor-not-allowed"
+                : "bg-brand-primary/50 cursor-not-allowed"
             }`}
           >
             Continue

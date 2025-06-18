@@ -6,7 +6,7 @@ import { Tags } from "@/shared/components/onboarding/tagsQuiz";
 import { SliderLevel } from "@/shared/components/onboarding/slider";
 import { SingleString } from "@/shared/components/onboarding/singleString";
 import { BigString } from "@/shared/components/onboarding/bigString";
-import router, { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const availableSkills = [
   "javascript",
@@ -87,7 +87,7 @@ export default function OnBoarding() {
   const generateSkillLevelScreens = () => {
     return userData.skills.map((skill) => (
       <SliderLevel
-        key={skill}
+        key={`skill_level_${skill}`}
         tag={skill}
         setData={setUserData}
         onNext={goToNextStep}
@@ -98,12 +98,14 @@ export default function OnBoarding() {
 
   const screens = [
     <SignUp
+      key="signup"
       setData={setUserData}
       onNext={goToNextStep}
       onBack={goToPreviousStep}
       userData={userData}
     />,
     <SingleString
+      key="education"
       title="What is your highest level of education completed?"
       placeholder="Enter your education level..."
       fieldKey="education"
@@ -113,6 +115,7 @@ export default function OnBoarding() {
       onBack={goToPreviousStep}
     />,
     <BigString
+      key="background"
       title="Tell us about your background"
       placeholder="Enter your background..."
       setData={setUserData}
@@ -121,6 +124,7 @@ export default function OnBoarding() {
       onBack={goToPreviousStep}
     />,
     <Tags
+      key="skills"
       tags={availableSkills}
       title="Tell us about your skills"
       placeholder="Enter your skills..."
@@ -132,6 +136,7 @@ export default function OnBoarding() {
       onBack={goToPreviousStep}
     />,
     <SingleString
+      key="goal_vacancy"
       title="Which position are you aiming to achieve?"
       placeholder="Enter your vacancy..."
       fieldKey="goal_vacancy"
@@ -141,6 +146,7 @@ export default function OnBoarding() {
       onBack={goToPreviousStep}
     />,
     <Tags
+      key="goal_skills"
       tags={availableSkills}
       title="Which goal skills are you aiming to achieve?"
       placeholder="Enter your skills..."
@@ -152,6 +158,7 @@ export default function OnBoarding() {
       onBack={goToPreviousStep}
     />,
     <SingleString
+      key="goals"
       title="Which goals are you aiming to achieve?"
       placeholder="Enter your goals..."
       fieldKey="goals"
@@ -160,16 +167,14 @@ export default function OnBoarding() {
       onNext={goToNextStep}
       onBack={goToPreviousStep}
     />,
-    ...generateSkillLevelScreens().map((component) =>
-      React.cloneElement(component, { onBack: goToPreviousStep })
-    ),
+    ...generateSkillLevelScreens(),
   ];
 
   const totalSteps = screens.length;
 
   useEffect(() => {
     console.log(userData);
-  }, [step]);
+  }, [step, userData]);
 
   return (
     <div className="flex items-center justify-center min-h-screen h-full w-142 bg-white">
