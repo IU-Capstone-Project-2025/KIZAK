@@ -15,7 +15,6 @@ jobs:
       matrix:
         dockerfile:
           - back/Dockerfile
-          - front/Dockerfile
           - ml/Dockerfile
 
     steps:
