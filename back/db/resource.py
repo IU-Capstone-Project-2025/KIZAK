@@ -191,7 +191,7 @@ async def remove_resource(res_id: UUID) -> None:
     try:
         result = await db.execute(
             """
-            DELETE FROM resource 
+            DELETE FROM resource
             WHERE resource_id = $1
             """,
             res_id,

@@ -76,7 +76,8 @@ async def remove_roadmap(roadmap_id: UUID) -> bool:
         roadmap_id (UUID): Roadmap ID
 
     Returns:
-        bool: True if the roadmap was removed, False if no roadmap was found with that ID.
+        bool: True if the roadmap was removed, False if no roadmap was found
+        with that ID.
     """
     row = await db.execute(
         """
@@ -120,7 +121,8 @@ async def create_node(node: NodeCreate) -> NodeResponse:
     """
     row = await db.fetchrow(
         """
-        INSERT INTO roadmap_node (roadmap_id, title, summary, resource_id, progress)
+        INSERT INTO roadmap_node
+        (roadmap_id, title, summary, resource_id, progress)
         VALUES ($1, $2, $3, $4, $5)
         RETURNING *
     """,
@@ -175,7 +177,8 @@ async def delete_node(node_id: UUID) -> bool:
         node_id (UUID): Node ID
 
     Returns:
-        bool: True if the node was deleted, False if no node was found with that ID.
+        bool: True if the node was deleted, False if no node was found with
+        that ID.
     """
     row = await db.execute(
         """
@@ -239,7 +242,8 @@ async def delete_link(link_id: UUID) -> bool:
         link_id (UUID): Link ID
 
     Returns:
-        bool: True if the link was deleted, False if no link was found with that ID.
+        bool: True if the link was deleted, False if no link was found with
+        that ID.
     """
     result = await db.execute(
         """

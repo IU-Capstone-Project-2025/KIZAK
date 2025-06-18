@@ -25,7 +25,8 @@ class DataBase:
         }
 
     async def connect(self, max_retries: int = 10, delay: float = 1):
-        """Wait for the database to be available, then create a connection pool"""
+        """Wait for the database to be available, then create
+        a connection pool"""
         retries = 0
         while retries < max_retries:
             try:

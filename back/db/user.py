@@ -31,7 +31,8 @@ async def create_user(user: UserCreate) -> UserResponse:
 
             user_profile_response = await db.fetchrow(
                 """
-            INSERT INTO user_profiles (user_id, background, goals, goal_vacancy, education)
+            INSERT INTO user_profiles
+            (user_id, background, goals, goal_vacancy, education)
             VALUES  ($1, $2, $3, $4, $5)
             RETURNING background, goals, goal_vacancy, education
             """,
@@ -82,7 +83,9 @@ async def retrieve_user(user_id: UUID) -> UserResponse:
     try:
         user_response = await db.fetchrow(
             """
-        SELECT users.user_id, users.login, users.password, users.creation_date, user_profiles.background, user_profiles.education, user_profiles.goals, user_profiles.goal_vacancy,
+        SELECT users.user_id, users.login, users.password, users.creation_date,
+         user_profiles.background, user_profiles.education,
+          user_profiles.goals, user_profiles.goal_vacancy,
         (
         SELECT array_agg(skill ORDER BY skill)
         FROM user_skills
@@ -95,7 +98,7 @@ async def retrieve_user(user_id: UUID) -> UserResponse:
         ) AS skills_levels,
         (
         SELECT array_agg (goal)
-        FROM user_goals 
+        FROM user_goals
         WHERE user_goals .user_id = users.user_id
         ) AS goal_skills
         FROM users
@@ -230,7 +233,7 @@ async def remove_user(user_id: UUID) -> None:
     try:
         result = await db.execute(
             """
-            DELETE FROM users 
+            DELETE FROM users
             WHERE user_id = $1
             """,
             user_id,
