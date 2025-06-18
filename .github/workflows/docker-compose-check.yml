@@ -23,7 +23,7 @@ jobs:
       - name: Wait for services to become healthy
         run: |
           sleep 10
-          curl --fail http://localhost:8000 || (docker compose logs && exit 1)
+          curl --fail http://localhost:8000/docs || (docker compose logs && exit 1)
           curl --fail http://localhost:80 || (docker compose logs && exit 1)
 
       - name: Stop containers

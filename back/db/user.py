@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any
+from typing import Any, List
 from uuid import UUID
 
 from fastapi import HTTPException
@@ -266,7 +266,7 @@ async def _update(table: str, fields: dict[str, Any], user_id: UUID) -> bool:
     return True
 
 
-async def _check_len(skills: [], skills_levels: []):
+async def _check_len(skills: List[str], skills_levels: List[str]):
     if len(skills) != len(skills_levels):
         raise HTTPException(
             status_code=400, detail="Skills and skill levels count mismatch"

@@ -9,7 +9,7 @@ from db.roadmap import (
     remove_roadmap,
     retrieve_link,
     retrieve_node,
-    retrive_roadmap,
+    retrieve_roadmap,
     update_node,
 )
 from fastapi.routing import APIRouter
@@ -31,7 +31,7 @@ router = APIRouter()
     "/roadmap/{roadmap_id}", response_model=RoadmapResponse, tags=["Roadmap"]
 )
 async def get_roadmap(roadmap_id: UUID) -> RoadmapResponse:
-    return await retrive_roadmap(roadmap_id)
+    return await retrieve_roadmap(roadmap_id)
 
 
 @router.post("/roadmap/", tags=["Roadmap"], response_model=RoadmapResponse)
