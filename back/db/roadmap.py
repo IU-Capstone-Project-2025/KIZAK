@@ -1,15 +1,8 @@
 from uuid import UUID
 
-from models.roadmap import (
-    LinkCreate,
-    LinkResponse,
-    NodeCreate,
-    NodeResponse,
-    NodeUpdate,
-    RoadmapCreate,
-    RoadmapInfo,
-    RoadmapResponse,
-)
+from models.roadmap import (LinkCreate, LinkResponse, NodeCreate, NodeResponse,
+                            NodeUpdate, RoadmapCreate, RoadmapInfo,
+                            RoadmapResponse)
 
 from .db_connector import db
 

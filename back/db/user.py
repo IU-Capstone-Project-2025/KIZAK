@@ -4,8 +4,7 @@ from uuid import UUID
 
 from db_connector import db
 from fastapi import HTTPException
-
-from ..models.user import UserCreate, UserResponse, UserUpdate
+from models.user import UserCreate, UserResponse, UserUpdate
 
 
 async def create_user(user: UserCreate) -> UserResponse:

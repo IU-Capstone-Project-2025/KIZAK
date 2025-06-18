@@ -1,10 +1,9 @@
 from uuid import UUID
 
+from db.user import create_user, remove_user, retrieve_user, update_user
 from fastapi import Response, status
 from fastapi.routing import APIRouter
-
-from ..db.user import create_user, remove_user, retrieve_user, update_user
-from ..models.user import UserCreate, UserResponse, UserUpdate
+from models.user import UserCreate, UserResponse, UserUpdate
 
 router = APIRouter()
 
