@@ -1,40 +1,39 @@
-from pydantic import BaseModel
+from datetime import datetime
 from typing import List, Optional
+from uuid import UUID
 
-class CreateUser(BaseModel):
+from pydantic import BaseModel
+
+
+class UserBase(BaseModel):
     login: str
     password: str
     background: str
     education: str
+    goals: str
+    goal_vacancy: str
     skills: List[str]
     skills_levels: List[str]
     goal_skills: List[str]
-    goals: str
-    goal_vacancy: str
 
-class UpdateUser(BaseModel):
-    login: Optional[str]
-    password: Optional[str]
-    background: Optional[str]
-    education: Optional[str]
-    skills: Optional[List[str]]
-    skills_levels: Optional[List[str]]
-    goal_skills: Optional[List[str]]
-    goals: Optional[str]
-    goal_vacancy: Optional[str]
 
-class GetUser(BaseModel):
-    id: str
-    login: str
-    password: str
-    timestamp: str
-    background: str
-    background_vector: List[float]
-    education: str
-    skills: List[str]
-    skills_levels: List[str]
-    goal_skills: List[str]
-    goals: str
-    goals_vector: List[float]
-    goal_vacancy: str
-    goal_vacancy_vector: List[float]
+class UserCreate(UserBase):
+    pass
+
+
+class UserResponse(UserBase):
+    user_id: UUID
+    creation_date: datetime
+
+
+class UserUpdate(BaseModel):
+    user_id: UUID
+    login: Optional[str] = None
+    password: Optional[str] = None
+    background: Optional[str] = None
+    education: Optional[str] = None
+    goals: Optional[str] = None
+    goal_vacancy: Optional[str] = None
+    skills: Optional[List[str]] = None
+    skills_levels: Optional[List[str]] = None
+    goal_skills: Optional[List[str]] = None
