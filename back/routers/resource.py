@@ -1,11 +1,7 @@
 from uuid import UUID
 
-from db.resource import (
-    create_resource,
-    remove_resource,
-    retrieve_resource,
-    update_resource,
-)
+from db.resource import (create_resource, remove_resource, retrieve_resource,
+                         update_resource)
 from fastapi.routing import APIRouter
 from models.resource import ResourceCreate, ResourceResponse, ResourceUpdate
 
