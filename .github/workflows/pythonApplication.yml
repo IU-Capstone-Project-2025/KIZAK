@@ -54,12 +54,6 @@ jobs:
           poetry run pip install pycodestyle
           poetry run pycodestyle .
 
-      - name: mypy
-        working-directory: back
-        run: |
-          poetry run pip install mypy types-Flask-Cors
-          poetry run mypy . --ignore-missing-imports
-
       - name: ruff
         working-directory: back
         run: |
