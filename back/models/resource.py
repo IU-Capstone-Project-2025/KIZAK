@@ -27,7 +27,7 @@ class ResourceResponse(ResourceBase):
     skills_covered_vector: Optional[List[List[float]]] = None
 
 
-class ResourseCreate(ResourceBase):
+class ResourceCreate(ResourceBase):
     pass
 
 

@@ -14,8 +14,8 @@ from models.roadmap import (
 from .db_connector import db
 
 
-async def retrive_roadmap(roadmap_id: UUID) -> RoadmapInfo:
-    """Retrive roadmap based on its id
+async def retrieve_roadmap(roadmap_id: UUID) -> RoadmapInfo:
+    """Retrieve roadmap based on its id
 
     Args:
         roadmap_id (UUID): Roadmap ID

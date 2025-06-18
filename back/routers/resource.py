@@ -7,7 +7,7 @@ from db.resource import (
     update_resource,
 )
 from fastapi.routing import APIRouter
-from models.resource import ResourceResponse, ResourceUpdate, ResourseCreate
+from models.resource import ResourceResponse, ResourceUpdate, ResourceCreate
 
 router = APIRouter()
 
@@ -20,7 +20,7 @@ async def get_resource(res_id: UUID):
 
 
 @router.post("/resource/", response_model=ResourceResponse, tags=["Resource"])
-async def post_resource(res: ResourseCreate):
+async def post_resource(res: ResourceCreate):
     return await create_resource(res)
 
 

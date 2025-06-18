@@ -2,7 +2,7 @@ from uuid import UUID
 
 from db.db_connector import db
 from fastapi import HTTPException
-from models.resource import ResourceResponse, ResourceUpdate, ResourseCreate
+from models.resource import ResourceResponse, ResourceUpdate, ResourceCreate
 
 
 async def retrieve_resource(res_id: UUID) -> ResourceResponse:
@@ -48,7 +48,7 @@ async def retrieve_resource(res_id: UUID) -> ResourceResponse:
     return ResourceResponse(**row)
 
 
-async def create_resource(res: ResourseCreate) -> ResourceResponse:
+async def create_resource(res: ResourceCreate) -> ResourceResponse:
     """Creates a new learning resource in the database.
 
     Args:
