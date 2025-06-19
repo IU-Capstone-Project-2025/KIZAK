@@ -1,12 +1,21 @@
 from datetime import date
 from typing import List, Optional
 from uuid import UUID
+from enum import Enum
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+
+
+class ResourceType(str, Enum):
+    COURSE = "Course"
+    ARTICLE = "Article"
 
 
 class ResourceBase(BaseModel):
-    resource_type: str
+    resource_type: ResourceType = Field(
+        ...,
+        description="Type of resource (e.g. 'Course' or 'Article')",
+        example="Course")
     title: str
     summary: str
     content: str
