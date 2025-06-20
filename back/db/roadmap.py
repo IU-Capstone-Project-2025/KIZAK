@@ -1,5 +1,8 @@
 from uuid import UUID
 
+from fastapi import HTTPException
+from utils.logger import logger
+
 from models.roadmap import (
     LinkCreate,
     LinkResponse,
@@ -23,6 +26,7 @@ async def retrieve_roadmap(roadmap_id: UUID) -> RoadmapInfo:
     Returns:
         RoadmapInfo (RoadmapInfo): Lists with nodes and links
     """
+    logger.info(f"Retrieving nodes of the roadmap {roadmap_id}")
     node_rows = await db.fetch(
         """
         SELECT node_id, roadmap_id, title, summary, resource_id, progress
@@ -31,7 +35,9 @@ async def retrieve_roadmap(roadmap_id: UUID) -> RoadmapInfo:
         """,
         roadmap_id,
     )
+    logger.info(f"Retrieved nodes of the roadmap {roadmap_id}")
 
+    logger.info(f"Retrieving links of the roadmap {roadmap_id}")
     link_rows = await db.fetch(
         """
         SELECT link_id, roadmap_id, from_node, to_node
@@ -40,7 +46,9 @@ async def retrieve_roadmap(roadmap_id: UUID) -> RoadmapInfo:
         """,
         roadmap_id,
     )
+    logger.info(f"Retrieved links of the roadmap {roadmap_id}")
 
+    logger.info(f"Retrieving roadmap {roadmap_id} retrieved successfully")
     return RoadmapInfo(
         roadmap_id=roadmap_id,
         nodes=[NodeResponse(**node) for node in node_rows],
@@ -57,6 +65,7 @@ async def create_roadmap(roadmap: RoadmapCreate) -> RoadmapResponse:
     Returns:
         RoadmapResponse (RoadmapResponse): Created roadmap
     """
+    logger.info(f"Creating new roadmap for user {roadmap.user_id}")
     row = await db.fetchrow(
         """
         INSERT INTO user_roadmap (user_id)
@@ -66,18 +75,19 @@ async def create_roadmap(roadmap: RoadmapCreate) -> RoadmapResponse:
         roadmap.user_id,
     )
 
+    if not row:
+        logger.error(f"Failed to create roadmap")
+        raise HTTPException(status_code=500, detail="Failed to create roadmap")
+
     return RoadmapResponse(**row)
 
 
-async def remove_roadmap(roadmap_id: UUID) -> bool:
+async def remove_roadmap(roadmap_id: UUID):
     """Removes roadmap from DB
 
     Args:
         roadmap_id (UUID): Roadmap ID
 
-    Returns:
-        bool: True if the roadmap was removed, False if no roadmap was found
-        with that ID.
     """
     row = await db.execute(
         """
@@ -86,7 +96,10 @@ async def remove_roadmap(roadmap_id: UUID) -> bool:
         """,
         roadmap_id,
     )
-    return row is not None
+    if row == "DELETE 0":
+        logger.error(f"Roadmap {roadmap_id} not found")
+        raise HTTPException(status_code=404, detail="Resource not found")
+    logger.info(f"Removed roadmap {roadmap_id}")
 
 
 async def retrieve_node(node_id: UUID) -> NodeResponse:
@@ -106,6 +119,11 @@ async def retrieve_node(node_id: UUID) -> NodeResponse:
     """,
         node_id,
     )
+    if not row:
+        logger.error(f"Node {node_id} not found")
+        raise HTTPException(status_code=404, detail="Node not found")
+
+    logger.info(f"Retrieved node {node_id}")
 
     return NodeResponse(**row)
 
@@ -119,6 +137,8 @@ async def create_node(node: NodeCreate) -> NodeResponse:
     Returns:
         NodeResponse (NodeResponse): Created node
     """
+
+    logger.info(f"Creating new node for the roadmap{node.roadmap_id}")
     row = await db.fetchrow(
         """
         INSERT INTO roadmap_node
@@ -132,6 +152,10 @@ async def create_node(node: NodeCreate) -> NodeResponse:
         node.resource_id,
         node.progress,
     )
+
+    if not row:
+        logger.error("Failed to create a row")
+        raise HTTPException(status_code=500, detail="Failed to create a row")
 
     return NodeResponse(**row)
 
@@ -156,29 +180,37 @@ async def update_node(node: NodeUpdate) -> NodeResponse:
             updates.append(f"{field} = ${len(updates) + 1}")
             values.append(value)
 
-    row = await db.execute(
-        f"""
+    values.append(node.node_id)
+
+    if not updates:
+        logger.error("No fields provided for update")
+        raise HTTPException(
+            status_code=400, detail="No fields provided for update"
+        )
+
+    query = f"""
         UPDATE roadmap_node
         SET {', '.join(updates)}
-        WHERE node_id = $6
+        WHERE node_id = ${len(values)}
         RETURNING *
-    """,
-        *values,
-        node.node_id,
-    )
+    """
 
+    row = await db.fetchrow(query, *values)
+
+    if not row:
+        logger.error(f"Node {node.node_id} not found")
+        raise HTTPException(status_code=404, detail="Node not found")
+
+    logger.info(f"Updated node {node.node_id}")
     return NodeResponse(**row)
 
 
-async def delete_node(node_id: UUID) -> bool:
+async def delete_node(node_id: UUID):
     """Delete a node from the roadmap
 
     Args:
         node_id (UUID): Node ID
 
-    Returns:
-        bool: True if the node was deleted, False if no node was found with
-        that ID.
     """
     row = await db.execute(
         """
@@ -188,7 +220,11 @@ async def delete_node(node_id: UUID) -> bool:
         node_id,
     )
 
-    return row is not None
+    if row == "DELETE 0":
+        logger.error(f"Node {node_id} not found")
+        raise HTTPException(status_code=404, detail="Resource not found")
+
+    logger.info(f"Deleted node {node_id}")
 
 
 async def retrieve_link(link_id: UUID) -> LinkResponse:
@@ -209,6 +245,12 @@ async def retrieve_link(link_id: UUID) -> LinkResponse:
         link_id,
     )
 
+    if not row:
+        logger.error(f"Link {link_id} not found")
+        raise HTTPException(status_code=404, detail="Link not found")
+
+    logger.info(f"Retrieved link {link_id}")
+
     return LinkResponse(**row)
 
 
@@ -221,6 +263,8 @@ async def create_link(link: LinkCreate) -> LinkResponse:
     Returns:
         LinkResponse (LinkResponse): Created link
     """
+
+    logger.info(f"Creating new link for the roadmap {link.roadmap_id}")
     row = await db.fetchrow(
         """
         INSERT INTO roadmap_link (roadmap_id, from_node, to_node)
@@ -232,26 +276,29 @@ async def create_link(link: LinkCreate) -> LinkResponse:
         link.to_node,
     )
 
+    if not row:
+        logger.error("Failed to create a link")
+        raise HTTPException(status_code=500, detail="Failed to create a link")
+
     return LinkResponse(**row)
 
 
-async def delete_link(link_id: UUID) -> bool:
+async def delete_link(link_id: UUID):
     """Delete a link from the roadmap
 
     Args:
         link_id (UUID): Link ID
 
-    Returns:
-        bool: True if the link was deleted, False if no link was found with
-        that ID.
     """
     result = await db.execute(
         """
         DELETE FROM roadmap_link
         WHERE link_id = $1
-        RETURNING link_id
     """,
         link_id,
     )
+    logger.info(f"Deleted link {link_id}")
 
-    return result is not None
+    if result == "DELETE 0":
+        logger.error(f"Link {link_id} not found")
+        raise HTTPException(status_code=404, detail="Resource not found")
