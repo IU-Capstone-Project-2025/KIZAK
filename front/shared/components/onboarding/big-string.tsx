@@ -1,12 +1,13 @@
 "use client";
-import { OnboardingData } from "@/app/(auth)/onboarding/page";
+import { OnboardingData } from "@/shared/types/types";
 import { ArrowLeft } from "lucide-react";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 interface Props {
   title: string;
   placeholder: string;
   setData: (value: React.SetStateAction<OnboardingData>) => void;
+  fieldKey: keyof Pick<OnboardingData, "goals" | "background">;
   userData: OnboardingData;
   onNext: () => void;
   onBack: () => void;
@@ -21,10 +22,6 @@ export const BigString: React.FC<Props> = ({
   onBack,
 }) => {
   const [text, setText] = useState(userData.background || "");
-
-  useEffect(() => {
-    setText(userData.background || "");
-  }, [userData]);
 
   const isValid = text.trim() !== "";
 

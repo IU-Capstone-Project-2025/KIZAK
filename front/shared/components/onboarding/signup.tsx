@@ -1,7 +1,7 @@
 "use client";
-import { OnboardingData } from "@/app/(auth)/onboarding/page";
+import { OnboardingData } from "@/shared/types/types";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 interface Props {
   setData: (value: React.SetStateAction<OnboardingData>) => void;
@@ -10,21 +10,9 @@ interface Props {
   onBack: () => void;
 }
 
-export const SignUp: React.FC<Props> = ({
-  setData,
-  userData,
-  onNext,
-  onBack,
-}) => {
+export const SignUp: React.FC<Props> = ({ setData, userData, onNext }) => {
   const [login, setLogin] = useState(userData.login);
   const [password, setPassword] = useState(userData.password);
-
-  const [isValid, setValid] = useState<boolean>(false);
-
-  useEffect(() => {
-    setLogin(userData.login);
-    setPassword(userData.password);
-  }, [userData]);
 
   function handleAcceptData() {
     if (isValid) {
@@ -37,10 +25,7 @@ export const SignUp: React.FC<Props> = ({
     }
   }
 
-  useEffect(() => {
-    if (login.trim() !== "" && password.trim() !== "") setValid(true);
-    else setValid(false);
-  }, [login, password]);
+  const isValid = login.trim() !== "" && password.trim() !== "";
 
   return (
     <div className="w-full max-w-sm space-y-6 bg-white rounded ">
@@ -53,13 +38,13 @@ export const SignUp: React.FC<Props> = ({
           type="login"
           placeholder="Enter your login..."
           value={login}
-          className="h-[50px] placeholder: text-ui-muted w-100 px-4 py-2 border rounded-sm focus:outline-none focus:ring  outline:none border-ui-border"
+          className="h-[50px] placeholder:text-ui-muted w-100 px-4 py-2 border rounded-sm focus:outline-none focus:ring  outline:none border-ui-border"
           onChange={(e) => setLogin(e.target.value)}
         />
         <input
           type="password"
           placeholder="Enter your password..."
-          className="h-[50px] placeholder: text-ui-muted w-100 px-4 py-2 border rounded-sm focus:outline-none focus:ring  outline:none border-ui-border"
+          className="h-[50px] placeholder:text-ui-muted w-100 px-4 py-2 border rounded-sm focus:outline-none focus:ring  outline:none border-ui-border"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />

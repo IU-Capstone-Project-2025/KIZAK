@@ -1,7 +1,7 @@
 "use client";
-import { OnboardingData } from "@/app/(auth)/onboarding/page";
+import { OnboardingData } from "@/shared/types/types";
 import { ArrowLeft } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 interface Props {
   title: string;
@@ -25,14 +25,6 @@ export const SingleString: React.FC<Props> = ({
   const [text, setText] = useState<string>(
     typeof userData[fieldKey] === "string" ? (userData[fieldKey] as string) : ""
   );
-
-  useEffect(() => {
-    setText(
-      typeof userData[fieldKey] === "string"
-        ? (userData[fieldKey] as string)
-        : ""
-    );
-  }, [userData, fieldKey]);
 
   const isValid = typeof text === "string" && text.trim() !== "";
 

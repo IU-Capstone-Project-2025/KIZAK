@@ -1,7 +1,7 @@
 "use client";
-import { OnboardingData } from "@/app/(auth)/onboarding/page";
+import { OnboardingData } from "@/shared/types/types";
 import { ArrowLeft } from "lucide-react";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 interface TagsProps {
   tags: string[];
@@ -30,10 +30,6 @@ export const Tags: React.FC<TagsProps> = ({
   const [text, setText] = useState<string>("");
   const [filteredSkills, setFilteredSkills] = useState<string[]>([]);
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
-
-  useEffect(() => {
-    setSkills(userData[fieldKey] || []);
-  }, [userData, fieldKey]);
 
   const isValid = skills.length > 0;
 
