@@ -70,7 +70,7 @@ export const SignUp: React.FC<Props> = ({
           className={`h-[50px] w-100 py-2 hover:bg-brand-primary text-white font-semibold rounded-md transition-all duration-300 ${
             isValid
               ? "bg-brand-primary hover:bg-brand-primary/90"
-              : "bg-brand-primary/80 cursor-not-allowed"
+              : "bg-brand-primary/50 cursor-not-allowed"
           }`}
         >
           Continue
