@@ -277,7 +277,7 @@ async def remove_user(user_id: UUID) -> None:
 
 async def _update(table: str, fields: dict[str, Any], user_id: UUID) -> bool:
     if not fields:
-        logger.error(f"No fields provided for update")
+        logger.error("No fields provided for update")
         return False
 
     logger.info(f"Updating {user_id} user fields {', '.join(fields.keys())}")
@@ -294,7 +294,9 @@ async def _update(table: str, fields: dict[str, Any], user_id: UUID) -> bool:
 
     if not res:
         logger.error(
-            f"Failed to update user {user_id} fields {', '.join(fields.keys())}"
+            f"""
+            Failed to update user {user_id} fields {', '.join(fields.keys())}
+            """
         )
         raise HTTPException(
             status_code=500, detail=f"Failed to update fields in {table}"
@@ -311,7 +313,7 @@ async def _check_len(
     if skills_levels is None:
         skills_levels = []
     if len(skills) != len(skills_levels):
-        logger.error(f"Skills and skill levels count mismatch")
+        logger.error("Skills and skill levels count mismatch")
         raise HTTPException(
             status_code=400, detail="Skills and skill levels count mismatch"
         )

@@ -76,7 +76,7 @@ async def create_roadmap(roadmap: RoadmapCreate) -> RoadmapResponse:
     )
 
     if not row:
-        logger.error(f"Failed to create roadmap")
+        logger.error("Failed to create roadmap")
         raise HTTPException(status_code=500, detail="Failed to create roadmap")
 
     return RoadmapResponse(**row)

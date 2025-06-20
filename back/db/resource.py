@@ -64,7 +64,7 @@ async def create_resource(res: ResourceCreate) -> ResourceResponse:
     Raises:
         HTTPException: 500 if database operation fails
     """
-    logger.info(f"Creating new resource")
+    logger.info("Creating new resource")
     try:
         row = await db.fetchrow(
             """
@@ -104,7 +104,7 @@ async def create_resource(res: ResourceCreate) -> ResourceResponse:
         )
 
         if not row:
-            logger.error(f"Failed to create resource")
+            logger.error("Failed to create resource")
             raise HTTPException(
                 status_code=500, detail="Failed to create resource"
             )
@@ -157,7 +157,7 @@ async def update_resource(res: ResourceUpdate) -> ResourceResponse:
                 field_index += 1
 
         if not updates:
-            logger.error(f"No fields provided for update")
+            logger.error("No fields provided for update")
             raise HTTPException(
                 status_code=400, detail="No fields provided for update"
             )
