@@ -22,7 +22,6 @@ CREATE TABLE user_skills (
     skill_level VARCHAR(20) CHECK (
         skill_level IN ('Beginner', 'Intermediate', 'Advanced')
     ),
-    level_vector VECTOR(64),
     is_goal BOOLEAN,
     PRIMARY KEY (user_id, skill)
 );
