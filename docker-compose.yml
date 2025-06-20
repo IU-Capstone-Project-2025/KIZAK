@@ -13,6 +13,14 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
     restart: unless-stopped
+  frontend:
+    build:
+      context: ./front
+      dockerfile: Dockerfile
+    ports:
+      - "80:3000"
+    depends_on:
+      - backend
   db:
     image: ankane/pgvector:latest
     environment:
