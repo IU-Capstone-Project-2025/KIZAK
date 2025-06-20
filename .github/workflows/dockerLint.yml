@@ -16,6 +16,7 @@ jobs:
         dockerfile:
           - back/Dockerfile
           - ml/Dockerfile
+          - front/Dockerfile
 
     steps:
       - name: Checkout repository
