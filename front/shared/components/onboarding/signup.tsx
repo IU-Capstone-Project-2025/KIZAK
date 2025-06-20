@@ -10,12 +10,7 @@ interface Props {
   onBack: () => void;
 }
 
-export const SignUp: React.FC<Props> = ({
-  setData,
-  userData,
-  onNext,
-  onBack,
-}) => {
+export const SignUp: React.FC<Props> = ({ setData, userData, onNext }) => {
   const [login, setLogin] = useState(userData.login);
   const [password, setPassword] = useState(userData.password);
 
