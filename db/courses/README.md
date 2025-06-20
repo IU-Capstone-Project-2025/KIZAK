@@ -3,15 +3,19 @@
 
 ## Progress
 
-For now courses scraped from:
-[x] Stepik ~ 460
-    - Courses related to
-        * Python languahe
-        * Machine Learning
-        * Data Science
-        * Backend
-[ ] YouTube
-[ ] Coursera
+Courses scraped from:
+
+- [x] **Stepik** (~460 courses)
+  - Topics:
+    - Python Language
+    - Machine Learning
+    - Data Science
+    - Backend Development
+
+- [ ] **YouTube**
+
+- [ ] **Coursera**
+
 
 ## Data Format
 
