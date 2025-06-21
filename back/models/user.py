@@ -12,8 +12,8 @@ class UserBase(BaseModel):
     education: str
     goals: str
     goal_vacancy: str
-    skills: List[str]
-    skills_levels: List[str]
+    skills: List[str] = []
+    skills_levels: List[str] = []
     goal_skills: List[str]
 
 
