@@ -42,8 +42,8 @@ async def create_user(user: UserCreate) -> UserResponse:
             logger.info(f"Inserted {user.login} to users table")
 
             records = [
-                (user_response["user_id"], skill.skill, 
-                skill.skill_level, skill.is_goal)
+                (user_response["user_id"], skill.skill,
+                 skill.skill_level, skill.is_goal)
                 for skill in user.skills
             ]
 
@@ -81,7 +81,7 @@ async def retrieve_user(user_id: UUID) -> UserResponse:
                 FROM users
                 WHERE users.user_id = $1
             """,
-                user_id
+            user_id
             )
 
         skills_response = await db.fetch(
@@ -135,13 +135,18 @@ async def update_user(user: UserUpdate) -> UserResponse:
                 )
 
                 records = [
-                    (user.user_id, skill.skill, skill.skill_level, skill.is_goal)
+                    (user.user_id, skill.skill,
+                     skill.skill_level, skill.is_goal)
                     for skill in user.skills
                 ]
 
                 await db.executemany(
                     """
-                    INSERT INTO user_skills (user_id, skill, skill_level, is_goal)
+                    INSERT INTO user_skills (
+                        user_id,
+                        skill,
+                        skill_level,
+                        is_goal)
                     VALUES ($1, $2, $3, $4)
                     """,
                     records,

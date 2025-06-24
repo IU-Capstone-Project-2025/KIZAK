@@ -107,6 +107,7 @@ class ResourceResponse(ResourceBase):
         examples=[[[0.23, -0.45], [0.1, 0.9]]]
     )
 
+
 class ResourceCreate(ResourceBase):
     pass
 
