@@ -35,9 +35,11 @@ class ResourceBase(BaseModel):
     )
     content: str = Field(
         ...,
-        description="URL to course (in Case of Course resource type) or .md content (in case of Article resource type)",
-        examples=["https://stepik.org/course/98974/promo?search=7287873917",
-                  "# Super python course!\nOOP is cool we have:\n* Inheritance\n* Other stuff"]
+        description="""
+        URL to course (in Case of Course resource type)
+        or .md content (in case of Article resource type)
+        """,
+        examples=["https://stepik.org/course/98974/promo?search=7287873917"]
     )
     level: ResourceLevel = Field(
         ...,
@@ -94,12 +96,14 @@ class ResourceResponse(ResourceBase):
     )
     summary_vector: Optional[List[float]] = Field(
         None,
-        description="Vector representation of the resource summary, used for semantic search or ML models",
+        description="""Vector representation of the resource summary,
+        used for semantic search or ML models""",
         examples=[[0.12, 0.48, -0.22]]
     )
     skills_covered_vector: Optional[List[List[float]]] = Field(
         None,
-        description="List of vector representations for each skill in 'skills_covered'",
+        description="""List of vector representations
+        for each skill in 'skills_covered'""",
         examples=[[[0.23, -0.45], [0.1, 0.9]]]
     )
 
@@ -130,8 +134,9 @@ class ResourceUpdate(BaseModel):
     )
     content: Optional[str] = Field(
         None,
-        description="Updated URL (for courses) or markdown content (for articles)",
-        examples=["https://example.com/advanced-course", "# Updated content..."]
+        description="""Updated URL (for courses)
+        or markdown content (for articles)""",
+        examples=["https://example.com/advanced-course", "# Updated content"]
     )
     level: Optional[str] = Field(
         None,
@@ -170,7 +175,7 @@ class ResourceUpdate(BaseModel):
     )
     certificate_available: Optional[bool] = Field(
         None,
-        description="Updated certificate availability status after completion",
+        description="Updated certificate availability after completion",
         examples=[True]
     )
     skills_covered: Optional[List[str]] = Field(

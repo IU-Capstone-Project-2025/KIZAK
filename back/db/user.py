@@ -16,11 +16,11 @@ async def create_user(user: UserCreate) -> UserResponse:
             user_response = await db.fetchrow(
                 """
                     INSERT INTO users (
-                        login, 
-                        password, 
-                        background, 
-                        education, 
-                        goals, 
+                        login,
+                        password,
+                        background,
+                        education,
+                        goals,
                         goal_vacancy
                     )
                     VALUES ($1, $2, $3, $4, $5, $6)
@@ -42,7 +42,8 @@ async def create_user(user: UserCreate) -> UserResponse:
             logger.info(f"Inserted {user.login} to users table")
 
             records = [
-                (user_response["user_id"], skill.skill, skill.skill_level, skill.is_goal)
+                (user_response["user_id"], skill.skill, 
+                skill.skill_level, skill.is_goal)
                 for skill in user.skills
             ]
 
@@ -59,7 +60,7 @@ async def create_user(user: UserCreate) -> UserResponse:
             logger.info(f"Inserted {user.login}'s skills to user_skills table")
         logger.info(f"User {user.login} successfully created")
         return UserResponse(**user_response, skills=user.skills)
-    
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -68,9 +69,15 @@ async def retrieve_user(user_id: UUID) -> UserResponse:
     try:
         user_response = await db.fetchrow(
             """
-                SELECT users.user_id, users.login, users.password, users.creation_date,
-                users.background, users.education,
-                users.goals, users.goal_vacancy
+                SELECT
+                    users.user_id,
+                    users.login,
+                    users.password,
+                    users.creation_date,
+                    users.background,
+                    users.education,
+                    users.goals,
+                    users.goal_vacancy
                 FROM users
                 WHERE users.user_id = $1
             """,
