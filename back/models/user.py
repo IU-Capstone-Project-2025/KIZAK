@@ -2,7 +2,25 @@ from datetime import datetime
 from typing import List, Optional
 from uuid import UUID
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+
+
+class UserSkill(BaseModel):
+    skill: str = Field(
+        ...,
+        description="Skill name",
+        examples=["Python"]
+    )
+    skill_level: Optional[str] = Field(
+        ...,
+        description="Skill level. Must be 'Beginner', 'Intermediate' or 'Advanced'",
+        examples=['Beginner', 'Intermediate', 'Advanced']
+    )
+    is_goal: bool = Field(
+        ...,
+        description="Is current skill is a goal one?",
+        examples=[True]
+    )
 
 
 class UserBase(BaseModel):
@@ -12,9 +30,7 @@ class UserBase(BaseModel):
     education: str
     goals: str
     goal_vacancy: str
-    skills: List[str] = []
-    skills_levels: List[str] = []
-    goal_skills: List[str]
+    skills: List[UserSkill]
 
 
 class UserCreate(UserBase):
