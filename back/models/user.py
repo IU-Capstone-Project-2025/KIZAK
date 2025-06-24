@@ -50,6 +50,4 @@ class UserUpdate(BaseModel):
     education: Optional[str] = None
     goals: Optional[str] = None
     goal_vacancy: Optional[str] = None
-    skills: Optional[List[str]] = None
-    skills_levels: Optional[List[str]] = None
-    goal_skills: Optional[List[str]] = None
+    skills: Optional[List[UserSkill]] = None

@@ -99,8 +99,8 @@ async def update_user(user: UserUpdate) -> UserResponse:
 
             user_exists = await db.fetchrow(
                 """
-            SELECT 1 FROM users WHERE user_id = $1
-            """,
+                    SELECT 1 FROM users WHERE user_id = $1
+                """,
                 user.user_id,
             )
 
@@ -111,9 +111,7 @@ async def update_user(user: UserUpdate) -> UserResponse:
                     detail=f"Resource not found with id {user.user_id}",
                 )
 
-            if user.skills is not None and user.skills_levels is not None:
-                await _check_len(user.skills, user.skills_levels)
-
+            if user.skills is not None:
                 logger.info(f"Updating {user.user_id} skills")
                 await db.execute(
                     """
@@ -123,45 +121,18 @@ async def update_user(user: UserUpdate) -> UserResponse:
                 )
 
                 records = [
-                    (user.user_id, skill, level)
-                    for skill, level in zip(user.skills, user.skills_levels)
+                    (user.user_id, skill.skill, skill.skill_level, skill.is_goal)
+                    for skill in user.skills
                 ]
 
                 await db.executemany(
                     """
-                    INSERT INTO user_skills (user_id, skill, skill_level)
+                    INSERT INTO user_skills (user_id, skill, skill_level, is_goal)
                     VALUES ($1, $2, $3)
                     """,
                     records,
                 )
                 logger.info(f"Updated {user.user_id} new skills")
-
-                updated = True
-
-            elif user.skills is not None or user.skills_levels is not None:
-                await _check_len(user.skills, user.skills_levels)
-
-            if user.goal_skills is not None:
-                logger.info(f"Updating {user.user_id} goals")
-                await db.execute(
-                    """
-                DELETE FROM user_goals WHERE user_id = $1
-                """,
-                    user.user_id,
-                )
-
-                goal_records = [
-                    (user.user_id, goal) for goal in user.goal_skills
-                ]
-
-                await db.executemany(
-                    """
-                    INSERT INTO user_goals (user_id, goal)
-                    VALUES ($1, $2)
-                    """,
-                    goal_records,
-                )
-                logger.info(f"Updated {user.user_id} goals")
 
                 updated = True
 
@@ -171,25 +142,17 @@ async def update_user(user: UserUpdate) -> UserResponse:
                 users_update_fields["login"] = user.login
             if user.password is not None:
                 users_update_fields["password"] = user.password
+            if user.background is not None:
+                users_update_fields["background"] = user.background
+            if user.education is not None:
+                users_update_fields["education"] = user.education
+            if user.goals is not None:
+                users_update_fields["goals"] = user.goals
+            if user.goal_vacancy is not None:
+                users_update_fields["goal_vacancy"] = user.goal_vacancy
 
             if users_update_fields:
                 await _update("users", users_update_fields, user.user_id)
-                updated = True
-
-            profiles_update_fields = {}
-            if user.background is not None:
-                profiles_update_fields["background"] = user.background
-            if user.education is not None:
-                profiles_update_fields["education"] = user.education
-            if user.goals is not None:
-                profiles_update_fields["goals"] = user.goals
-            if user.goal_vacancy is not None:
-                profiles_update_fields["goal_vacancy"] = user.goal_vacancy
-
-            if profiles_update_fields:
-                await _update(
-                    "user_profiles", profiles_update_fields, user.user_id
-                )
                 updated = True
 
             if not updated:
@@ -201,9 +164,6 @@ async def update_user(user: UserUpdate) -> UserResponse:
                 )
 
             return await retrieve_user(user.user_id)
-
-    except HTTPException:
-        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -222,8 +182,6 @@ async def remove_user(user_id: UUID) -> None:
         if result == "DELETE 0":
             logger.error(f"Failed to remove user {user_id}")
             raise HTTPException(status_code=404, detail="Resource not found")
-    except HTTPException:
-        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -256,17 +214,3 @@ async def _update(table: str, fields: dict[str, Any], user_id: UUID) -> bool:
         )
     logger.info(f"Updated {user_id} user fields {', '.join(fields.keys())}")
     return True
-
-
-async def _check_len(
-    skills: Optional[List[str]], skills_levels: Optional[List[str]]
-):
-    if skills is None:
-        skills = []
-    if skills_levels is None:
-        skills_levels = []
-    if len(skills) != len(skills_levels):
-        logger.error("Skills and skill levels count mismatch")
-        raise HTTPException(
-            status_code=400, detail="Skills and skill levels count mismatch"
-        )
