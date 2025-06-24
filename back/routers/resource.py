@@ -1,6 +1,6 @@
 from uuid import UUID
 from utils.logger import logger
-from fastapi import status, Response
+from fastapi import status
 
 from db.resource import (
     create_resource,
@@ -15,7 +15,11 @@ router = APIRouter()
 
 
 @router.get(
-    "/resources/{res_id}", response_model=ResourceResponse, tags=["Resource"]
+    "/resource/{res_id}",
+    response_model=ResourceResponse,
+    tags=["Resource"],
+    description="Gets a resource from database based on UUID",
+    status_code=status.HTTP_200_OK
 )
 async def get_resource(res_id: UUID):
     logger.info(f"Retrieving resource {res_id}")
@@ -26,12 +30,12 @@ async def get_resource(res_id: UUID):
     "/resources/",
     response_model=ResourceResponse,
     tags=["Resource"],
-    status_code=status.HTTP_201_CREATED,
+    description="Creates new resource",
+    status_code=status.HTTP_201_CREATED
 )
-async def post_resource(res: ResourceCreate, response: Response):
+async def post_resource(res: ResourceCreate):
     resource = await create_resource(res)
     logger.info(f"Created resource {resource.resource_id}")
-    response.headers["Location"] = f"/resources/{resource.resource_id}"
     return resource
 
 
