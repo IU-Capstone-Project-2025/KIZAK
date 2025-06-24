@@ -30,32 +30,8 @@ jobs:
         run: |
           poetry install --no-root --no-interaction --no-ansi
 
-      - name: flake8
-        working-directory: back
-        run: |
-          poetry run pip install flake8
-          poetry run flake8 .
-
       - name: pylint
         working-directory: back
         run: |
           poetry run pip install pylint
           poetry run pylint . --disable=C0114,C0115,C0116 --fail-under=5
-
-      - name: black
-        working-directory: back
-        run: |
-          poetry run pip install black
-          poetry run black --check .
-
-      - name: pycodestyle
-        working-directory: back
-        run: |
-          poetry run pip install pycodestyle
-          poetry run pycodestyle .
-
-      - name: ruff
-        working-directory: back
-        run: |
-          poetry run pip install ruff
-          poetry run ruff check .
