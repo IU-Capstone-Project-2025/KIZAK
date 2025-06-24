@@ -15,37 +15,21 @@ async def create_user(user: UserCreate) -> UserResponse:
 
             user_response = await db.fetchrow(
                 """
-            INSERT INTO users (login, password, creation_date)
-            VALUES ($1, $2, $3)
+            INSERT INTO users (login, password, background, education, goals, goal_vacancy)
+            VALUES ($1, $2, $3, $4, $5, $6)
             RETURNING *
             """,
                 user.login,
                 user.password,
-                datetime.now(),
+                user.background,
+                user.education,
+                user.goals,
+                user.goal_vacancy
             )
 
             if not user_response:
                 raise HTTPException(
                     status_code=500, detail="Failed to create user"
-                )
-
-            user_profile_response = await db.fetchrow(
-                """
-            INSERT INTO user_profiles
-            (user_id, background, goals, goal_vacancy, education)
-            VALUES  ($1, $2, $3, $4, $5)
-            RETURNING background, goals, goal_vacancy, education
-            """,
-                user_response["user_id"],
-                user.background,
-                user.goals,
-                user.goal_vacancy,
-                user.education,
-            )
-
-            if not user_profile_response:
-                raise HTTPException(
-                    status_code=500, detail="Failed to create user profile"
                 )
 
             records = [
