@@ -13,7 +13,7 @@ class UserSkill(BaseModel):
     )
     skill_level: Optional[str] = Field(
         ...,
-        description="Skill level. Must be 'Beginner', 'Intermediate' or 'Advanced'",
+        description="Skill level",
         examples=['Beginner', 'Intermediate', 'Advanced']
     )
     is_goal: bool = Field(

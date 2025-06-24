@@ -1,4 +1,4 @@
-from typing import Any, List, Optional
+from typing import Any
 from uuid import UUID
 
 from utils.logger import logger
@@ -15,7 +15,14 @@ async def create_user(user: UserCreate) -> UserResponse:
             logger.info(f"Inserting {user.login} to users table")
             user_response = await db.fetchrow(
                 """
-                    INSERT INTO users (login, password, background, education, goals, goal_vacancy)
+                    INSERT INTO users (
+                        login, 
+                        password, 
+                        background, 
+                        education, 
+                        goals, 
+                        goal_vacancy
+                    )
                     VALUES ($1, $2, $3, $4, $5, $6)
                     RETURNING *
                 """,

@@ -15,8 +15,8 @@ router = APIRouter()
 
 
 @router.get(
-    "/resource/{res_id}", 
-    response_model=ResourceResponse, 
+    "/resource/{res_id}",
+    response_model=ResourceResponse,
     tags=["Resource"],
     description="Gets a resource from database based on UUID",
     status_code=status.HTTP_200_OK
