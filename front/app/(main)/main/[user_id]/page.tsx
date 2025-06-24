@@ -6,9 +6,7 @@ interface Props {
   }>;
 }
 
-export default async function Home({ params }: Props) {
-  const userInfo = await params;
-
+export default async function Home({}: Props) {
   return (
     <div className="h-full">
       <MainContent />

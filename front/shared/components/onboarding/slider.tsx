@@ -1,7 +1,7 @@
 "use client";
-import React, { useMemo, useEffect } from "react";
-import { OnboardingData, SkillLevels } from "@/app/(auth)/onboarding/page";
+import React, { useMemo } from "react";
 import { ArrowLeft } from "lucide-react";
+import { OnboardingData, SkillLevels } from "@/shared/types/types";
 
 interface SliderLevelProps {
   tag: string;
@@ -23,10 +23,6 @@ export const SliderLevel: React.FC<SliderLevelProps> = ({
   const [levelIndex, setLevelIndex] = React.useState(() =>
     levels.indexOf(skillLevel)
   );
-
-  useEffect(() => {
-    setLevelIndex(levels.indexOf(skillLevel));
-  }, [skillLevel]);
 
   const leftPercent = useMemo(
     () => (levelIndex / (levels.length - 1)) * 100,

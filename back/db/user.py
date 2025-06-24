@@ -1,6 +1,8 @@
 from datetime import datetime
-from typing import Any, List
+from typing import Any, List, Optional
 from uuid import UUID
+
+from utils.logger import logger
 
 from fastapi import HTTPException
 from models.user import UserCreate, UserResponse, UserUpdate
@@ -13,6 +15,7 @@ async def create_user(user: UserCreate) -> UserResponse:
         async with db.transaction():
             await _check_len(user.skills, user.skills_levels)
 
+            logger.info(f"Inserting {user.login} to users table")
             user_response = await db.fetchrow(
                 """
             INSERT INTO users (login, password, background, education, goals, goal_vacancy)
@@ -28,14 +31,44 @@ async def create_user(user: UserCreate) -> UserResponse:
             )
 
             if not user_response:
+                logger.error(f"Failed to insert {user.login} to users table")
                 raise HTTPException(
                     status_code=500, detail="Failed to create user"
                 )
+            logger.info(f"Inserted {user.login} to users table")
+
+            logger.info(f"Inserting {user.login} to users_profiles table")
+            user_profile_response = await db.fetchrow(
+                """
+            INSERT INTO user_profiles
+            (user_id, background, goals, goal_vacancy, education)
+            VALUES  ($1, $2, $3, $4, $5)
+            RETURNING background, goals, goal_vacancy, education
+            """,
+                user_response["user_id"],
+                user.background,
+                user.goals,
+                user.goal_vacancy,
+                user.education,
+            )
+
+            if not user_profile_response:
+                logger.error(
+                    f"Failed to insert {user.login} to users_profiles table"
+                )
+                raise HTTPException(
+                    status_code=500, detail="Failed to create user profile"
+                )
+            logger.info(f"Inserted {user.login} to users_profiles table")
 
             records = [
                 (user_response["user_id"], skill, level)
                 for skill, level in zip(user.skills, user.skills_levels)
             ]
+
+            logger.info(
+                f"Inserting {user.login}'s skills to user_skills table"
+            )
             await db.executemany(
                 """
                 INSERT INTO user_skills (user_id, skill, skill_level)
@@ -43,11 +76,13 @@ async def create_user(user: UserCreate) -> UserResponse:
                 """,
                 records,
             )
+            logger.info(f"Inserted {user.login}'s skills to user_skills table")
 
             goal_records = [
                 (user_response["user_id"], goal) for goal in user.goal_skills
             ]
 
+            logger.info(f"Inserting {user.login}'s goals to user_goals table")
             await db.executemany(
                 """
                 INSERT INTO user_goals (user_id, goal)
@@ -55,7 +90,8 @@ async def create_user(user: UserCreate) -> UserResponse:
                 """,
                 goal_records,
             )
-
+            logger.info(f"Inserted {user.login}'s goals to user_goals table")
+        logger.info(f"User {user.login} successfully created")
         return await retrieve_user(user_response["user_id"])
     except HTTPException:
         raise
@@ -69,22 +105,22 @@ async def retrieve_user(user_id: UUID) -> UserResponse:
             """
         SELECT users.user_id, users.login, users.password, users.creation_date,
          user_profiles.background, user_profiles.education,
-          user_profiles.goals, user_profiles.goal_vacancy,
-        (
-        SELECT array_agg(skill ORDER BY skill)
+         user_profiles.goals, user_profiles.goal_vacancy,
+        COALESCE(
+        (SELECT array_agg(skill ORDER BY skill)
         FROM user_skills
         WHERE user_skills.user_id = users.user_id
-        ) AS skills,
-        (
-        SELECT array_agg (skill_level ORDER BY skill)
+        ), ARRAY[]::text[]) AS skills,
+        COALESCE(
+        (SELECT array_agg (skill_level ORDER BY skill)
         FROM user_skills
         WHERE user_skills.user_id = users.user_id
-        ) AS skills_levels,
-        (
-        SELECT array_agg (goal)
+        ), ARRAY[]::text[]) AS skills_levels,
+        COALESCE(
+        (SELECT array_agg (goal)
         FROM user_goals
-        WHERE user_goals .user_id = users.user_id
-        ) AS goal_skills
+        WHERE user_goals.user_id = users.user_id
+        ), ARRAY[]::text[]) AS goal_skills
         FROM users
         JOIN user_profiles ON users.user_id = user_profiles.user_id
         WHERE users.user_id = $1
@@ -93,10 +129,11 @@ async def retrieve_user(user_id: UUID) -> UserResponse:
         )
 
         if not user_response:
+            logger.error(f"Failed to retrieve user {user_id}")
             raise HTTPException(
                 status_code=404, detail="Failed to retrieve user"
             )
-
+        logger.info(f"User {user_id} retrieved successfully")
         return UserResponse(**user_response)
 
     except HTTPException:
@@ -118,6 +155,7 @@ async def update_user(user: UserUpdate) -> UserResponse:
             )
 
             if not user_exists:
+                logger.error(f"User {user.user_id} does not exist")
                 raise HTTPException(
                     status_code=404,
                     detail=f"Resource not found with id {user.user_id}",
@@ -126,6 +164,7 @@ async def update_user(user: UserUpdate) -> UserResponse:
             if user.skills is not None and user.skills_levels is not None:
                 await _check_len(user.skills, user.skills_levels)
 
+                logger.info(f"Updating {user.user_id} skills")
                 await db.execute(
                     """
                 DELETE FROM user_skills WHERE user_id = $1
@@ -137,6 +176,7 @@ async def update_user(user: UserUpdate) -> UserResponse:
                     (user.user_id, skill, level)
                     for skill, level in zip(user.skills, user.skills_levels)
                 ]
+
                 await db.executemany(
                     """
                     INSERT INTO user_skills (user_id, skill, skill_level)
@@ -144,15 +184,15 @@ async def update_user(user: UserUpdate) -> UserResponse:
                     """,
                     records,
                 )
+                logger.info(f"Updated {user.user_id} new skills")
+
                 updated = True
 
             elif user.skills is not None or user.skills_levels is not None:
-                raise HTTPException(
-                    status_code=400,
-                    detail="Skills and skill levels count mismatch",
-                )
+                await _check_len(user.skills, user.skills_levels)
 
             if user.goal_skills is not None:
+                logger.info(f"Updating {user.user_id} goals")
                 await db.execute(
                     """
                 DELETE FROM user_goals WHERE user_id = $1
@@ -171,6 +211,8 @@ async def update_user(user: UserUpdate) -> UserResponse:
                     """,
                     goal_records,
                 )
+                logger.info(f"Updated {user.user_id} goals")
+
                 updated = True
 
             users_update_fields = {}
@@ -201,6 +243,9 @@ async def update_user(user: UserUpdate) -> UserResponse:
                 updated = True
 
             if not updated:
+                logger.error(
+                    f"User {user.user_id}: No fields provided for update"
+                )
                 raise HTTPException(
                     status_code=400, detail="No fields provided for update"
                 )
@@ -215,6 +260,7 @@ async def update_user(user: UserUpdate) -> UserResponse:
 
 async def remove_user(user_id: UUID) -> None:
     try:
+        logger.info(f"Removing user {user_id}")
         result = await db.execute(
             """
             DELETE FROM users
@@ -224,6 +270,7 @@ async def remove_user(user_id: UUID) -> None:
         )
 
         if result == "DELETE 0":
+            logger.error(f"Failed to remove user {user_id}")
             raise HTTPException(status_code=404, detail="Resource not found")
     except HTTPException:
         raise
@@ -233,8 +280,10 @@ async def remove_user(user_id: UUID) -> None:
 
 async def _update(table: str, fields: dict[str, Any], user_id: UUID) -> bool:
     if not fields:
+        logger.error("No fields provided for update")
         return False
 
+    logger.info(f"Updating {user_id} user fields {', '.join(fields.keys())}")
     values = list(fields.values()) + [user_id]
 
     query = f"""
@@ -247,14 +296,27 @@ async def _update(table: str, fields: dict[str, Any], user_id: UUID) -> bool:
     res = await db.fetchrow(query, *values)
 
     if not res:
+        logger.error(
+            f"""
+            Failed to update user {user_id} fields {', '.join(fields.keys())}
+            """
+        )
         raise HTTPException(
             status_code=500, detail=f"Failed to update fields in {table}"
         )
+    logger.info(f"Updated {user_id} user fields {', '.join(fields.keys())}")
     return True
 
 
-async def _check_len(skills: List[str], skills_levels: List[str]):
+async def _check_len(
+    skills: Optional[List[str]], skills_levels: Optional[List[str]]
+):
+    if skills is None:
+        skills = []
+    if skills_levels is None:
+        skills_levels = []
     if len(skills) != len(skills_levels):
+        logger.error("Skills and skill levels count mismatch")
         raise HTTPException(
             status_code=400, detail="Skills and skill levels count mismatch"
         )

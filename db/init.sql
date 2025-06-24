@@ -5,7 +5,11 @@ CREATE TABLE users (
     user_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     login VARCHAR(50) UNIQUE NOT NULL,
     password VARCHAR(100) NOT NULL,
-    creation_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    creation_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+-- User profile information
+CREATE TABLE user_profiles (
+    user_id UUID PRIMARY KEY REFERENCES users(user_id) ON DELETE CASCADE,
     background TEXT,
     education TEXT,
     background_vector VECTOR(256),
@@ -22,8 +26,15 @@ CREATE TABLE user_skills (
     skill_level VARCHAR(20) CHECK (
         skill_level IN ('Beginner', 'Intermediate', 'Advanced')
     ),
-    is_goal BOOLEAN,
+    level_vector VECTOR(64),
     PRIMARY KEY (user_id, skill)
+);
+-- User goals
+CREATE TABLE user_goals (
+    user_id UUID REFERENCES users(user_id) ON DELETE CASCADE,
+    goal VARCHAR(100) NOT NULL,
+    goal_vector VECTOR(256),
+    PRIMARY KEY (user_id, goal)
 );
 -- Learning resources
 CREATE TABLE resource (

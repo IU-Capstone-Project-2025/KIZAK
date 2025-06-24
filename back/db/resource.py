@@ -1,5 +1,6 @@
 from uuid import UUID
 
+from utils.logger import logger
 from db.db_connector import db
 from fastapi import HTTPException
 from models.resource import ResourceCreate, ResourceResponse, ResourceUpdate
@@ -43,7 +44,10 @@ async def retrieve_resource(res_id: UUID) -> ResourceResponse:
     )
 
     if not row:
+        logger.error(f"Resource {res_id} not found")
         raise HTTPException(status_code=404, detail="Resource not found")
+
+    logger.info(f"Retrieved resource {res_id}")
 
     return ResourceResponse(**row)
 
@@ -60,6 +64,7 @@ async def create_resource(res: ResourceCreate) -> ResourceResponse:
     Raises:
         HTTPException: 500 if database operation fails
     """
+    logger.info("Creating new resource")
     try:
         row = await db.fetchrow(
             """
@@ -99,10 +104,11 @@ async def create_resource(res: ResourceCreate) -> ResourceResponse:
         )
 
         if not row:
+            logger.error("Failed to create resource")
             raise HTTPException(
                 status_code=500, detail="Failed to create resource"
             )
-        print(row)
+        logger.debug(row)
         return ResourceResponse(**row)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -151,6 +157,7 @@ async def update_resource(res: ResourceUpdate) -> ResourceResponse:
                 field_index += 1
 
         if not updates:
+            logger.error("No fields provided for update")
             raise HTTPException(
                 status_code=400, detail="No fields provided for update"
             )
@@ -166,11 +173,12 @@ async def update_resource(res: ResourceUpdate) -> ResourceResponse:
         row = await db.fetchrow(query, *values)
 
         if not row:
+            logger.error(f"Resource {res.resource_id} not found")
             raise HTTPException(
                 status_code=404,
                 detail=f"Resource not found with id {res.resource_id}",
             )
-
+        logger.info(f"Updated resource {res.resource_id}")
         return ResourceResponse(**row)
     except HTTPException:
         raise
@@ -198,7 +206,10 @@ async def remove_resource(res_id: UUID) -> None:
         )
 
         if result == "DELETE 0":
+            logger.error(f"Resource {res_id} not found")
             raise HTTPException(status_code=404, detail="Resource not found")
+
+        logger.info(f"Deleted resource {res_id}")
     except HTTPException:
         raise
     except Exception as e:
