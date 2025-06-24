@@ -4,7 +4,7 @@ from uuid import UUID
 from utils.logger import logger
 
 from fastapi import HTTPException
-from models.user import UserCreate, UserResponse, UserUpdate
+from models.user import UserCreate, UserResponse, UserUpdate, UserSkill
 
 from .db_connector import db
 
@@ -63,27 +63,23 @@ async def retrieve_user(user_id: UUID) -> UserResponse:
             """
                 SELECT users.user_id, users.login, users.password, users.creation_date,
                 users.background, users.education,
-                users.goals, users.goal_vacancy,
-                COALESCE(
-                (SELECT array_agg(skill ORDER BY skill)
-                FROM user_skills
-                WHERE user_skills.user_id = users.user_id
-                ), ARRAY[]::text[]) AS skills,
-                COALESCE(
-                (SELECT array_agg (skill_level ORDER BY skill)
-                FROM user_skills
-                WHERE user_skills.user_id = users.user_id
-                ), ARRAY[]::text[]) AS skills_levels,
-                COALESCE(
-                (SELECT array_agg (skill)
-                FROM user_skills
-                WHERE user_skills.user_id = users.user_id
-                ), ARRAY[]::text[]) AS goal_skills
+                users.goals, users.goal_vacancy
                 FROM users
                 WHERE users.user_id = $1
             """,
-                user_id,
+                user_id
             )
+
+        skills_response = await db.fetch(
+            """
+                SELECT skill, skill_level, is_goal
+                FROM user_skills
+                WHERE user_id = $1
+            """,
+            user_id
+        )
+
+        skills = [UserSkill(**s) for s in skills_response]
 
         if not user_response:
             logger.error(f"Failed to retrieve user {user_id}")
@@ -91,10 +87,7 @@ async def retrieve_user(user_id: UUID) -> UserResponse:
                 status_code=404, detail="Failed to retrieve user"
             )
         logger.info(f"User {user_id} retrieved successfully")
-        return UserResponse(**user_response)
-
-    except HTTPException:
-        raise
+        return UserResponse(**user_response, skills=skills)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
