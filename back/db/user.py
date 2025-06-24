@@ -128,7 +128,7 @@ async def update_user(user: UserUpdate) -> UserResponse:
                 await db.executemany(
                     """
                     INSERT INTO user_skills (user_id, skill, skill_level, is_goal)
-                    VALUES ($1, $2, $3)
+                    VALUES ($1, $2, $3, $4)
                     """,
                     records,
                 )
