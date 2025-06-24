@@ -39,7 +39,12 @@ async def post_resource(res: ResourceCreate):
     return resource
 
 
-@router.put("/resources/", response_model=ResourceResponse, tags=["Resource"])
+@router.put(
+    "/resources/",
+    response_model=ResourceResponse,
+    tags=["Resource"],
+    description="Update resource"
+)
 async def put_resource(res: ResourceUpdate):
     logger.info(f"Updating resource {res.resource_id}")
     return await update_resource(res)
@@ -49,6 +54,7 @@ async def put_resource(res: ResourceUpdate):
     "/resources/{res_id}",
     tags=["Resource"],
     status_code=status.HTTP_204_NO_CONTENT,
+    description="Delete resource"
 )
 async def delete_resource(res_id: UUID):
     logger.info(f"Deleting resource {res_id}")

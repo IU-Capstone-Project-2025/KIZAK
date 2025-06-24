@@ -31,7 +31,11 @@ router = APIRouter()
 
 # Roadmap
 @router.get(
-    "/roadmap/{roadmap_id}", response_model=RoadmapInfo, tags=["Roadmap"]
+    "/roadmap/{roadmap_id}",
+    response_model=RoadmapInfo,
+    tags=["Roadmap"],
+    description="Get roadmap"
+
 )
 async def get_roadmap(roadmap_id: UUID) -> RoadmapInfo:
     logger.info(f"Getting roadmap {roadmap_id}")
@@ -42,7 +46,8 @@ async def get_roadmap(roadmap_id: UUID) -> RoadmapInfo:
     "/roadmap/",
     tags=["Roadmap"],
     response_model=RoadmapResponse,
-    status_code=status.HTTP_201_CREATED,
+    description="Create new roadmap",
+    status_code=status.HTTP_201_CREATED
 )
 async def post_roadmap(
     new_roadmap: RoadmapCreate, response: Response
@@ -57,6 +62,8 @@ async def post_roadmap(
     "/roadmap/{roadmap_id}",
     tags=["Roadmap"],
     status_code=status.HTTP_204_NO_CONTENT,
+    description="Delete roadmap"
+
 )
 async def delete_roadmap(roadmap_id: UUID) -> None:
     logger.info(f"Deleting roadmap {roadmap_id}")
@@ -64,7 +71,13 @@ async def delete_roadmap(roadmap_id: UUID) -> None:
 
 
 # Nodes
-@router.get("/node/{node_id}", response_model=NodeResponse, tags=["Node"])
+@router.get(
+    "/node/{node_id}",
+    response_model=NodeResponse,
+    tags=["Node"],
+    description="Get node"
+
+)
 async def get_node(node_id: UUID) -> NodeResponse:
     logger.info(f"Getting node {node_id}")
     return await retrieve_node(node_id)
@@ -75,6 +88,8 @@ async def get_node(node_id: UUID) -> NodeResponse:
     response_model=NodeResponse,
     status_code=status.HTTP_201_CREATED,
     tags=["Node"],
+    description="Create node"
+
 )
 async def post_node(new_node: NodeCreate, response: Response) -> NodeResponse:
     node = await create_node(new_node)
@@ -83,14 +98,24 @@ async def post_node(new_node: NodeCreate, response: Response) -> NodeResponse:
     return node
 
 
-@router.put("/node/", response_model=NodeResponse, tags=["Node"])
+@router.put(
+    "/node/",
+    response_model=NodeResponse,
+    tags=["Node"],
+    description="Update node"
+
+)
 async def put_node(node: NodeUpdate) -> NodeResponse:
     logger.info(f"Updating node {node.node_id}")
     return await update_node(node)
 
 
 @router.delete(
-    "/node/{node_id}", tags=["Node"], status_code=status.HTTP_204_NO_CONTENT
+    "/node/{node_id}",
+    tags=["Node"],
+    status_code=status.HTTP_204_NO_CONTENT,
+    description="Delete node"
+
 )
 async def remove_node(node_id: UUID) -> None:
     logger.info(f"Removing node {node_id}")
@@ -98,7 +123,13 @@ async def remove_node(node_id: UUID) -> None:
 
 
 # Links
-@router.get("/link/{link_id}", response_model=LinkResponse, tags=["Link"])
+@router.get(
+    "/link/{link_id}",
+    response_model=LinkResponse,
+    tags=["Link"],
+    description="Get link"
+
+)
 async def get_link(link_id: UUID) -> LinkResponse:
     logger.info(f"Getting link {link_id}")
     return await retrieve_link(link_id)
@@ -109,6 +140,8 @@ async def get_link(link_id: UUID) -> LinkResponse:
     response_model=LinkResponse,
     status_code=status.HTTP_201_CREATED,
     tags=["Link"],
+    description="Create node"
+
 )
 async def post_link(new_link: LinkCreate, response: Response) -> LinkResponse:
     link = await create_link(new_link)
@@ -118,7 +151,11 @@ async def post_link(new_link: LinkCreate, response: Response) -> LinkResponse:
 
 
 @router.delete(
-    "/link/{link_id}", tags=["Link"], status_code=status.HTTP_204_NO_CONTENT
+    "/link/{link_id}",
+    tags=["Link"],
+    status_code=status.HTTP_204_NO_CONTENT,
+    description="Delete link"
+
 )
 async def remove_link(link_id: UUID) -> None:
     logger.info(f"Removing link {link_id}")
