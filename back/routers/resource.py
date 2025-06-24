@@ -1,6 +1,6 @@
 from uuid import UUID
 from utils.logger import logger
-from fastapi import status, Response
+from fastapi import status
 
 from db.resource import (
     create_resource,

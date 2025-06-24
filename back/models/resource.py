@@ -76,7 +76,7 @@ class ResourceBase(BaseModel):
     )
     certificate_available: bool = Field(
         ...,
-        description="True if resource provide certificate ofter completion",
+        description="True if resource provide certificate after completion",
         examples=[True, False]
     )
     skills_covered: List[str] = Field(
