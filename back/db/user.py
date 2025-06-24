@@ -52,7 +52,12 @@ async def create_user(user: UserCreate) -> UserResponse:
             )
             await db.executemany(
                 """
-                INSERT INTO user_skills (user_id, skill, skill_level, is_goal)
+                INSERT INTO user_skills (
+                    user_id,
+                    skill,
+                    skill_level,
+                    is_goal
+                )
                 VALUES ($1, $2, $3, $4)
                 """,
                 records,
