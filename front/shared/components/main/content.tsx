@@ -9,13 +9,14 @@ import { TransitionLink } from "../transition/transition-link";
 
 interface Props {
   className?: string;
+  userId: string;
 }
 
-export const MainContent: React.FC<Props> = ({ className = "" }) => {
+export const MainContent: React.FC<Props> = ({ className = "", userId }) => {
   return (
     <div className={`h-full flex flex-col gap-y-4 ${className}`}>
       <MainTop />
-      <TransitionLink href="/roadmap/123">
+      <TransitionLink href={`/roadmap/${userId}`}>
         <MainRoadmap />
       </TransitionLink>
       <div className="h-full flex gap-x-4" hidden>

@@ -1,7 +1,7 @@
 "use client";
-import { RoadmapNode } from "@/components/node";
-import { WORLD_SIZE } from "@/components/roadmap";
 import { useEffect, useRef, useState } from "react";
+import { RoadmapNode } from "../components/roadmap/node";
+import { WORLD_SIZE } from "../components/roadmap/roadmap-new";
 
 type RawNode = {
   node_id: string;

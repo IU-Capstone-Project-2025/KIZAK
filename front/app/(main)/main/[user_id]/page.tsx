@@ -1,15 +1,15 @@
 import { MainContent } from "@/shared/components/main/content";
 
 interface Props {
-  params: Promise<{
+  params: {
     user_id: string;
-  }>;
+  };
 }
 
-export default async function Home({}: Props) {
+export default function Home({ params }: Props) {
   return (
     <div className="h-full">
-      <MainContent />
+      <MainContent userId={params.user_id} />
     </div>
   );
 }

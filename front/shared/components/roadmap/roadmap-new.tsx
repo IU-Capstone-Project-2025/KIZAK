@@ -1,8 +1,8 @@
 "use client";
 
-import { useRoadmapLayout } from "@/hooks/useRoadmapLayout";
 import { useEffect, useRef, useState } from "react";
 import { RoadmapNode } from "./node";
+import { useRoadmapLayout } from "../../hooks/useRoadmapLayout";
 export const rawNodes = [
   {
     node_id: "node-1",
@@ -48,7 +48,11 @@ const SPACING = 30;
 const dotRadius = 1;
 const dotColor = "#ccc";
 
-export const Roadmap = () => {
+interface Props {
+  userId: string;
+}
+
+export const RoadmapNew: React.FC<Props> = ({ userId }) => {
   const [offset, setOffset] = useState<{ x: number; y: number }>({
     x: 0,
     y: 0,
@@ -234,7 +238,7 @@ export const Roadmap = () => {
       onMouseUp={handleOnMouseUp}
       onMouseMove={(e) => handleOnMouseMove(e)}
       onMouseLeave={handleOnMouseUp}
-      className="relative w-full h-full overflow-hidden border border-gray-300 rounded-xl"
+      className="relative w-full h-full overflow-hidden rounded-b-xl"
     >
       <div
         className="absolute origin-center"
