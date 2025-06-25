@@ -1,11 +1,33 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { OnboardingData } from "@/shared/types/types";
 import { ProgressDots } from "@/shared/components/onboarding";
 import { getScreens } from "@/shared/utils/getScreens";
 import { usePageTransition } from "@/shared/components/transition/transition-provider";
+
+export type SkillLevels = "Beginner" | "Intermediate" | "Advanced";
+
+export interface ChosenSkill {
+  skill: string;
+  skillLevel: SkillLevels;
+}
+
+export interface UserSkill {
+  skill: string;
+  level: SkillLevels;
+}
+
+export interface OnboardingData {
+  login: string;
+  password: string;
+  background: string;
+  education: string;
+  skills: string[];
+  skills_level: UserSkill[];
+  goal_skills: string[];
+  goals: string[];
+  goal_vacancy: string;
+}
 
 export default function OnBoarding() {
   const [userData, setUserData] = useState<OnboardingData>({
@@ -25,32 +47,6 @@ export default function OnBoarding() {
   const [animating, setAnimating] = useState<boolean>(false);
   const { handleClick } = usePageTransition();
 
-  async function submitOnboardingData(userData: OnboardingData) {
-    try {
-      const response = await fetch("http://localhost:8000/api/users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || "Registration failed");
-      }
-
-      return await response.json();
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        alert("Ошибка регистрации: " + error.message);
-      } else {
-        alert("Ошибка регистрации: Unknown error");
-      }
-      throw error;
-    }
-  }
-
   const goToNextStep = async () => {
     if (step < screens.length - 1) {
       setAnimating(true);
@@ -61,10 +57,52 @@ export default function OnBoarding() {
       }, 300);
     } else {
       try {
-        await submitOnboardingData(userData);
-        handleClick("/main/123");
-      } catch {
-        
+        const skills = userData.skills;
+        const skills_levels = Array.isArray(userData.skills_level)
+          ? userData.skills_level.map(s => s.level)
+          : Object.values(userData.skills_level);
+        if (skills.length !== skills_levels.length) {
+          
+          return;
+        }
+        const payload = {
+          login: userData.login,
+          password: userData.password,
+          background: userData.background,
+          education: userData.education,
+          goals: Array.isArray(userData.goals) ? userData.goals.join(", ") : userData.goals,
+          goal_vacancy: userData.goal_vacancy,
+          skills,
+          skills_levels,
+          goal_skills: userData.goal_skills,
+        };
+
+        const response = await fetch("http://localhost:8000/users/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+          let errorText = "Ошибка при создании пользователя";
+          try {
+            const errorData = await response.json();
+            errorText = errorData.detail
+              ? JSON.stringify(errorData.detail)
+              : JSON.stringify(errorData);
+          } catch {
+            errorText = await response.text();
+          }
+          throw new Error(errorText);
+        }
+
+        const data = await response.json();
+        const userId = data.user_id;
+        handleClick(`/main/${userId}`);
+      } catch (error) {
+        console.error("Ошибка при завершении онбординга:", error);
       }
     }
   };
@@ -91,12 +129,11 @@ export default function OnBoarding() {
     <div className="flex items-center justify-center min-h-screen h-full w-142 bg-white">
       <div className="w-full flex-center flex-col space-y-6 bg-white h-200 rounded overflow-hidden">
         <div
-          className={`flex justify-center mb-4 transition-all duration-300 transform
-            ${
-              animating
-                ? "opacity-0 translate-y-[10px]"
-                : "opacity-100 translate-y-0"
-            }`}
+          className={`flex justify-center mb-4 transition-all duration-300 transform ${
+            animating
+              ? "opacity-0 translate-y-[10px]"
+              : "opacity-100 translate-y-0"
+          }`}
         >
           <div className="w-18 h-18 rounded-full flex items-center justify-center">
             <div className="w-18 h-18 rounded-full relative overflow-hidden">
@@ -109,7 +146,6 @@ export default function OnBoarding() {
             </div>
           </div>
         </div>
-
         <section className={animating ? "fade-slide-out" : "fade-slide-in"}>
           {screens[displayedStep]}
         </section>
