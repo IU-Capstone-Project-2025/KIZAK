@@ -1,4 +1,4 @@
-import { MainContent } from "@/shared/components/main/main-content";
+import { MainContent } from "@/shared/components/main/content";
 
 interface Props {
   params: Promise<{

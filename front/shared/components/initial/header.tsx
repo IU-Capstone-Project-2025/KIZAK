@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { TransitionLink } from "../transition/transition-link";
 
 export const Header = () => {
   return (
@@ -10,9 +11,9 @@ export const Header = () => {
       </div>
       <p className="uppercase text-3xl font-bold w-80 flex-center">kizak</p>
       <div className="flex items-center justify-end gap-x-5 text-lg w-80">
-        <Link className="font-light" href={"/onboarding"}>
+        <TransitionLink className="font-light" href={"/onboarding"}>
           Sign up
-        </Link>
+        </TransitionLink>
         <Link
           className="bg-brand-primary/80 py-2 px-3 rounded-md transition-all duration-300 hover:bg-brand-primary"
           href={"/onboarding"}

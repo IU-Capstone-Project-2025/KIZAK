@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { OnboardingData } from "@/shared/types/types";
 import { ProgressDots } from "@/shared/components/onboarding";
 import { getScreens } from "@/shared/utils/getScreens";
+import { usePageTransition } from "@/shared/components/transition/transition-provider";
 
 export default function OnBoarding() {
   const [userData, setUserData] = useState<OnboardingData>({
@@ -22,7 +23,7 @@ export default function OnBoarding() {
   const [step, setStep] = useState<number>(0);
   const [displayedStep, setDisplayedStep] = useState<number>(0);
   const [animating, setAnimating] = useState<boolean>(false);
-  const router = useRouter();
+  const { handleClick } = usePageTransition();
 
   const goToNextStep = () => {
     if (step < screens.length - 1) {
@@ -33,7 +34,7 @@ export default function OnBoarding() {
         setAnimating(false);
       }, 300);
     } else {
-      router.push("/main/123");
+      handleClick("/main/123");
     }
   };
 
@@ -62,7 +63,7 @@ export default function OnBoarding() {
           className={`flex justify-center mb-4 transition-all duration-300 transform
             ${
               animating
-                ? "opacity-0 translate-y-4"
+                ? "opacity-0 translate-y-[10px]"
                 : "opacity-100 translate-y-0"
             }`}
         >
@@ -78,18 +79,9 @@ export default function OnBoarding() {
           </div>
         </div>
 
-        <div
-          className={`
-            transition-all duration-300 transform
-            ${
-              animating
-                ? "opacity-0 translate-y-4"
-                : "opacity-100 translate-y-0"
-            }
-          `}
-        >
+        <section className={animating ? "fade-slide-out" : "fade-slide-in"}>
           {screens[displayedStep]}
-        </div>
+        </section>
 
         <ProgressDots totalSteps={screens.length} currentStep={step} />
       </div>

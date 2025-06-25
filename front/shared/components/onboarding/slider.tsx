@@ -42,7 +42,7 @@ export const SliderLevel: React.FC<SliderLevelProps> = ({
   };
 
   return (
-    <div className="w-100 max-w-md mx-auto space-y-6 bg-white rounded p-6">
+    <article className="w-100 max-w-md mx-auto space-y-6 bg-white rounded p-6">
       <h2 className="text-center text-lg font-medium text-ui-dark">
         What is your{" "}
         <span className="inline-flex items-center border border-ui-border rounded px-3 py-1 shadow-sm text-sm font-mono">
@@ -104,6 +104,6 @@ export const SliderLevel: React.FC<SliderLevelProps> = ({
           Continue
         </button>
       </div>
-    </div>
+    </article>
   );
 };
