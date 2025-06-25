@@ -16,7 +16,7 @@ export const MainContent: React.FC<Props> = ({ className = "", userId }) => {
   return (
     <div className={`h-full flex flex-col gap-y-4 ${className}`}>
       <MainTop />
-      <TransitionLink href={`/roadmap/${userId}`}>
+      <TransitionLink delay={2000} href={`/roadmap/${userId}`}>
         <MainRoadmap />
       </TransitionLink>
       <div className="h-full flex gap-x-4" hidden>

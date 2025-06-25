@@ -6,6 +6,7 @@ interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   isActive?: boolean;
   isUser?: boolean;
   href?: string;
+  delay?: number;
 }
 
 const baseClasses =
@@ -22,11 +23,13 @@ export const SidebarButton: React.FC<PropsWithChildren<Props>> = ({
   isUser = false,
   children,
   href,
+  delay = 0,
   ...rest
 }) => {
   if (href) {
     return (
       <TransitionLink
+        delay={delay}
         {...rest}
         href={href}
         className={`${baseClasses} ${

@@ -6,35 +6,36 @@ import { useRoadmapLayout } from "../../hooks/useRoadmapLayout";
 export const rawNodes = [
   {
     node_id: "node-1",
-    title: "Введение",
-    summary: "Основы и цели обучения",
+    title: "Introduction",
+    summary: "Basics and learning goals",
     progress: 100,
   },
   {
     node_id: "node-2",
     title: "HTML",
-    summary: "Разметка страниц и структура контента",
+    summary: "Page markup and content structure",
     progress: 100,
   },
   {
     node_id: "node-3",
     title: "CSS",
-    summary: "Стилизация и позиционирование",
+    summary: "Styling and positioning",
     progress: 80,
   },
   {
     node_id: "node-4",
     title: "JavaScript",
-    summary: "Основы логики и взаимодействия",
+    summary: "Fundamentals of logic and interaction",
     progress: 30,
   },
   {
     node_id: "node-5",
     title: "React",
-    summary: "Современный подход к UI",
+    summary: "Modern approach to UI",
     progress: 0,
   },
 ];
+
 export const rawLinks = [
   { from_node: "node-1", to_node: "node-2" },
   { from_node: "node-2", to_node: "node-3" },
@@ -269,6 +270,7 @@ export const RoadmapNew: React.FC<Props> = ({ userId }) => {
               }}
             >
               <RoadmapNode
+                onClick={() => animateTo(WORLD_SIZE / 2, WORLD_SIZE / 2)}
                 title={node.title}
                 description={node.summary}
                 progress={

@@ -1,12 +1,14 @@
 import { RoadmapNew } from "@/shared/components/roadmap/roadmap-new";
 
 interface Props {
-  params: {
+  params: Promise<{
     user_id: string;
-  };
+  }>;
 }
 
-export default function RoadmapPage({ params }: Props) {
+export default async function RoadmapPage({ params }: Props) {
+  const { user_id } = await params;
+
   return (
     <section
       className={`flex flex-col w-full h-full rounded-xl group border shadow-sm border-ui-border`}
@@ -15,7 +17,7 @@ export default function RoadmapPage({ params }: Props) {
         Roadmap
       </h2>
       <div className="flex-1 w-full relative">
-        <RoadmapNew userId={params.user_id} />
+        <RoadmapNew userId={user_id} />
       </div>
     </section>
   );

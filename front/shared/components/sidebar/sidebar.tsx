@@ -32,7 +32,7 @@ export const Sidebar: React.FC<Props> = ({ className = "" }) => {
           <SidebarButton href="/main/123">
             <MessageCircle width={32} height={32} strokeWidth={1.8} />
           </SidebarButton>
-          <SidebarButton href="/roadmap/123">
+          <SidebarButton href="/roadmap/123" delay={2000}>
             <Map width={32} height={30} strokeWidth={1.8} />
           </SidebarButton>
         </div>

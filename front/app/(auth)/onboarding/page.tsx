@@ -57,24 +57,31 @@ export default function OnBoarding() {
       }, 300);
     } else {
       try {
-        const skills = userData.skills;
-        const skills_levels = Array.isArray(userData.skills_level)
-          ? userData.skills_level.map(s => s.level)
-          : Object.values(userData.skills_level);
-        if (skills.length !== skills_levels.length) {
-          
+        if (!userData.background.trim()) {
+          alert("Пожалуйста, укажите background");
           return;
         }
+
+        const allSkills: {
+          skill: string;
+          skill_level: SkillLevels;
+          is_goal: boolean;
+        }[] = userData.skills_level.map((skillObj) => ({
+          skill: skillObj.skill,
+          skill_level: skillObj.level,
+          is_goal: userData.goal_skills.includes(skillObj.skill),
+        }));
+
         const payload = {
           login: userData.login,
           password: userData.password,
           background: userData.background,
           education: userData.education,
-          goals: Array.isArray(userData.goals) ? userData.goals.join(", ") : userData.goals,
+          goals: Array.isArray(userData.goals)
+            ? userData.goals.join(", ")
+            : userData.goals,
           goal_vacancy: userData.goal_vacancy,
-          skills,
-          skills_levels,
-          goal_skills: userData.goal_skills,
+          skills: allSkills,
         };
 
         const response = await fetch("http://localhost:8000/users/", {
@@ -100,7 +107,7 @@ export default function OnBoarding() {
 
         const data = await response.json();
         const userId = data.user_id;
-        handleClick(`/main/${userId}`);
+        handleClick(`/main/${userId}`, 0);
       } catch (error) {
         console.error("Ошибка при завершении онбординга:", error);
       }

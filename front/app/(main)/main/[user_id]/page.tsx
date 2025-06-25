@@ -1,15 +1,14 @@
 import { MainContent } from "@/shared/components/main/content";
 
-interface Props {
-  params: {
-    user_id: string;
-  };
+interface PageProps {
+  params: Promise<{ user_id: string }>;
 }
 
-export default function Home({ params }: Props) {
+export default async function Home({ params }: PageProps) {
+  const { user_id } = await params;
   return (
     <div className="h-full">
-      <MainContent userId={params.user_id} />
+      <MainContent userId={user_id} />
     </div>
   );
 }

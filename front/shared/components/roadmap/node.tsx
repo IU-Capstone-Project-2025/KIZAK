@@ -8,12 +8,14 @@ interface Props {
   title: string;
   description: string;
   progress: Progress;
+  onClick?: () => void;
 }
 
 export const RoadmapNode = forwardRef<HTMLDivElement, Props>(
-  ({ className = "", title, description, progress }, ref) => {
+  ({ className = "", title, description, progress, onClick }, ref) => {
     return (
       <article
+        onClick={onClick}
         ref={ref}
         className={`w-fit min-w-90 max-w-130 min-h-18 max-h-24 p-4 rounded-lg bg-white border border-[#DDDDDD] flex flex-col gap-y-1 ${className}`}
       >
