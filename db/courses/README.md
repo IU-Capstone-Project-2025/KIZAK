@@ -12,9 +12,9 @@ Courses scraped from:
     - Data Science
     - Backend Development
 
-- [ ] **YouTube**
+- [ ] **YouTube** 
 
-- [ ] **Coursera**
+- [x] **Coursera** (280 Courses)
 
 
 ## Data Format
@@ -22,22 +22,19 @@ Courses scraped from:
 For now all data presented in **string** format
 
 ```json
-    "title": "Title of the course",
-    "course_url": "https://stepik.org/course/223532?search=7291233907",
-    "author": "Jhon Doe",
-    "description": "Short description of the course",
-    "rating": "Rating (0-5)",
-    "num_of_users": "Num of enrolled users",
-    "time_to_pass": "Hours to pass the course",
-    "is_certified": true,
-    "price": "Price in rub",
-    "skills_learned": [
-      "Description of skills  !! NOT TAGS"
-    ],
-    "about_course": "More information about the course",
-    "target_audience": "Description of target audience",
-    "initial_requirements": null,
-    "source": "Stepik/Coursera/YouTube"
+    "url": "https://www.coursera.org/learn/python-for-applied-data-science-ai",
+    "title": "Python for Data Science, AI & Development",
+    "author": "Joseph Santarcangelo",
+    "students": 1222909,
+    "rating": 4.6,
+    "difficulty": "Beginner",
+    "skills": [
+            "NumPy",
+            "Data Manipulation"
+        ],
+    "description": "Bla-bla",
+    "price": null,
+    "source": "Coursera"
 ```
 
 ## Important
