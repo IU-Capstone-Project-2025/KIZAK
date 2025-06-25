@@ -19,7 +19,16 @@ def scrape_coursera_course(url):
 
     difficulty = soup.find_all("div", class_="css-fk6qfz")[1].text.split(" ")[0]
 
-    skills = soup.find_all("a", class_="cds-119 cds-113 cds-115 css-113xph7 cds-142")[0].text
+    skills_data = soup.find_all("a", class_="cds-119 cds-113 cds-115 css-113xph7 cds-142")
+
+    skills = [i.text for i in skills_data]
+
+    description = soup.find("div", class_="cds-9 css-0 cds-11 cds-grid-item cds-56 cds-79 cds-94").text
+
+    time_to_pass = soup.find_all("div", class_="css-fw9ih3")
+
+    for i, idx in enumerate(time_to_pass):
+        print(idx, i)
 
     return {
         "title": title,
@@ -27,7 +36,11 @@ def scrape_coursera_course(url):
         "students": students,
         "rating": rating,
         "difficulty": difficulty,
-        "skills": skills
+        "skills": skills,
+        "description": description,
+        "time_to_pass": time_to_pass,
+        "price": None,
+        "source": "Coursera"
     }
 
 if __name__ == "__main__":
