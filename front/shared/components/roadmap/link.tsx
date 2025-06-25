@@ -4,10 +4,7 @@ interface NodeLinkProps {
 }
 
 export const NodeLink = ({ from, to }: NodeLinkProps) => (
-  <svg
-    className="absolute top-0 left-0 pointer-events-none"
-    style={{ width: "100%", height: "100%" }}
-  >
+  <svg className="absolute w-full h-full top-0 left-0 pointer-events-none transition-all duration-200">
     <line
       x1={from.x}
       y1={from.y}
