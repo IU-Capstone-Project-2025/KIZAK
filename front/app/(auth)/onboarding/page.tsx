@@ -25,7 +25,33 @@ export default function OnBoarding() {
   const [animating, setAnimating] = useState<boolean>(false);
   const { handleClick } = usePageTransition();
 
-  const goToNextStep = () => {
+  async function submitOnboardingData(userData: OnboardingData) {
+    try {
+      const response = await fetch("http://localhost:8000/api/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || "Registration failed");
+      }
+
+      return await response.json();
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        alert("Ошибка регистрации: " + error.message);
+      } else {
+        alert("Ошибка регистрации: Unknown error");
+      }
+      throw error;
+    }
+  }
+
+  const goToNextStep = async () => {
     if (step < screens.length - 1) {
       setAnimating(true);
       setTimeout(() => {
@@ -34,7 +60,12 @@ export default function OnBoarding() {
         setAnimating(false);
       }, 300);
     } else {
-      handleClick("/main/123");
+      try {
+        await submitOnboardingData(userData);
+        handleClick("/main/123");
+      } catch {
+        
+      }
     }
   };
 
