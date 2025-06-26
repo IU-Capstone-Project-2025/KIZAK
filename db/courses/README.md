@@ -7,8 +7,6 @@ Courses scraped from:
 
 - [x] **Stepik** (~460 courses)
 
-- [ ] **YouTube** 
-s
 - [x] **Coursera** (280 Courses)
 
 
@@ -28,7 +26,7 @@ For now all data presented in **string** format
             "Data Manipulation"
         ],
     "description": "Bla-bla",
-    "price": null,
+    "price": 0,
     "source": "Coursera"
 ```
 
