@@ -34,4 +34,4 @@ For now all data presented in **string** format
 
 ## Important
 
-**Note that for now data is raw (ie not properly processed)**
+**Since Coursera courses avaliable by subscription, all prices set to 0**
