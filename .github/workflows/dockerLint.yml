@@ -15,8 +15,8 @@ jobs:
       matrix:
         dockerfile:
           - back/Dockerfile
-          - front/Dockerfile
           - ml/Dockerfile
+          - front/Dockerfile
 
     steps:
       - name: Checkout repository
