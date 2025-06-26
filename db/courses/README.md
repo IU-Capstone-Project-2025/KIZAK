@@ -6,14 +6,9 @@
 Courses scraped from:
 
 - [x] **Stepik** (~460 courses)
-  - Topics:
-    - Python Language
-    - Machine Learning
-    - Data Science
-    - Backend Development
 
 - [ ] **YouTube** 
-
+s
 - [x] **Coursera** (280 Courses)
 
 
