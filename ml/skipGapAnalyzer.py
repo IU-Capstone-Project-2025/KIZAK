@@ -1,3 +1,5 @@
+import json
+
 class SkillGapAnalyzer:
     def __init__(self, role_to_skills: dict[str: list[str]]):
         '''
@@ -23,12 +25,9 @@ class SkillGapAnalyzer:
             "extra_skills": list(set(user_skills) - set(required)),
         }
         
-# TODO: add real mapping role to skills
-ROLE_TO_SKILLS = {
-    "data_engineer": ["python", "sql", "aws", "docker", "kubernetes"],
-    "data_scientist": ["python", "sql", "aws", "docker", "kubernetes"],
-    "data_analyst": ["python", "sql", "aws", "docker", "kubernetes"],
-}
+
+with open('job_skill.json', 'r', encoding='utf-8') as f:
+    ROLE_TO_SKILLS = json.load(f)
 
 # TODO: add real user skills from backend 
 # probably extract from all user info 
