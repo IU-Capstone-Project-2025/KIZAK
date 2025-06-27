@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 import uvicorn
 from db.db_connector import db
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from routers.resource import router as ResourceRouter
 from routers.roadmap import router as RoadmapRouter
 from routers.user import router as UserRouter
@@ -20,6 +21,14 @@ app = FastAPI(
     summary="API for KIZAK project",
     version="0.0.1",
     lifespan=lifespan,
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 app.include_router(UserRouter, tags=["User"])

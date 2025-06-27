@@ -28,14 +28,21 @@ async def post_user(new_user: UserCreate, response: Response) -> UserResponse:
     return user
 
 
-@router.put("/users/", response_model=UserResponse, tags=["User"])
+@router.put(
+    "/users/",
+    response_model=UserResponse,
+    tags=["User"]
+)
 async def put_user(user: UserUpdate) -> UserResponse:
     logger.info(f"Putting user {user.user_id}")
     return await update_user(user)
 
 
 @router.delete(
-    "/users/{user_id}", tags=["User"], status_code=status.HTTP_204_NO_CONTENT
+    "/users/{user_id}",
+    tags=["User"],
+    status_code=status.
+    HTTP_204_NO_CONTENT
 )
 async def delete_user(user_id: UUID) -> None:
     logger.info(f"Deleting user {user_id}")

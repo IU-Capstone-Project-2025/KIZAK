@@ -74,7 +74,7 @@ export const Tags: React.FC<TagsProps> = ({
   };
 
   return (
-    <div className="w-100 space-y-6 bg-white rounded p-4">
+    <article className="w-100 space-y-6 bg-white rounded p-4">
       <h2 className="text-center text-lg font-medium text-ui-dark">{title}</h2>
 
       <div className="space-y-4 w-full flex flex-col items-center">
@@ -144,6 +144,6 @@ export const Tags: React.FC<TagsProps> = ({
           </button>
         </div>
       </div>
-    </div>
+    </article>
   );
 };
