@@ -121,31 +121,7 @@ Then build and run the project using Docker Compose:
 docker-compose up --build
 ```
 
-Visit [localhost:8000/docs](http://localhost:8000/docs) to access KIZAK API docs.
-
-### Frontend
-
-
-First, clone the project:
-
-```bash
-git clone https://github.com/IU-Capstone-Project-2025/KIZAK
-cd KIZAK/front
-```
-
-Install all dependencies
-
-```bash
-npm install
-```
-
-And run frontend
-
-```bash
-npm run dev
-```
-
-Now access KIZAK on [localhost:3000](http://localhost:3000/)
+Visit [localhost:8000/docs](http://localhost:8000/docs) to access KIZAK API docs or [localhost:80](http://localhost) to see front part
 
 ## 🐞 Open Issues and Contribution
 
