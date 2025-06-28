@@ -1,0 +1,30 @@
+name: CD
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+jobs:
+  deploy:
+    # Only run if PR was merged
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout code
+      - uses: actions/checkout@v4
+
+      # 2. SSH key
+      - uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      # 3. Deploy to VDS
+      - name: SSH
+        run: |
+          ssh -o StrictHostKeyChecking=no root@109.196.103.241 "
+            cd /root/KIZAK
+            git pull origin main
+            docker-compose up -d --build
+          "
