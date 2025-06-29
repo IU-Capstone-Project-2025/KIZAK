@@ -1,15 +1,11 @@
 import pytest
+import pytest_asyncio
 import logging
 from faker import Faker
-from fastapi.testclient import TestClient
-from models.user import UserCreate, UserResponse, UserUpdate
-from app import app
+from models.user import UserResponse
 from utils.logger import logger
-import time
 
 logger.setLevel(logging.DEBUG)
-client = TestClient(app)
-
 
 @pytest.fixture
 def fake_user_data():
@@ -36,42 +32,46 @@ def fake_user_data():
     }
 
 
-@pytest.fixture
-def created_user(fake_user_data):
-    time.sleep(1)
-    response = client.post("/users/", json=fake_user_data)
+@pytest_asyncio.fixture
+async def created_user(async_client, fake_user_data):
+    response = await async_client.post("/users/", json=fake_user_data)
+    assert response.status_code == 201
     json_response = response.json()
     logger.debug(f"User created: {json_response}")
-    assert response.status_code == 201
-    UserResponse(**json_response)
+    UserResponse(**json_response)  # validate schema
     return json_response
 
 
-def test_post_user(created_user):
+@pytest.mark.asyncio
+async def test_post_user(created_user):
     user_id = created_user["user_id"]
     assert user_id is not None
 
 
-def test_get_user(created_user, fake_user_data):
-    response = client.get(f"/users/{created_user['user_id']}")
+@pytest.mark.asyncio
+async def test_get_user(async_client, created_user):
+    response = await async_client.get(f"/users/{created_user['user_id']}")
+    assert response.status_code == 200
     json_response = response.json()
     UserResponse(**json_response)
-    assert response.status_code == 200
     assert json_response == created_user
 
 
-def test_update_user(fake_user_data, created_user):
-    updated_user = fake_user_data
+@pytest.mark.asyncio
+async def test_update_user(async_client, created_user, fake_user_data):
+    updated_user = fake_user_data.copy()
     updated_user["user_id"] = created_user["user_id"]
-    response = client.put(f"/users/", json=updated_user)
+    response = await async_client.put("/users/", json=updated_user)
+    assert response.status_code == 200
     json_response = response.json()
     UserResponse(**json_response)
-    assert response.status_code == 200
     assert json_response == created_user
 
 
-def test_delete_user(created_user):
-    response = client.delete(f"/users/{created_user['user_id']}")
+@pytest.mark.asyncio
+async def test_delete_user(async_client, created_user):
+    response = await async_client.delete(f"/users/{created_user['user_id']}")
     assert response.status_code == 204
-    response = client.get(f"/users/{created_user['user_id']}")
+
+    response = await async_client.get(f"/users/{created_user['user_id']}")
     assert response.status_code == 404
