@@ -1,30 +1,27 @@
-name: CD
+name: Continuous Deployment
 
 on:
-  pull_request:
-    types: [closed]
+  push:
     branches: [main]
 
 jobs:
   deploy:
-    # Only run if PR was merged
-    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout code
       - uses: actions/checkout@v4
 
-      # 2. SSH key
       - uses: webfactory/ssh-agent@v0.8.0
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      # 3. Deploy to VDS
-      - name: SSH
+      - name: Deploy application
         run: |
-          ssh -o StrictHostKeyChecking=no root@109.196.103.241 "
+          ssh -o StrictHostKeyChecking=no -o BatchMode=yes root@${{ secrets.SERVER_IP }} "
+            set -e  # Exit immediately if any command fails
             cd /root/KIZAK
-            git pull origin main
+            git fetch origin main
+            git reset --hard origin/main
+            docker-compose down
             docker-compose up -d --build
           "
