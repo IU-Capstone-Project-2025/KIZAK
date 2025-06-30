@@ -129,13 +129,13 @@ DB_NAME=db
 CORS_ORIGINS=http://localhost
 
 # API configuration
-API_PREFIX=/api
-API_HOST=localhost
+API_HOST=backend
 API_PORT=8000
 
 # Frontend configuration
-FRONTEND_HOST=localhost
+FRONTEND_HOST=frontend
 FRONTEND_PORT=3000
+FRONTEND_HOST_PORT=3000
 ```
 
 Then build and run the project using Docker Compose:
