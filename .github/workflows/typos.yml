@@ -15,3 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: crate-ci/typos@v1.33.1
+        with:
+          ignore: |
+            ml/jv_mapping.ipynb
+            *.pb  # you can add more patterns here
