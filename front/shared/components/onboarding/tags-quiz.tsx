@@ -1,5 +1,5 @@
 "use client";
-import { OnboardingData } from "@/shared/types/types";
+import { OnboardingData, UserSkill } from "@/shared/types/types";
 import { ArrowLeft } from "lucide-react";
 import React, { useState } from "react";
 
@@ -8,9 +8,9 @@ interface TagsProps {
   title: string;
   placeholder: string;
   singleChoice: boolean;
+  isGoal: boolean;
   setData: (value: React.SetStateAction<OnboardingData>) => void;
   userData: OnboardingData;
-  fieldKey: keyof Pick<OnboardingData, "skills" | "goal_skills">;
   onNext: () => void;
   onBack: () => void;
 }
@@ -22,11 +22,13 @@ export const Tags: React.FC<TagsProps> = ({
   singleChoice,
   setData,
   userData,
-  fieldKey,
+  isGoal,
   onNext,
   onBack,
 }) => {
-  const [skills, setSkills] = useState<string[]>(userData[fieldKey] || []);
+  const [skills, setSkills] = useState<UserSkill[]>(
+    userData.skills.filter((s) => s.is_goal === isGoal)
+  );
   const [text, setText] = useState<string>("");
   const [filteredSkills, setFilteredSkills] = useState<string[]>([]);
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
@@ -35,7 +37,7 @@ export const Tags: React.FC<TagsProps> = ({
 
   function handleAcceptData() {
     if (isValid) {
-      setData({ ...userData, [fieldKey]: skills });
+      setData({ ...userData, skills: [...userData.skills, ...skills] });
       onNext();
     }
   }
@@ -58,10 +60,13 @@ export const Tags: React.FC<TagsProps> = ({
 
   const handleChooseTag = (tag: string) => {
     if (singleChoice) {
-      setSkills([tag]);
+      setSkills([{ skill: tag, is_goal: isGoal, skill_level: "Beginner" }]);
     } else {
-      if (!skills.includes(tag)) {
-        setSkills((prev) => [...prev, tag]);
+      if (!skills.some((s) => s.skill === tag)) {
+        setSkills((prev) => [
+          ...prev,
+          { skill: tag, is_goal: isGoal, skill_level: "Beginner" },
+        ]);
       }
     }
 
@@ -70,7 +75,7 @@ export const Tags: React.FC<TagsProps> = ({
   };
 
   const handleRemoveSkill = (tag: string) => {
-    setSkills((prev) => prev.filter((s) => s !== tag));
+    setSkills((prev) => prev.filter((s) => s.skill !== tag));
   };
 
   return (
@@ -111,12 +116,12 @@ export const Tags: React.FC<TagsProps> = ({
         <div className="min-h-8 max-w-full flex flex-wrap justify-center gap-2">
           {skills.map((skill) => (
             <button
-              key={skill}
+              key={skill.skill}
               type="button"
-              onClick={() => handleRemoveSkill(skill)}
+              onClick={() => handleRemoveSkill(skill.skill)}
               className="flex items-center border border-ui-border rounded px-3 py-1 shadow-sm transition-all duration-200 hover:bg-bg-subtle text-sm"
             >
-              {skill}
+              {skill.skill}
             </button>
           ))}
         </div>
