@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from routers.resource import router as ResourceRouter
 from routers.roadmap import router as RoadmapRouter
 from routers.user import router as UserRouter
+from routers.utils import router as UtilsRouter
 
 
 @asynccontextmanager
@@ -34,6 +35,7 @@ app.add_middleware(
 app.include_router(UserRouter, tags=["User"])
 app.include_router(RoadmapRouter)
 app.include_router(ResourceRouter, tags=["Resource"])
+app.include_router(UtilsRouter, tags=["Utils"])
 
 if __name__ == "__main__":
     uvicorn.run(app)
