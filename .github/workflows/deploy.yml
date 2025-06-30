@@ -1,8 +1,10 @@
 name: Continuous Deployment
 
 on:
-  push:
-    branches: [main]
+   workflow_run:
+      workflows: ["Docker-compose Check"]
+      types:
+        - completed
 
 jobs:
   deploy:
