@@ -17,8 +17,9 @@ jobs:
 
       - name: Deploy application
         run: |
-          ssh -o StrictHostKeyChecking=no -o BatchMode=yes root@${{ secrets.SERVER_IP }} "
-            set -e  # Exit immediately if any command fails
+          ssh -o StrictHostKeyChecking=no \
+          -o BatchMode=yes root@${{ secrets.SERVER_IP }} "
+            set -e
             cd /root/KIZAK
             git fetch origin main
             git reset --hard origin/main
