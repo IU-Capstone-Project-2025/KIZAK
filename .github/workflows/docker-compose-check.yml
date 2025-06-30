@@ -17,6 +17,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup test environment
+        run: |
+          # Create .env from example if doesn't exist
+          if [ ! -f .env ]; then
+            cp .env.example .env
+            # Override any sensitive values with test defaults
+            sed -i 's/DB_USER=.*/DB_USER=testuser/' .env
+            sed -i 's/DB_PASSWORD=.*/DB_PASSWORD=testpass/' .env
+            sed -i 's/DB_NAME=.*/DB_NAME=testdb/' .env
+          fi
+          cat .env  # For debugging (remove in production)
+
       - name: Build and run services
         run: docker compose up --build -d
 
