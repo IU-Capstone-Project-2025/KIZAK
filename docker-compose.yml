@@ -52,7 +52,8 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
       POSTGRES_DB: ${DB_NAME:-appdb}
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-appdb}"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres}
+       -d ${DB_NAME:-appdb}"]
       interval: 5s
       timeout: 5s
       retries: 10
