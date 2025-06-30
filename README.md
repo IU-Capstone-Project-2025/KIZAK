@@ -115,6 +115,29 @@ git clone https://github.com/IU-Capstone-Project-2025/KIZAK
 cd KIZAK
 ```
 
+Now set up _.env_ file:
+
+```bash
+# Database configuration
+DB_HOST=db
+DB_PORT=5432
+DB_USER=user
+DB_PASSWORD=password
+DB_NAME=db
+
+# CORS configuration
+CORS_ORIGINS=http://localhost
+
+# API configuration
+API_PREFIX=/api
+API_HOST=localhost
+API_PORT=8000
+
+# Frontend configuration
+FRONTEND_HOST=localhost
+FRONTEND_PORT=3000
+```
+
 Then build and run the project using Docker Compose:
 
 ```bash
