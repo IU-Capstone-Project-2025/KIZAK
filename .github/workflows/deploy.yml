@@ -1,10 +1,10 @@
 name: Continuous Deployment
 
 on:
-   workflow_run:
-      workflows: ["Docker-compose Check"]
-      types:
-        - completed
+  workflow_run:
+    workflows: ["dockerCheck"]
+    types:
+      - completed
 
 jobs:
   deploy:
