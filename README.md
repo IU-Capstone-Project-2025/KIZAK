@@ -73,20 +73,20 @@ KIZAK is an AI-powered learning assistant designed to guide users through their 
 - 🟢 Choose tech stack
 
 ### 🧪 Week 2 – Prototyping
-- 🟡 Gather and refine functional/non-functional requirements
-- 🟡 Create UI/UX design prototype
-- 🟡 Build basic frontend structure
-- 🟡 Set up backend architecture and API contracts
+- 🟢 Gather and refine functional/non-functional requirements
+- 🟢 Create UI/UX design prototype
+- 🟢 Build basic frontend structure
+- 🟢 Set up backend architecture and API contracts
 
 ### ⚙️ Week 3 – MVP v0
-- 🔴 Implement core features (onboarding, roadmap engine)
-- 🔴 Design and build initial database schema
-- 🔴 Prepare working MVP demo
+- 🟢 Implement core features (onboarding, roadmap engine)
+- 🟢 Design and build initial database schema
+- 🟢 Prepare working MVP demo
 
 ### 🧪 Week 4 – Testing & Deployment
-- 🔴 Implement CI/CD pipeline
-- 🔴 Add unit and integration tests
-- 🔴 Deploy MVP to test/staging environment
+- 🟡 Implement CI/CD pipeline
+- 🟡 Add unit and integration tests
+- 🟡 Deploy MVP to test/staging environment
 
 ### 🎨 Week 5 – Polishing
 - 🔴 Gather feedback from initial users/stakeholders
