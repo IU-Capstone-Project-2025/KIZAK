@@ -3,6 +3,7 @@ from sentence_transformers import SentenceTransformer
 from qdrant_client import QdrantClient
 from qdrant_client.models import VectorParams, Distance, PointStruct, NamedVector, SearchRequest
 from collections import defaultdict
+import torch
 
 import logging
 
@@ -18,11 +19,16 @@ class CourseVectorSearch:
     _instance = None
 
     def __init__(self, csv_path='ml/courses_final.csv', collection_name='courses', qdrant_host='localhost',
-                 qdrant_port=6333):
+                qdrant_port=6333, use_gpu=True):
         logger.info("Initializing CourseVectorSearch (DB connection only)")
         self.collection_name = collection_name
         self.client = QdrantClient(host=qdrant_host, port=qdrant_port)
-        self.skills_model = SentenceTransformer('sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2')
+
+        device = 'cuda'if torch.cuda.is_available() else 'cpu'
+        model_name = 'sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2'
+        self.skills_model = SentenceTransformer(model_name, device=device)
+        self.skills_model.max_seq_length = 512
+
         self.df = pd.read_csv(csv_path)
         self.qdrant_data = None
 
@@ -38,7 +44,13 @@ class CourseVectorSearch:
                 "title": VectorParams(size=384, distance=Distance.COSINE),
                 "description": VectorParams(size=384, distance=Distance.COSINE),
                 "skills": VectorParams(size=384, distance=Distance.COSINE)
-            }
+            },
+            hnsw_config={
+                            "m": 8,
+                            "ef_construct": 50,
+                            "full_scan_threshold": 1000
+                        } 
+                                    
         )
 
     def _prepare_vectors(self):
@@ -107,12 +119,12 @@ class CourseVectorSearch:
         )
 
     def search_courses_batch_weighted(self, title_vector, description_vector, skills_vector,
-                                      weights={'title': 0.2, 'description': 0.1, 'skills': 0.7}, limit=5):
+                                      weights={'title': 0.2, 'description': 0.1, 'skills': 0.7}, limit=20):
         logger.info("searching courses batch weighted")
         search_requests = [
-            SearchRequest(vector=NamedVector(name="title", vector=title_vector), limit=40, with_payload=True),
-            SearchRequest(vector=NamedVector(name="description", vector=description_vector), limit=40, with_payload=True),
-            SearchRequest(vector=NamedVector(name="skills", vector=skills_vector), limit=40, with_payload=True)
+            SearchRequest(vector=NamedVector(name="title", vector=title_vector), limit=50, with_payload=True),
+            SearchRequest(vector=NamedVector(name="description", vector=description_vector), limit=20, with_payload=True),
+            SearchRequest(vector=NamedVector(name="skills", vector=skills_vector), limit=100, with_payload=True)
         ]
         batch_results = self.client.search_batch(
             collection_name=self.collection_name,
