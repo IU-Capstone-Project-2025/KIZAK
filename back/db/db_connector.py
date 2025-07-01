@@ -11,8 +11,9 @@ dotenv.load_dotenv()
 
 
 class DataBase:
+    _pool = None
     def __init__(self):
-        self._pool = None
+        
         self._db_config = {
             "user": os.getenv("DB_USER", "user"),
             "password": os.getenv("DB_PASSWORD", "password"),
