@@ -93,9 +93,9 @@ async def retrieve_user_by_login(login: str) -> UserResponse:
             """
                 SELECT skill, skill_level, is_goal
                 FROM user_skills
-                WHERE login = $1
+                WHERE user_id = $1
             """,
-            login
+            user_response["user_id"]
         )
 
         skills = [UserSkill(**s) for s in skills_response]
