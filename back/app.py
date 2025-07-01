@@ -6,7 +6,7 @@ from fastapi import FastAPI
 from routers.resource import router as ResourceRouter
 from routers.roadmap import router as RoadmapRouter
 from routers.user import router as UserRouter
-
+from routers.auth import router as AuthRouter
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -25,6 +25,9 @@ app = FastAPI(
 app.include_router(UserRouter, tags=["User"])
 app.include_router(RoadmapRouter)
 app.include_router(ResourceRouter, tags=["Resource"])
+app.include_router(AuthRouter, tags=["auth"])
+
+
 
 if __name__ == "__main__":
     uvicorn.run(app)

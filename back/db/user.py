@@ -8,6 +8,10 @@ from models.user import UserCreate, UserResponse, UserUpdate, UserSkill
 
 from .db_connector import db
 
+from typing import Optional
+from fastapi import HTTPException, status
+from asyncpg import PostgresError
+
 
 async def create_user(user: UserCreate) -> UserResponse:
     try:
@@ -87,7 +91,7 @@ async def retrieve_user(user_id: UUID) -> UserResponse:
                 WHERE users.user_id = $1
             """,
             user_id
-            )
+        )
 
         skills_response = await db.fetch(
             """
@@ -238,3 +242,42 @@ async def _update(table: str, fields: dict[str, Any], user_id: UUID) -> bool:
         )
     logger.info(f"Updated {user_id} user fields {', '.join(fields.keys())}")
     return True
+
+
+class UserNotFoundError(Exception):
+    pass
+
+
+async def get_user_from_db(login: str) -> dict:
+    if not isinstance(login, str):
+        raise TypeError(f"Login must be a string, got {type(login).__name__}")
+    login = login.strip()
+    if not login:
+        raise ValueError("Login cannot be empty or whitespace")
+
+    try:
+        row: Optional[dict] = await db.fetchrow(
+            """
+            SELECT login, password
+            FROM users
+            WHERE login = $1
+            """,
+            login,
+        )
+    except PostgresError as db_exc:
+
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Database error while retrieving user"
+        )
+
+    if row is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"User with login '{login}' not found"
+        )
+
+    if "login" not in row or "password" not in row:
+        raise RuntimeError("Unexpected DB response structure")
+
+    return dict(row)
