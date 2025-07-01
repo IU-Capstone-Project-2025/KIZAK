@@ -17,6 +17,36 @@ from models.roadmap import (
 from .db_connector import db
 
 
+async def retrieve_roadmap_by_user_id(user_id: UUID) -> RoadmapInfo:
+    """Retrieve roadmap based on user ID
+
+    Args:
+        user_id (UUID): User ID
+
+    Returns:
+        RoadmapInfo (RoadmapInfo): Lists with nodes and links
+    """
+    try:
+        logger.info(f"Retrieving roadmap of user {user_id}")
+        roadmap_row = await db.fetchrow(
+            """
+            SELECT roadmap_id, user_id
+            FROM user_roadmap
+            WHERE user_id = $1
+            """,
+            user_id,
+        )
+
+        if not roadmap_row:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Roadmap for user {user_id} not exists"
+            )
+    except HTTPException:
+        raise
+    return await retrieve_roadmap(roadmap_row['roadmap_id'])
+
+
 async def retrieve_roadmap(roadmap_id: UUID) -> RoadmapInfo:
     """Retrieve roadmap based on its id
 
