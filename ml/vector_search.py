@@ -15,22 +15,63 @@ logger = logging.getLogger(__name__)
 
 
 class CourseVectorSearch:
-    def __init__(self, csv_path='courses_final.csv', collection_name='courses', qdrant_host='localhost', qdrant_port=6333):
-        logger.info("Initialization CourseVectorSearch")
-        self.collection_name = collection_name
-        self.skills_model = SentenceTransformer('sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2')
-        self.client = QdrantClient(host=qdrant_host, port=qdrant_port)
+    _instance = None
 
-        logger.info(f"Download data from {csv_path}")
+    def __init__(self, csv_path='ml/courses_final.csv', collection_name='courses', qdrant_host='localhost',
+                 qdrant_port=6333):
+        logger.info("Initializing CourseVectorSearch (DB connection only)")
+        self.collection_name = collection_name
+        self.client = QdrantClient(host=qdrant_host, port=qdrant_port)
+        self.skills_model = SentenceTransformer('sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2')
         self.df = pd.read_csv(csv_path)
-        self._prepare_vectors()
-        self.qdrant_data = [self._prepare_for_qdrant(row) for _, row in self.df.iterrows()]
+        self.qdrant_data = None
+
+    def create_collection(self):
+        logger.info(f"check if colletion exists '{self.collection_name}'")
+        if self.client.collection_exists(self.collection_name):
+            logger.info(f"deleting collection '{self.collection_name}'")
+            self.client.delete_collection(self.collection_name)
+        logger.info(f"Creating new collection '{self.collection_name}'")
+        self.client.create_collection(
+            collection_name=self.collection_name,
+            vectors_config={
+                "title": VectorParams(size=384, distance=Distance.COSINE),
+                "description": VectorParams(size=384, distance=Distance.COSINE),
+                "skills": VectorParams(size=384, distance=Distance.COSINE)
+            }
+        )
 
     def _prepare_vectors(self):
         logger.info("deleting NaNs")
         self.df = self.df.dropna(subset=["title", "description", "skills"]).reset_index(drop=True)
+
         logger.info("vectorizing cources")
         self.df["vectors"] = self.df.apply(self._vectorize, axis=1)
+
+
+    def _upload_to_qdrant(self):
+        logger.info(f"uploading {len(self.qdrant_data)} points to Qdrant")
+        points = [
+            PointStruct(
+                id=item["id"],
+                vector=item["vector"],
+                payload=item["payload"]
+            )
+            for item in self.qdrant_data
+        ]
+        self.client.upsert(collection_name=self.collection_name, points=points)
+        logger.info("uploading completed")
+
+
+    def load_and_prepare_data(self, csv_path='ml/courses_final.csv'):
+        logger.info(f"Loading and preparing data from {csv_path}")
+
+        self.df = pd.read_csv(csv_path)
+        self._prepare_vectors()
+        self.qdrant_data = [self._prepare_for_qdrant(row) for _, row in self.df.iterrows()]
+
+        self._upload_to_qdrant()
+
 
     def _vectorize(self, row):
         return {
@@ -56,33 +97,6 @@ class CourseVectorSearch:
             }
         }
 
-    def create_collection(self):
-        logger.info(f"check if colletion exists '{self.collection_name}'")
-        if self.client.collection_exists(self.collection_name):
-            logger.info(f"deleting collection '{self.collection_name}'")
-            self.client.delete_collection(self.collection_name)
-        logger.info(f"Creating new collection '{self.collection_name}'")
-        self.client.create_collection(
-            collection_name=self.collection_name,
-            vectors_config={
-                "title": VectorParams(size=384, distance=Distance.COSINE),
-                "description": VectorParams(size=384, distance=Distance.COSINE),
-                "skills": VectorParams(size=384, distance=Distance.COSINE)
-            }
-        )
-
-    def upload_to_qdrant(self):
-        logger.info(f"uploading {len(self.qdrant_data)} points to Qdrant")
-        points = [
-            PointStruct(
-                id=item["id"],
-                vector=item["vector"],
-                payload=item["payload"]
-            )
-            for item in self.qdrant_data
-        ]
-        self.client.upsert(collection_name=self.collection_name, points=points)
-        logger.info("uploading completed")
 
     def encode_query(self, role, query, skills):
         logger.info("vectorizing user query")
@@ -93,7 +107,7 @@ class CourseVectorSearch:
         )
 
     def search_courses_batch_weighted(self, title_vector, description_vector, skills_vector,
-                                      weights={'title': 0.3, 'description': 0.2, 'skills': 0.5}, limit=5):
+                                      weights={'title': 0.2, 'description': 0.1, 'skills': 0.7}, limit=5):
         logger.info("searching courses batch weighted")
         search_requests = [
             SearchRequest(vector=NamedVector(name="title", vector=title_vector), limit=40, with_payload=True),
