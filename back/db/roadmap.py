@@ -56,6 +56,40 @@ async def retrieve_roadmap(roadmap_id: UUID) -> RoadmapInfo:
     )
 
 
+async def retrieve_roadmap_by_login(login: str) -> RoadmapInfo:
+    """Retrieve roadmap based on user login
+
+    Args:
+        login (str): User login
+
+    Returns:
+        RoadmapInfo (RoadmapInfo): Lists with nodes and links
+    """
+    logger.info(f"Retrieving roadmap by login {login}")
+    user_row = await db.fetchrow(
+        """
+        SELECT user_id
+        FROM users
+        WHERE login = $1
+        """,
+        login,
+    )
+    if not user_row:
+        logger.error(f"User {login} not found")
+        raise HTTPException(status_code=404, detail="User not found")
+    roadmap_row = await db.fetchrow(
+        """
+        SELECT roadmap_id
+        FROM user_roadmap
+        WHERE user_id = $1
+        """,
+        user_row["user_id"],
+    )
+
+    roadmap_id = roadmap_row["roadmap_id"]
+    return await retrieve_roadmap(roadmap_id)
+
+
 async def create_roadmap(roadmap: RoadmapCreate) -> RoadmapResponse:
     """Create new empty roadmap for user
 
