@@ -8,9 +8,8 @@ from models.user import UserCreate, UserResponse, UserUpdate, UserSkill, UserPas
 
 from db.db_connector import db
 
-from typing import Optional
+
 from fastapi import HTTPException, status
-from asyncpg import PostgresError
 
 
 async def create_user(user: UserCreate) -> UserResponse:
@@ -245,6 +244,7 @@ async def _update(table: str, fields: dict[str, Any], user_id: UUID) -> bool:
 
 
 
+
 async def get_user_from_db(login: str) -> UserPasssword:
     if not isinstance(login, str):
         raise TypeError(f"Login must be a string, got {type(login).__name__}")
@@ -254,8 +254,10 @@ async def get_user_from_db(login: str) -> UserPasssword:
         user_response = await db.fetchrow(
             """
                 SELECT
+                    users.user_id,
                     users.login,
-                    users.password
+                    users.password, 
+                    users.creation_date
                 FROM users
                 WHERE users.login = $1
             """,
@@ -273,3 +275,32 @@ async def get_user_from_db(login: str) -> UserPasssword:
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
+
+async def get_userResp_from_db(login: str) -> UserResponse:
+    if not isinstance(login, str):
+        raise TypeError(f"Login must be a string, got {type(login).__name__}")
+
+
+    try:
+        user_response = await db.fetchrow(
+            """
+                SELECT
+                    users.user_id,
+                    users.creation_date
+                FROM users
+                WHERE users.login = $1
+            """,
+            login
+        )
+
+
+        if not user_response:
+            logger.error(f"Failed to retrieve user {login}")
+            raise HTTPException(
+                status_code=404, detail="Failed to retrieve user"
+            )
+        logger.info(f"User {login} retrieved successfully")
+        return UserResponse(**user_response)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

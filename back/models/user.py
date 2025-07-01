@@ -35,6 +35,17 @@ class UserPasssword(BaseModel):
         description="User password (hashed or plain depending on security policy)",
         examples=["P@ssw0rd!"]
     )
+    user_id: UUID = Field(
+        ...,
+        description="Unique identifier for the user",
+        examples=["123e4567-e89b-12d3-a456-426614174000"]
+    )
+    creation_date: datetime = Field(
+    ...,
+    description="Timestamp when the user was created",
+    examples=["2025-06-24T15:30:00Z"]
+)
+
 
 
 class UserBase(BaseModel):
@@ -100,6 +111,7 @@ class UserResponse(UserBase):
     )
 
 
+
 class UserUpdate(BaseModel):
     """Schema for updating existing user data; all fields optional except user_id."""
     user_id: UUID = Field(
@@ -146,4 +158,18 @@ class UserUpdate(BaseModel):
                 {"skill": "Docker", "skill_level": "Intermediate", "is_goal": False}
             ]
         ]
+    )
+
+
+class LoginRequest(BaseModel):
+    """Schema for user login requests."""
+    login: str = Field(
+        ...,
+        description="Login identifier for the user",
+        examples=["johndoe", "user123"]
+    )
+    password: str = Field(
+        ...,
+        description="User password (hashed or plain depending on security policy)",
+        examples=["P@ssw0rd!"]
     )
