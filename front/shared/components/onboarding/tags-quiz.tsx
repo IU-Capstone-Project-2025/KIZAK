@@ -36,6 +36,18 @@ export const Tags: React.FC<TagsProps> = ({
 
   const isValid = skills.length > 0;
 
+  React.useEffect(() => {
+    const allSkills = isGoal
+      ? userData.skills.filter((s) => !s.is_goal).map((s) => s.skill)
+      : userData.skills.filter((s) => s.is_goal).map((s) => s.skill);
+    const overlap = skills.some((s) => allSkills.includes(s.skill));
+    if (overlap) {
+      setError("Skill tags and Goal tags must not overlap");
+    } else {
+      setError("");
+    }
+  }, [skills, userData.skills, isGoal]);
+
   function handleAcceptData() {
     const allSkills = isGoal
       ? userData.skills.filter((s) => !s.is_goal).map((s) => s.skill)
