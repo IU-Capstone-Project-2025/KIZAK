@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 
 class CourseVectorSearch:
-    def __init__(self, csv_path='ml/courses_final.csv', collection_name='courses', qdrant_host='localhost', qdrant_port=6333):
+    def __init__(self, csv_path='courses_final.csv', collection_name='courses', qdrant_host='localhost', qdrant_port=6333):
         logger.info("Initialization CourseVectorSearch")
         self.collection_name = collection_name
         self.skills_model = SentenceTransformer('sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2')
