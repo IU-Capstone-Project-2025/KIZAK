@@ -13,7 +13,8 @@ from db.roadmap import (
     retrieve_node,
     retrieve_roadmap,
     update_node,
-    retrieve_roadmap_by_login
+    retrieve_roadmap_by_login,
+    retrieve_roadmap_by_user_id
 )
 from fastapi.routing import APIRouter
 from models.roadmap import (
@@ -41,6 +42,18 @@ router = APIRouter()
 async def get_roadmap(roadmap_id: UUID) -> RoadmapInfo:
     logger.info(f"Getting roadmap {roadmap_id}")
     return await retrieve_roadmap(roadmap_id)
+
+
+@router.get(
+    "/roadmap_by_user_id/{user_id}",
+    response_model=RoadmapInfo,
+    tags=["Roadmap"],
+    description="Get roadmap by user id",
+    status_code=status.HTTP_200_OK
+)
+async def get_roadmap_by_user_id(user_id: UUID) -> RoadmapInfo:
+    logger.info(f"Getting roadmap by user id {user_id}")
+    return await retrieve_roadmap_by_user_id(user_id)
 
 
 @router.get(
