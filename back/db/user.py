@@ -4,7 +4,7 @@ from uuid import UUID
 from utils.logger import logger
 
 from fastapi import HTTPException
-from models.user import UserCreate, UserResponse, UserUpdate, UserSkill, UserPasssword
+from models.user import UserCreate, UserResponse, UserUpdate, UserSkill, UserPassword
 
 from db.db_connector import db
 
@@ -272,7 +272,7 @@ async def _update(table: str, fields: dict[str, Any], user_id: UUID,
 
 
 
-async def get_user_from_db(login: str) -> UserPasssword:
+async def get_user_from_db(login: str) -> UserPassword:
     if not isinstance(login, str):
         raise TypeError(f"Login must be a string, got {type(login).__name__}")
 
@@ -298,7 +298,7 @@ async def get_user_from_db(login: str) -> UserPasssword:
                 status_code=404, detail="Failed to retrieve user"
             )
         logger.info(f"User {login} retrieved successfully")
-        return UserPasssword(**user_response)
+        return UserPassword(**user_response)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

@@ -24,7 +24,7 @@ class UserSkill(BaseModel):
     )
 
 
-class UserPasssword(BaseModel):
+class UserPassword(BaseModel):
     login: str = Field(
         ...,
         description="Login identifier for the user",
