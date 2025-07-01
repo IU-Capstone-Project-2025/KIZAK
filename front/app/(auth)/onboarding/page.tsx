@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { ProgressDots } from "@/shared/components/onboarding";
 import { getScreens } from "@/shared/utils/getScreens";
@@ -7,7 +7,7 @@ import { usePageTransition } from "@/shared/components/transition/transition-pro
 import { OnboardingData } from "@/shared/types/types";
 
 export default function OnBoarding() {
-  const [userData, setUserData] = useState<OnboardingData>({
+  const defaultUserData: OnboardingData = {
     login: "",
     password: "",
     background: "",
@@ -15,12 +15,38 @@ export default function OnBoarding() {
     skills: [],
     goals: "",
     goal_vacancy: "",
-  });
+  };
 
+  const [userData, setUserData] = useState<OnboardingData>(defaultUserData);
   const [step, setStep] = useState<number>(0);
   const [displayedStep, setDisplayedStep] = useState<number>(0);
   const [animating, setAnimating] = useState<boolean>(false);
   const { handleClick } = usePageTransition();
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedUserData = localStorage.getItem("onboardingUserData");
+      if (savedUserData) setUserData(JSON.parse(savedUserData));
+
+      const savedStep = localStorage.getItem("onboardingStep");
+      if (savedStep) {
+        setStep(Number(savedStep));
+        setDisplayedStep(Number(savedStep));
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("onboardingUserData", JSON.stringify(userData));
+    }
+  }, [userData]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("onboardingStep", String(step));
+    }
+  }, [step]);
 
   const goToNextStep = async () => {
     if (step < screens.length - 1) {
@@ -55,6 +81,10 @@ export default function OnBoarding() {
 
         const data = await response.json();
         const userId = data.user_id;
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("onboardingUserData");
+          localStorage.removeItem("onboardingStep");
+        }
         handleClick(`/main/${userId}`, 0);
       } catch (error) {
         console.error("Ошибка при завершении онбординга:", error);
