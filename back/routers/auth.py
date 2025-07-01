@@ -1,15 +1,15 @@
 # back/routers/auth.py
 from fastapi import APIRouter, HTTPException, status
 
-from models.user import UserResponse, LoginRequest
+from models.user import UserResponse, LoginRequest, UserPassword
 from db.user import get_user_from_db
 
 router = APIRouter()
 
 
 async def authenticate_user(login: str, password: str) -> bool:
-    user_row = await get_user_from_db(login)
-    if not user_row or user_row["password"] != password:
+    user = await get_user_from_db(login)
+    if not user or user.password != password:
         return False
     return True
 

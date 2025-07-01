@@ -4,9 +4,9 @@ from uuid import UUID
 from utils.logger import logger
 
 from fastapi import HTTPException
-from models.user import UserCreate, UserResponse, UserUpdate, UserSkill
+from models.user import UserCreate, UserResponse, UserUpdate, UserSkill, UserPasssword
 
-from .db_connector import db
+from db.db_connector import db
 
 from typing import Optional
 from fastapi import HTTPException, status
@@ -244,40 +244,32 @@ async def _update(table: str, fields: dict[str, Any], user_id: UUID) -> bool:
     return True
 
 
-class UserNotFoundError(Exception):
-    pass
 
-
-async def get_user_from_db(login: str) -> dict:
+async def get_user_from_db(login: str) -> UserPasssword:
     if not isinstance(login, str):
         raise TypeError(f"Login must be a string, got {type(login).__name__}")
-    login = login.strip()
-    if not login:
-        raise ValueError("Login cannot be empty or whitespace")
+
 
     try:
-        row: Optional[dict] = await db.fetchrow(
+        user_response = await db.fetchrow(
             """
-            SELECT login, password
-            FROM users
-            WHERE login = $1
+                SELECT
+                    users.login,
+                    users.password
+                FROM users
+                WHERE users.login = $1
             """,
-            login,
-        )
-    except PostgresError as db_exc:
-
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Database error while retrieving user"
+            login
         )
 
-    if row is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"User with login '{login}' not found"
-        )
 
-    if "login" not in row or "password" not in row:
-        raise RuntimeError("Unexpected DB response structure")
+        if not user_response:
+            logger.error(f"Failed to retrieve user {login}")
+            raise HTTPException(
+                status_code=404, detail="Failed to retrieve user"
+            )
+        logger.info(f"User {login} retrieved successfully")
+        return UserPasssword(**user_response)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
-    return dict(row)
