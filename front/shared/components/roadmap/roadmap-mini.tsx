@@ -13,7 +13,7 @@ export const RoadmapMini = () => {
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-full p-4 flex items-center justify-center"
+      className="absolute w-full h-full p-4 flex items-center justify-center"
     >
       <RoadmapNode
         ref={(el) => {

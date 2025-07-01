@@ -162,9 +162,9 @@ export const Tags: React.FC<TagsProps> = ({
             type="submit"
             disabled={!isValid || !!error}
             onClick={handleAcceptData}
-            className={`h-[50px] w-50 py-2 hover:bg-brand-primary text-white font-semibold rounded-md transition-all duration-300 ${
+            className={`h-[50px] w-50 py-2 text-white font-semibold rounded-md transition-all duration-300 ${
               isValid && !error
-                ? "bg-brand-primary hover:bg-brand-primary/90"
+                ? "bg-brand-primary"
                 : "bg-brand-primary/50 cursor-not-allowed"
             }`}
           >

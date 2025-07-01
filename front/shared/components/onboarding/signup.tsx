@@ -21,7 +21,11 @@ export const SignUp: React.FC<Props> = ({ setData, userData, onNext }) => {
     setCheckingLogin(true);
     setLoginError("");
     try {
-      const res = await fetch(`http://localhost:8000/users/check_login?login=${encodeURIComponent(login)}`);
+      const res = await fetch(
+        `http://localhost:8000/users/check_login?login=${encodeURIComponent(
+          login
+        )}`
+      );
       const data = await res.json();
       if (data.exists) {
         setLoginError("Login already exists");
@@ -55,7 +59,8 @@ export const SignUp: React.FC<Props> = ({ setData, userData, onNext }) => {
     }
   }
 
-  const isValid = login.trim() !== "" && password.trim().length >= 6 && !loginError;
+  const isValid =
+    login.trim() !== "" && password.trim().length >= 6 && !loginError;
 
   return (
     <article className="w-full max-w-sm space-y-6 bg-white rounded ">
@@ -93,14 +98,16 @@ export const SignUp: React.FC<Props> = ({ setData, userData, onNext }) => {
             }
           }}
         />
-        {passwordError && <div className="text-red-500 text-xs">{passwordError}</div>}
+        {passwordError && (
+          <div className="text-red-500 text-xs">{passwordError}</div>
+        )}
         <button
           type="submit"
           disabled={!isValid || checkingLogin}
           onClick={handleAcceptData}
-          className={`h-[50px] w-100 py-2 hover:bg-brand-primary text-white font-semibold rounded-md transition-all duration-300 ${
+          className={`h-[50px] w-100 py-2 text-white font-semibold rounded-md transition-all duration-300 ${
             isValid && !checkingLogin
-              ? "bg-brand-primary hover:bg-brand-primary/90"
+              ? "bg-brand-primary"
               : "bg-brand-primary/50 cursor-not-allowed"
           }`}
         >
