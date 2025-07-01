@@ -4,6 +4,13 @@ from sklearn.metrics import ndcg_score
 import numpy as np
 import re
 
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s"
+)
+logger = logging.getLogger(__name__)
 
 class CourseRanker:
     '''
@@ -30,7 +37,6 @@ class CourseRanker:
 
     def normalize_skill(self, skill: str) -> str:
         skill = skill.lower()
-        skill = re.sub(r".∗?.∗?", "", skill)
         skill = re.sub(r"[^a-z0-9\s]", "", skill)
         return skill.strip()
 
@@ -55,8 +61,14 @@ class CourseRanker:
                 try:
                     raw_course_skills = ast.literal_eval(raw_course_skills)
                 except Exception:
+                    logger.info(f"skills are not string: {raw_course_skills}")
                     raw_course_skills = []
+
             course_skills = set(self.normalize_skill(s) for s in raw_course_skills)
+            logger.info(
+                f"Course ID: {course.get('id')}, "
+                f"skills type: {type(course_skills)}, "
+                f"value: {course_skills}")
             normalized_gap = set(self.normalize_skill(s) for s in skill_gap)
             covered_skills = course_skills.intersection(normalized_gap)
 
