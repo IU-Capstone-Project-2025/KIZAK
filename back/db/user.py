@@ -65,9 +65,8 @@ async def create_user(user: UserCreate) -> UserResponse:
             logger.info(f"Inserted {user.login}'s skills to user_skills table")
         logger.info(f"User {user.login} successfully created")
         return UserResponse(**user_response, skills=user.skills)
-
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    except Exception:
+        raise
 
 
 async def retrieve_user(user_id: UUID) -> UserResponse:
@@ -88,7 +87,7 @@ async def retrieve_user(user_id: UUID) -> UserResponse:
                     WHERE users.user_id = $1
                 """,
                 user_id
-                )
+            )
 
             skills_response = await conn.fetch(
                 """
@@ -108,8 +107,8 @@ async def retrieve_user(user_id: UUID) -> UserResponse:
                 )
             logger.info(f"User {user_id} retrieved successfully")
             return UserResponse(**user_response, skills=skills)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    except Exception:
+        raise
 
 
 async def update_user(user: UserUpdate) -> UserResponse:
@@ -128,7 +127,7 @@ async def update_user(user: UserUpdate) -> UserResponse:
                 logger.error(f"User {user.user_id} does not exist")
                 raise HTTPException(
                     status_code=404,
-                    detail=f"Resource not found with id {user.user_id}",
+                    detail=f"User not found with id {user.user_id}",
                 )
 
             if user.skills is not None:
@@ -216,8 +215,8 @@ async def update_user(user: UserUpdate) -> UserResponse:
             skills = [UserSkill(**s) for s in skills_response]
 
             return UserResponse(**user_response, skills=skills)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    except Exception:
+        raise
 
 
 async def remove_user(user_id: UUID) -> None:
@@ -234,15 +233,14 @@ async def remove_user(user_id: UUID) -> None:
 
             if result == "DELETE 0":
                 logger.error(f"Failed to remove user {user_id}")
-                raise HTTPException(status_code=404, detail="Resource not found")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+                raise HTTPException(status_code=404,
+                                    detail="Resource not found")
+    except Exception:
+        raise
 
 
-async def _update(table: str, fields: dict[str, Any], user_id: UUID, conn) -> bool:
-    if not fields:
-        logger.error("No fields provided for update")
-        return False
+async def _update(table: str, fields: dict[str, Any], user_id: UUID,
+                  conn) -> bool:
 
     logger.info(f"Updating {user_id} user fields {', '.join(fields.keys())}")
     values = list(fields.values()) + [user_id]

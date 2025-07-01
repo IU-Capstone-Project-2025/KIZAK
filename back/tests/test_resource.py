@@ -1,71 +1,126 @@
+import random
 import pytest
 import logging
+from faker import Faker
 import pytest_asyncio
+from unittest.mock import AsyncMock, patch
 from utils.logger import logger
+from models.resource import ResourceResponse
+from uuid import uuid4
+from tests.conftest import FakeTransaction
 
 logger.setLevel(logging.DEBUG)
 
-resource_payload = {
-    "resource_type": "Course",
-    "title": "Test Course",
-    "summary": "Test summary",
-    "content": "https://example.com/course",
-    "level": "Beginner",
-    "price": 0,
-    "language": "English",
-    "duration_hours": 3,
-    "platform": "Stepik",
-    "rating": 4.5,
-    "published_date": "2024-06-01",
-    "certificate_available": True,
-    "skills_covered": ["Python", "OOP"]
-}
 
-@pytest_asyncio.fixture
-async def created_resource(async_client):
-    response = await async_client.post("/resources/", json=resource_payload)
-    assert response.status_code == 201
-    data = response.json()
-    logger.debug(f"Resource created: {data}")
-    return data
+@pytest.mark.asyncio
+async def test_post_resource(created_resource):
+    resource_id = created_resource["resource_id"]
+    assert resource_id is not None
 
 
 @pytest.mark.asyncio
-async def test_create_resource(created_resource):
-    assert created_resource["title"] == "Test Course"
-    assert "resource_id" in created_resource
+async def test_post_invalid_resource(async_client):
+    faker = Faker()
+    resource = {
+        "login": faker.email(),
+        "password": faker.password()
+    }
+    response = await async_client.post(f"/resources/", json=resource)
+    assert response.status_code == 422
+
+
+@pytest.mark.asyncio
+async def test_post_resource_db_fail(async_client, fake_resource_data):
+    mock_conn = AsyncMock()
+    mock_conn.fetchrow.return_value = None
+
+    with patch("db.db_connector.db.transaction",
+               return_value=FakeTransaction(mock_conn)):
+        response = await async_client.post("/resources/",
+                                           json=fake_resource_data)
+        assert response.status_code == 500
 
 
 @pytest.mark.asyncio
 async def test_get_resource(async_client, created_resource):
-    res_id = created_resource["resource_id"]
-    response = await async_client.get(f"/resource/{res_id}")
+    response = await async_client.get(
+        f"/resources/{created_resource['resource_id']}")
+    json_response = response.json()
+    logger.debug(f"Resource retrieved: {json_response}")
     assert response.status_code == 200
-    data = response.json()
-    assert data["resource_id"] == res_id
+    actual = ResourceResponse(**json_response)
+    expected = ResourceResponse(**created_resource)
+    assert actual == expected
 
 
 @pytest.mark.asyncio
-async def test_update_resource(async_client, created_resource):
-    res_id = created_resource["resource_id"]
-    update_payload = {
-        "resource_id": res_id,
-        "title": "Updated Title",
-        "price": 10.0
-    }
-    response = await async_client.put("/resources/", json=update_payload)
+async def test_get_resource_by_invalid_uuid(async_client):
+    response = await async_client.get("/resources/1")
+    assert response.status_code == 422
+
+
+@pytest.mark.asyncio
+async def test_update_resource(async_client, created_resource,
+                               fake_second_resource_data):
+    updated_resource = fake_second_resource_data
+    updated_resource["resource_id"] = created_resource["resource_id"]
+    response = await async_client.put("/resources/", json=updated_resource)
+    json_response = response.json()
+    logger.debug(f"Resource updated: {json_response}")
     assert response.status_code == 200
-    data = response.json()
-    assert data["title"] == "Updated Title"
-    assert data["price"] == 10.0
+    actual = ResourceResponse(**json_response)
+    updated_resource["summary_vector"] = created_resource["summary_vector"]
+    updated_resource["skills_covered_vector"] = created_resource[
+        "skills_covered_vector"]
+    expected = ResourceResponse(**updated_resource)
+    assert actual == expected
+
+
+@pytest.mark.asyncio
+async def test_update_resource_by_invalid_uuid(async_client,
+                                               fake_second_resource_data):
+    updated_resource = fake_second_resource_data
+    updated_resource["resource_id"] = 1
+    response = await async_client.put("/resources/", json=updated_resource)
+    assert response.status_code == 422
+
+
+@pytest.mark.asyncio
+async def test_update_not_existing_resource(async_client,
+                                            fake_second_resource_data):
+    updated_resource = fake_second_resource_data
+    updated_resource["resource_id"] = str(uuid4())
+    response = await async_client.put(f"/resources/", json=updated_resource)
+    assert response.status_code == 404
+
+
+@pytest.mark.asyncio
+async def test_clear_update_resource_json(async_client, created_resource):
+    updated_resource = {
+        "resource_id": created_resource["resource_id"]
+    }
+    response = await async_client.put(f"/resources/", json=updated_resource)
+    assert response.status_code == 400
 
 
 @pytest.mark.asyncio
 async def test_delete_resource(async_client, created_resource):
-    res_id = created_resource["resource_id"]
-
-    response = await async_client.delete(f"/resources/{res_id}")
+    response = await async_client.delete(
+        f"/resources/{created_resource['resource_id']}")
     assert response.status_code == 204
 
-    response = await async_client.get(f"/resource/{res_id}")
-    assert response.status_code != 200
+    response = await async_client.get(
+        f"/resources/{created_resource['resource_id']}")
+    assert response.status_code == 404
+
+
+@pytest.mark.asyncio
+async def test_delete_resource_by_invalid_uuid(async_client):
+    response = await async_client.delete("/resources/1")
+    assert response.status_code == 422
+
+
+@pytest.mark.asyncio
+async def test_delete_not_existing_resource(async_client):
+    response = await async_client.delete(f"/resources/{uuid4()}")
+    assert response.status_code == 404
