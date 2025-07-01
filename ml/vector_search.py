@@ -95,7 +95,7 @@ class CourseVectorSearch:
         )
 
     def search_courses_batch_weighted(self, title_vector, description_vector, skills_vector,
-                                      weights={'title': 0.3, 'description': 0.2, 'skills': 0.5}, limit=5):
+                                      weights={'title': 0.1, 'description': 0.2, 'skills': 0.7}, limit=5):
         logger.info("searching courses batch weighted")
         search_requests = [
             SearchRequest(vector=NamedVector(name="title", vector=title_vector), limit=40, with_payload=True),

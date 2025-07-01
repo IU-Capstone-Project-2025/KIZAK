@@ -36,7 +36,7 @@ if not os.path.exists(flag_file):
     with open(flag_file, "w") as f:
         f.write("initialized")
 else:
-    print("Qdrant already initialized.")
+    print("Qdrant was previously initialized")
 
 # analysis of user's skills, define lacking ones
 gap_analyzer = SkillGapAnalyzer(role_to_skills)
