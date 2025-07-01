@@ -5,7 +5,7 @@ interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const baseClasses =
-  "h-[50px] w-[50px] rounded-xl flex-center transition-all duration-100 cursor-pointer";
+  "h-[50px] w-[50px] rounded-xl shadow-sm flex-center transition-all duration-100 cursor-pointer";
 export const MainButton: React.FC<PropsWithChildren<Props>> = ({
   className = "",
   children,
