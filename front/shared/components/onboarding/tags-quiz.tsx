@@ -32,10 +32,21 @@ export const Tags: React.FC<TagsProps> = ({
   const [text, setText] = useState<string>("");
   const [filteredSkills, setFilteredSkills] = useState<string[]>([]);
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
 
   const isValid = skills.length > 0;
 
   function handleAcceptData() {
+    const allSkills = isGoal
+      ? userData.skills.filter((s) => !s.is_goal).map((s) => s.skill)
+      : userData.skills.filter((s) => s.is_goal).map((s) => s.skill);
+    const overlap = skills.some((s) => allSkills.includes(s.skill));
+    if (overlap) {
+      setError("Skill tags and Goal tags must not overlap");
+      return;
+    } else {
+      setError("");
+    }
     if (isValid) {
       setData({ ...userData, skills: [...userData.skills, ...skills] });
       onNext();
@@ -137,10 +148,10 @@ export const Tags: React.FC<TagsProps> = ({
 
           <button
             type="submit"
-            disabled={!isValid}
+            disabled={!isValid || !!error}
             onClick={handleAcceptData}
             className={`h-[50px] w-50 py-2 hover:bg-brand-primary text-white font-semibold rounded-md transition-all duration-300 ${
-              isValid
+              isValid && !error
                 ? "bg-brand-primary hover:bg-brand-primary/90"
                 : "bg-brand-primary/50 cursor-not-allowed"
             }`}
@@ -148,6 +159,7 @@ export const Tags: React.FC<TagsProps> = ({
             Continue
           </button>
         </div>
+        {error && <div className="text-red-500 text-xs mt-2">{error}</div>}
       </div>
     </article>
   );
