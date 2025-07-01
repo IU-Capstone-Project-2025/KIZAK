@@ -4,9 +4,12 @@ from uuid import UUID
 from utils.logger import logger
 
 from fastapi import HTTPException
-from models.user import UserCreate, UserResponse, UserUpdate, UserSkill
+from models.user import UserCreate, UserResponse, UserUpdate, UserSkill, UserPassword
 
-from .db_connector import db
+from db.db_connector import db
+
+
+from fastapi import HTTPException, status
 
 
 async def create_user(user: UserCreate) -> UserResponse:
@@ -265,3 +268,66 @@ async def _update(table: str, fields: dict[str, Any], user_id: UUID,
         )
     logger.info(f"Updated {user_id} user fields {', '.join(fields.keys())}")
     return True
+
+
+
+
+async def get_user_from_db(login: str) -> UserPassword:
+    if not isinstance(login, str):
+        raise TypeError(f"Login must be a string, got {type(login).__name__}")
+
+
+    try:
+        user_response = await db.fetchrow(
+            """
+                SELECT
+                    users.user_id,
+                    users.login,
+                    users.password, 
+                    users.creation_date
+                FROM users
+                WHERE users.login = $1
+            """,
+            login
+        )
+
+
+        if not user_response:
+            logger.error(f"Failed to retrieve user {login}")
+            raise HTTPException(
+                status_code=404, detail="Failed to retrieve user"
+            )
+        logger.info(f"User {login} retrieved successfully")
+        return UserPassword(**user_response)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+
+async def get_userResp_from_db(login: str) -> UserResponse:
+    if not isinstance(login, str):
+        raise TypeError(f"Login must be a string, got {type(login).__name__}")
+
+
+    try:
+        user_response = await db.fetchrow(
+            """
+                SELECT
+                    users.user_id,
+                    users.creation_date
+                FROM users
+                WHERE users.login = $1
+            """,
+            login
+        )
+
+
+        if not user_response:
+            logger.error(f"Failed to retrieve user {login}")
+            raise HTTPException(
+                status_code=404, detail="Failed to retrieve user"
+            )
+        logger.info(f"User {login} retrieved successfully")
+        return UserResponse(**user_response)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
