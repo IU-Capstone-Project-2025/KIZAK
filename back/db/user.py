@@ -70,6 +70,47 @@ async def create_user(user: UserCreate) -> UserResponse:
         raise HTTPException(status_code=500, detail=str(e))
 
 
+async def retrieve_user_by_login(login: str) -> UserResponse:
+    try:
+        user_response = await db.fetchrow(
+            """
+                SELECT
+                    users.user_id,
+                    users.login,
+                    users.password,
+                    users.creation_date,
+                    users.background,
+                    users.education,
+                    users.goals,
+                    users.goal_vacancy
+                FROM users
+                WHERE users.login = $1
+            """,
+            login
+        )
+
+        skills_response = await db.fetch(
+            """
+                SELECT skill, skill_level, is_goal
+                FROM user_skills
+                WHERE login = $1
+            """,
+            login
+        )
+
+        skills = [UserSkill(**s) for s in skills_response]
+
+        if not user_response:
+            logger.error(f"Failed to retrieve user {login}")
+            raise HTTPException(
+                status_code=404, detail="Failed to retrieve user"
+            )
+        logger.info(f"User {login} retrieved successfully")
+        return UserResponse(**user_response, skills=skills)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 async def retrieve_user(user_id: UUID) -> UserResponse:
     try:
         user_response = await db.fetchrow(
@@ -87,7 +128,7 @@ async def retrieve_user(user_id: UUID) -> UserResponse:
                 WHERE users.user_id = $1
             """,
             user_id
-            )
+        )
 
         skills_response = await db.fetch(
             """
