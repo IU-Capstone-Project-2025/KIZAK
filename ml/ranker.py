@@ -1,6 +1,8 @@
+import ast
 from typing import List, Dict, Any
 from sklearn.metrics import ndcg_score
 import numpy as np
+import re
 
 
 class CourseRanker:
@@ -26,6 +28,12 @@ class CourseRanker:
         self.priorities_by_role = priorities_by_role
         self.rating_max = rating_max
 
+    def normalize_skill(self, skill: str) -> str:
+        skill = skill.lower()
+        skill = re.sub(r".∗?.∗?", "", skill)
+        skill = re.sub(r"[^a-z0-9\s]", "", skill)
+        return skill.strip()
+
     def rank_courses(self, courses: List[Dict], # from cosine similarity serach
                      skill_gap: List[str], #from skillgap
                      target_role: str, # from user onboarding info
@@ -42,9 +50,15 @@ class CourseRanker:
         ranked = []
 
         for course in courses:
-            course_skills = set(course.get("skills", []))
-            # todo: check how to get this from skill_gap_anal
-            covered_skills = course_skills.intersection(skill_gap)
+            raw_course_skills = course.get("skills", [])
+            if isinstance(raw_course_skills, str):
+                try:
+                    raw_course_skills = ast.literal_eval(raw_course_skills)
+                except Exception:
+                    raw_course_skills = []
+            course_skills = set(self.normalize_skill(s) for s in raw_course_skills)
+            normalized_gap = set(self.normalize_skill(s) for s in skill_gap)
+            covered_skills = course_skills.intersection(normalized_gap)
 
             # how many skills are covered by this course, the more the >>
             coverage_score = len(covered_skills) / len(skill_gap) if skill_gap else 0
@@ -56,8 +70,8 @@ class CourseRanker:
             rating = course.get("rating", 0) or 0 #course stars
             rating_score = rating / self.rating_max
 
-            # bcs everybody love halyava :)
-            price_score = 1 if course.get("price", 0) == 0 else 0
+            # # bcs everybody love halyava :)
+            # price_score = 1 if course.get("price", 0) == 0 else 0
 
             score = (
                     weights["coverage"] * coverage_score +

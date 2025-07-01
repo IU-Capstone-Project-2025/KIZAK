@@ -40,7 +40,7 @@ class CourseVectorSearch:
             "desc_vector": self.skills_model.encode(row["description"], show_progress_bar=False),
             "skills_vector": self.skills_model.encode(", ".join(row["skills"]), show_progress_bar=False)
         }
-    # todo: make better?
+
     def _prepare_for_qdrant(self, row):
         row_id = int(row.name)
         return {
