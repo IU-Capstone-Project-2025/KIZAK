@@ -40,37 +40,47 @@ class CourseRanker:
         skill = re.sub(r"[^a-z0-9\s]", "", skill)
         return skill.strip()
 
+    def get_skill_words(self, skills: list[str]) -> set[str]:
+        words = set()
+        for skill in skills:
+            normalized = self.normalize_skill(skill)
+            splitted = normalized.split()
+            words.update(splitted)
+        return words
+
     def rank_courses(self, courses: List[Dict], # from cosine similarity serach
                      skill_gap: List[str], #from skillgap
                      target_role: str, # from user onboarding info
                      weights: Dict[str, float] = None) -> List[Dict]: # alpha beta for ranking
         if weights is None:
             weights = {
-                "coverage": 0.4,
-                "priority": 0.4,
-                "rating": 0.2,
+                "coverage": 0.45,
+                "priority": 0.45,
+                "rating": 0.1,
                 # "free": 0.1
             }
         # get priorities only for needed role
         priorities = self.priorities_by_role.get(target_role, {})
         ranked = []
-
         for course in courses:
             raw_course_skills = course.get("skills", [])
             if isinstance(raw_course_skills, str):
                 try:
+                    import ast
                     raw_course_skills = ast.literal_eval(raw_course_skills)
                 except Exception:
-                    logger.info(f"skills are not string: {raw_course_skills}")
                     raw_course_skills = []
 
-            course_skills = set(self.normalize_skill(s) for s in raw_course_skills)
+            course_skills = self.get_skill_words(raw_course_skills)
+
             logger.info(
                 f"Course ID: {course.get('id')}, "
                 f"skills type: {type(course_skills)}, "
                 f"value: {course_skills}")
-            normalized_gap = set(self.normalize_skill(s) for s in skill_gap)
-            covered_skills = course_skills.intersection(normalized_gap)
+
+            # normalized_gap = set(self.normalize_skill(s) for s in skill_gap)
+            covered_skills = course_skills.intersection(skill_gap)
+
 
             # how many skills are covered by this course, the more the >>
             coverage_score = len(covered_skills) / len(skill_gap) if skill_gap else 0
