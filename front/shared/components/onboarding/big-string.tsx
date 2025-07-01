@@ -20,20 +20,23 @@ export const BigString: React.FC<Props> = ({
   userData,
   onNext,
   onBack,
+  fieldKey,
 }) => {
-  const [text, setText] = useState(userData.background || "");
+  const [text, setText] = useState<string>(
+    typeof userData[fieldKey] === "string" ? (userData[fieldKey] as string) : ""
+  );
 
   const isValid = text.trim() !== "";
 
   function handleAcceptData() {
     if (isValid) {
-      setData({ ...userData, background: text });
+      setData({ ...userData, [fieldKey]: text });
       onNext();
     }
   }
 
   return (
-    <div className="w-100 max-w-sm space-y-6 bg-white rounded">
+    <article className="w-100 max-w-sm space-y-6 bg-white rounded">
       <h2 className="text-center text-lg font-medium text-ui-dark">{title}</h2>
 
       <div className="space-y-4 flex-center flex-col">
@@ -66,6 +69,6 @@ export const BigString: React.FC<Props> = ({
           </button>
         </div>
       </div>
-    </div>
+    </article>
   );
 };

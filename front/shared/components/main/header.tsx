@@ -1,6 +1,6 @@
 import React from "react";
-import { Bell, Info, MessageCircle } from "lucide-react";
-import { MainButton } from "./main-button";
+import { Bell, Info } from "lucide-react";
+import { MainButton } from "./button";
 
 interface Props {
   className?: string;

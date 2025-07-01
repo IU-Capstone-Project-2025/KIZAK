@@ -18,36 +18,37 @@ async def retrieve_resource(res_id: UUID) -> ResourceResponse:
     Raises:
         HTTPException: 404 if resource not found
     """
-    row = await db.fetchrow(
-        """
-        SELECT
-            resource_id,
-            resource_type,
-            title,
-            summary,
-            summary_vector,
-            content,
-            level,
-            price,
-            language,
-            duration_hours,
-            platform,
-            rating,
-            published_date,
-            certificate_available,
-            skills_covered,
-            skills_covered_vector
-        FROM resource
-        WHERE resource_id = $1
-    """,
-        res_id,
-    )
+    async with db.transaction() as conn:
+        row = await conn.fetchrow(
+            """
+            SELECT
+                resource_id,
+                resource_type,
+                title,
+                summary,
+                summary_vector,
+                content,
+                level,
+                price,
+                language,
+                duration_hours,
+                platform,
+                rating,
+                published_date,
+                certificate_available,
+                skills_covered,
+                skills_covered_vector
+            FROM resource
+            WHERE resource_id = $1
+        """,
+            res_id,
+        )
 
-    if not row:
-        logger.error(f"Resource {res_id} not found")
-        raise HTTPException(status_code=404, detail="Resource not found")
+        if not row:
+            logger.error(f"Resource {res_id} not found")
+            raise HTTPException(status_code=404, detail="Resource not found")
 
-    logger.info(f"Retrieved resource {res_id}")
+        logger.info(f"Retrieved resource {res_id}")
 
     return ResourceResponse(**row)
 
@@ -66,52 +67,53 @@ async def create_resource(res: ResourceCreate) -> ResourceResponse:
     """
     logger.info("Creating new resource")
     try:
-        row = await db.fetchrow(
-            """
-            INSERT INTO resource (
-                resource_type,
-                title,
-                summary,
-                content,
-                level,
-                price,
-                language,
-                duration_hours,
-                platform,
-                rating,
-                published_date,
-                certificate_available,
-                skills_covered
+        async with db.transaction() as conn:
+            row = await conn.fetchrow(
+                """
+                INSERT INTO resource (
+                    resource_type,
+                    title,
+                    summary,
+                    content,
+                    level,
+                    price,
+                    language,
+                    duration_hours,
+                    platform,
+                    rating,
+                    published_date,
+                    certificate_available,
+                    skills_covered
+                )
+                VALUES ($1, $2, $3, $4, $5, $6,
+                       $7, $8, $9, $10, $11, $12,
+                       $13)
+                RETURNING *
+            """,
+                res.resource_type,
+                res.title,
+                res.summary,
+                res.content,
+                res.level,
+                res.price,
+                res.language,
+                res.duration_hours,
+                res.platform,
+                res.rating,
+                res.published_date,
+                res.certificate_available,
+                res.skills_covered,
             )
-            VALUES ($1, $2, $3, $4, $5, $6,
-                   $7, $8, $9, $10, $11, $12,
-                   $13)
-            RETURNING *
-        """,
-            res.resource_type,
-            res.title,
-            res.summary,
-            res.content,
-            res.level,
-            res.price,
-            res.language,
-            res.duration_hours,
-            res.platform,
-            res.rating,
-            res.published_date,
-            res.certificate_available,
-            res.skills_covered,
-        )
 
-        if not row:
-            logger.error("Failed to create resource")
-            raise HTTPException(
-                status_code=500, detail="Failed to create resource"
-            )
-        logger.debug(row)
+            if not row:
+                logger.error("Failed to create resource")
+                raise HTTPException(
+                    status_code=500, detail="Failed to create resource"
+                )
+            logger.debug(row)
         return ResourceResponse(**row)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    except HTTPException:
+        raise
 
 
 async def update_resource(res: ResourceUpdate) -> ResourceResponse:
@@ -129,61 +131,60 @@ async def update_resource(res: ResourceUpdate) -> ResourceResponse:
         HTTPException: 500 if database error occurs
     """
     try:
-        updates = []
-        values = []
-        field_index = 1
+        async with db.transaction() as conn:
+            updates = []
+            values = []
+            field_index = 1
 
-        # Dynamically build the update query
-        fields = {
-            "resource_type": res.resource_type,
-            "title": res.title,
-            "summary": res.summary,
-            "content": res.content,
-            "level": res.level,
-            "price": res.price,
-            "language": res.language,
-            "duration_hours": res.duration_hours,
-            "platform": res.platform,
-            "rating": res.rating,
-            "published_date": res.published_date,
-            "certificate_available": res.certificate_available,
-            "skills_covered": res.skills_covered,
-        }
+            # Dynamically build the update query
+            fields = {
+                "resource_type": res.resource_type,
+                "title": res.title,
+                "summary": res.summary,
+                "content": res.content,
+                "level": res.level,
+                "price": res.price,
+                "language": res.language,
+                "duration_hours": res.duration_hours,
+                "platform": res.platform,
+                "rating": res.rating,
+                "published_date": res.published_date,
+                "certificate_available": res.certificate_available,
+                "skills_covered": res.skills_covered,
+            }
 
-        for field, value in fields.items():
-            if value is not None:
-                updates.append(f"{field} = ${field_index}")
-                values.append(value)
-                field_index += 1
+            for field, value in fields.items():
+                if value is not None:
+                    updates.append(f"{field} = ${field_index}")
+                    values.append(value)
+                    field_index += 1
 
-        if not updates:
-            logger.error("No fields provided for update")
-            raise HTTPException(
-                status_code=400, detail="No fields provided for update"
-            )
+            if not updates:
+                logger.error("No fields provided for update")
+                raise HTTPException(
+                    status_code=400, detail="No fields provided for update"
+                )
 
-        values.append(res.resource_id)
-        query = f"""
-            UPDATE resource
-            SET {', '.join(updates)}
-            WHERE resource_id = ${field_index}
-            RETURNING *
-        """
+            values.append(res.resource_id)
+            query = f"""
+                UPDATE resource
+                SET {', '.join(updates)}
+                WHERE resource_id = ${field_index}
+                RETURNING *
+            """
 
-        row = await db.fetchrow(query, *values)
+            row = await conn.fetchrow(query, *values)
 
-        if not row:
-            logger.error(f"Resource {res.resource_id} not found")
-            raise HTTPException(
-                status_code=404,
-                detail=f"Resource not found with id {res.resource_id}",
-            )
-        logger.info(f"Updated resource {res.resource_id}")
+            if not row:
+                logger.error(f"Resource {res.resource_id} not found")
+                raise HTTPException(
+                    status_code=404,
+                    detail=f"Resource not found with id {res.resource_id}",
+                )
+            logger.info(f"Updated resource {res.resource_id}")
         return ResourceResponse(**row)
     except HTTPException:
         raise
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
 
 
 async def remove_resource(res_id: UUID) -> None:
@@ -197,20 +198,19 @@ async def remove_resource(res_id: UUID) -> None:
         HTTPException: 500 if database error occurs
     """
     try:
-        result = await db.execute(
-            """
-            DELETE FROM resource
-            WHERE resource_id = $1
-            """,
-            res_id,
-        )
+        async with db.transaction() as conn:
+            result = await conn.execute(
+                """
+                DELETE FROM resource
+                WHERE resource_id = $1
+                """,
+                res_id,
+            )
 
-        if result == "DELETE 0":
-            logger.error(f"Resource {res_id} not found")
-            raise HTTPException(status_code=404, detail="Resource not found")
+            if result == "DELETE 0":
+                logger.error(f"Resource {res_id} not found")
+                raise HTTPException(status_code=404, detail="Resource not found")
 
-        logger.info(f"Deleted resource {res_id}")
+            logger.info(f"Deleted resource {res_id}")
     except HTTPException:
         raise
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))

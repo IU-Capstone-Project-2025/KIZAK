@@ -36,7 +36,7 @@ export const SingleString: React.FC<Props> = ({
   }
 
   return (
-    <div className="w-full max-w-sm space-y-6 bg-white rounded ">
+    <article className="w-full max-w-sm space-y-6 bg-white rounded ">
       <h2 className="text-center text-lg font-medium text-ui-dark">{title}</h2>
 
       <div className="space-y-4 flex-center flex-col">
@@ -70,6 +70,6 @@ export const SingleString: React.FC<Props> = ({
           </button>
         </div>
       </div>
-    </div>
+    </article>
   );
 };

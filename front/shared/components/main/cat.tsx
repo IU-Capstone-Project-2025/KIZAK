@@ -9,7 +9,7 @@ interface Props {
 export const MainCat: React.FC<Props> = ({ className = "" }) => {
   return (
     <div
-      className={`relative w-full pt-[56.25%] rounded-xl overflow-hidden ${className}`}
+      className={`relative w-full pt-[56.25%] shadow-sm rounded-xl overflow-hidden ${className}`}
     >
       <Image
         src={catImage}

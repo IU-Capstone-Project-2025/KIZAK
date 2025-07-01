@@ -4,7 +4,7 @@ services:
       context: ./back
       dockerfile: Dockerfile
     ports:
-      - "8000:8000"
+      - "${API_HOST_PORT:-8000}:${API_PORT:-8000}"
     depends_on:
       db:
         condition: service_healthy
@@ -13,30 +13,45 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
     restart: unless-stopped
+    env_file:
+      - path: ./.env.example
+        required: True
+      - path: ./.env
+        required: false
   frontend:
     build:
       context: ./front
       dockerfile: Dockerfile
     ports:
-      - "80:3000"
+      - "${FRONTEND_HOST_PORT:-3000}:${FRONTEND_PORT:-3000}"
     depends_on:
       - backend
+    env_file:
+      - path: ./.env.example
+        required: True
+      - path: ./.env
+        required: false
   db:
     image: ankane/pgvector:latest
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: db
+      POSTGRES_USER: ${DB_USER:-user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
+      POSTGRES_DB: ${DB_NAME:-db}
     ports:
-      - "5432:5432"
+      - "${DB_PORT:-5432}:5432"
     volumes:
       - ./db/pg_data:/var/lib/postgresql/data
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U user -d db"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-user} -d ${DB_NAME:-db}"]
       interval: 5s
       timeout: 5s
       retries: 10
+    env_file:
+      - path: ./.env.example
+        required: True
+      - path: ./.env
+        required: false
 
 volumes:
   pg_data:

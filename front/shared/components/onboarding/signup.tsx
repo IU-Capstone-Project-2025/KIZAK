@@ -28,7 +28,7 @@ export const SignUp: React.FC<Props> = ({ setData, userData, onNext }) => {
   const isValid = login.trim() !== "" && password.trim() !== "";
 
   return (
-    <div className="w-full max-w-sm space-y-6 bg-white rounded ">
+    <article className="w-full max-w-sm space-y-6 bg-white rounded ">
       <h2 className="text-center text-lg font-medium text-ui-dark">
         Create your account
       </h2>
@@ -67,6 +67,6 @@ export const SignUp: React.FC<Props> = ({ setData, userData, onNext }) => {
           or Log in
         </Link>
       </div>
-    </div>
+    </article>
   );
 };
