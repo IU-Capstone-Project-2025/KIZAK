@@ -25,18 +25,19 @@ class SkillGapAnalyzer:
             "extra_skills": list(set(user_skills) - set(required)),
         }
         
+# testing part
 
-with open('job_skill.json', 'r', encoding='utf-8') as f:
-    ROLE_TO_SKILLS = json.load(f)
-
-# TODO: add real user skills from backend 
-# probably extract from all user info 
-USER_SKILLS = ["python", "sql", "aws", "docker", "kubernetes"]
-
-# TODO: add real role from backend 
-USER_ROLE = "data_engineer"
-
-analyzer = SkillGapAnalyzer(ROLE_TO_SKILLS)
-result = analyzer.compute_gap(USER_SKILLS, USER_ROLE)
-print(result)
+# with open('job_skill.json', 'r', encoding='utf-8') as f:
+#     ROLE_TO_SKILLS = json.load(f)
+#
+# # TODO: add real user skills from backend
+# # probably extract from all user info
+# USER_SKILLS = ["python", "sql", "aws", "docker", "kubernetes"]
+#
+# # TODO: add real role from backend
+# USER_ROLE = "data_engineer"
+#
+# analyzer = SkillGapAnalyzer(ROLE_TO_SKILLS)
+# result = analyzer.compute_gap(USER_SKILLS, USER_ROLE)
+# print(result)
 

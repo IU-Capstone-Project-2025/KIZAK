@@ -15,6 +15,7 @@ logger = logging.getLogger(__name__)
 
 
 class CourseVectorSearch:
+    #todo: make model downloading, data downloading and vectorizing only once
     def __init__(self, csv_path='courses_final.csv', collection_name='courses', qdrant_host='localhost', qdrant_port=6333):
         logger.info("Initialization CourseVectorSearch")
         self.collection_name = collection_name
@@ -29,16 +30,17 @@ class CourseVectorSearch:
     def _prepare_vectors(self):
         logger.info("deleting NaNs")
         self.df = self.df.dropna(subset=["title", "description", "skills"]).reset_index(drop=True)
-        logger.info("vectorizing cources")
+        logger.info("vectorizing cources...")
         self.df["vectors"] = self.df.apply(self._vectorize, axis=1)
+        logger.info("vectorization completed")
 
     def _vectorize(self, row):
         return {
-            "title_vector": self.skills_model.encode(row["title"]),
-            "desc_vector": self.skills_model.encode(row["description"]),
-            "skills_vector": self.skills_model.encode(", ".join(row["skills"]))
+            "title_vector": self.skills_model.encode(row["title"], show_progress_bar=False),
+            "desc_vector": self.skills_model.encode(row["description"], show_progress_bar=False),
+            "skills_vector": self.skills_model.encode(", ".join(row["skills"]), show_progress_bar=False)
         }
-
+    # todo: make better?
     def _prepare_for_qdrant(self, row):
         row_id = int(row.name)
         return {

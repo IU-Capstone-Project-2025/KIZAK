@@ -6,13 +6,21 @@ import numpy as np
 class CourseRanker:
     '''
     priorities_by_role = skill_priorities = {
-        "data_scientist": {
-        "Python": 1,
-        "Spark": 2,
-        "Docker": 3,
+        "fullstack developer": [
+        {
+          "skill": "angular",
+          "priority": 0.95
+        },
+        {
+          "skill": "aws",
+          "priority": 0.9
+        },
+        {
+          "skill": "azure",
+          "priority": 0.85
+        },
         ...
     rating_max = max course rank(5 stars)
-    note: priority 1 — эis better than 4
     '''
     def __init__(self, priorities_by_role: Dict[str, Dict[str, int]], rating_max: float = 5.0):
         self.priorities_by_role = priorities_by_role
@@ -25,9 +33,9 @@ class CourseRanker:
         if weights is None:
             weights = {
                 "coverage": 0.4,
-                "priority": 0.3,
+                "priority": 0.4,
                 "rating": 0.2,
-                "free": 0.1
+                # "free": 0.1
             }
         # get priorities only for needed role
         priorities = self.priorities_by_role.get(target_role, {})
@@ -42,10 +50,10 @@ class CourseRanker:
             coverage_score = len(covered_skills) / len(skill_gap) if skill_gap else 0
 
             #how large is priority of skills for that course
-            priority_score_sum = sum(1 / priorities[skill] for skill in covered_skills if skill in priorities)
+            priority_score_sum = sum(priorities.get(skill, 0.0) for skill in covered_skills)
             mean_priority_score = priority_score_sum / len(covered_skills) if covered_skills else 0
 
-            rating = course.get("rating", 0) #course stars
+            rating = course.get("rating", 0) or 0 #course stars
             rating_score = rating / self.rating_max
 
             # bcs everybody love halyava :)
@@ -54,17 +62,18 @@ class CourseRanker:
             score = (
                     weights["coverage"] * coverage_score +
                     weights["priority"] * mean_priority_score +
-                    weights["rating"] * rating_score +
-                    weights["free"] * price_score
+                    weights["rating"] * rating_score
+                    # +
+                    # weights["free"] * price_score
             )
 
             ranked.append({
                 "course": course,
-                "score": round(score, 4),
+                "ranking_score": round(score, 4),
                 "covered_skills": list(covered_skills)
             })
         # dict course - how cool it is
-        return sorted(ranked, key=lambda x: x["score"], reverse=True)
+        return sorted(ranked, key=lambda x: x["ranking_score"], reverse=True)
 
     def evaluate_ranking(self, ranked_courses: List[Dict],
                          skill_gap: List[str],
@@ -74,7 +83,6 @@ class CourseRanker:
         str, float]:
         priorities = self.priorities_by_role.get(target_role, {})
 
-        ideal_relevances = []
         predicted_relevances = []
 
         for item in ranked_courses[:k]:
