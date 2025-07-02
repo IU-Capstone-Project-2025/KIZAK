@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 class CourseVectorSearch:
     _instance = None
 
-    def __init__(self, csv_path='ml/courses_final.csv', collection_name='courses', qdrant_host='localhost',
+    def __init__(self, csv_path='courses_final.csv', collection_name='courses', qdrant_host='localhost',
                 qdrant_port=6333, use_gpu=True):
         logger.info("Initializing CourseVectorSearch (DB connection only)")
         self.collection_name = collection_name
