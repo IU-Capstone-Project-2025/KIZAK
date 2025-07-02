@@ -1,5 +1,3 @@
--- Enable pgvector
-CREATE EXTENSION IF NOT EXISTS vector;
 -- User accounts
 CREATE TABLE users (
     user_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -9,20 +7,15 @@ CREATE TABLE users (
     background TEXT,
     education TEXT,
     goals TEXT,
-    goal_vacancy VARCHAR(100),
-    background_vector VECTOR(256),
-    goals_vector VECTOR(256),
-    goal_vacancy_vector VECTOR(256)
+    goal_vacancy VARCHAR(100)
 );
 -- User skills
 CREATE TABLE user_skills (
     user_id UUID REFERENCES users(user_id) ON DELETE CASCADE,
     skill VARCHAR(100) NOT NULL,
-    skill_vector VECTOR(256),
     skill_level VARCHAR(20) CHECK (
         skill_level IN ('Beginner', 'Intermediate', 'Advanced')
     ),
-    level_vector VECTOR(64),
     is_goal BOOLEAN,
     PRIMARY KEY (user_id, skill)
 );
@@ -32,7 +25,6 @@ CREATE TABLE resource (
     resource_type VARCHAR(20) CHECK (resource_type IN ('Course', 'Article')),
     title VARCHAR(100) NOT NULL,
     summary TEXT,
-    summary_vector VECTOR(256),
     content TEXT NOT NULL,
     level VARCHAR(20) CHECK (
         level IN (
@@ -51,8 +43,7 @@ CREATE TABLE resource (
     ),
     published_date DATE,
     certificate_available BOOLEAN DEFAULT FALSE,
-    skills_covered VARCHAR(100) [],
-    skills_covered_vector VECTOR(256) []
+    skills_covered VARCHAR(100) []
 );
 CREATE TABLE user_roadmap (
     roadmap_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
