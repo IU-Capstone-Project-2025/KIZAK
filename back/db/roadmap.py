@@ -394,7 +394,7 @@ async def delete_link(link_id: UUID):
 
 
 async def get_roadmap_progress(roadmap_id: UUID) -> int:
-    """Get roadmap progress based on progres of each node
+    """Get roadmap progress based on progress of each node
 
     Args:
         feature-profile-api (UUID): Roadmap ID
