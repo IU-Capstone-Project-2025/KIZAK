@@ -40,6 +40,11 @@ jobs:
           curl --fail http://localhost:3000 \
           || (docker compose logs && exit 1)
 
+      - name: Run tests
+        working-directory: back
+        run: |
+          pytest
+
       - name: Stop containers
         if: always()
         run: docker compose down
