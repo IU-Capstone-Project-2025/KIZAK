@@ -9,6 +9,8 @@ from models.user import UserCreate, UserResponse, UserUpdate
 router = APIRouter()
 
 
+
+
 @router.get("/users/{user_id}", response_model=UserResponse, tags=["User"])
 async def get_user(user_id: UUID) -> UserResponse:
     logger.info(f"Getting user {user_id}")
