@@ -61,7 +61,7 @@ export const BigString: React.FC<Props> = ({
             onClick={handleAcceptData}
             className={`h-[50px] w-50 py-2 text-white font-semibold rounded-md transition-all duration-300 ${
               isValid
-                ? "bg-brand-primary hover:bg-brand-primary/90"
+                ? "bg-brand-primary"
                 : "bg-brand-primary/50 cursor-not-allowed"
             }`}
           >

@@ -7,7 +7,8 @@ export interface ChosenSkill {
 
 export interface UserSkill {
   skill: string;
-  level: SkillLevels;
+  skill_level: SkillLevels;
+  is_goal: boolean;
 }
 
 export interface OnboardingData {
@@ -15,9 +16,7 @@ export interface OnboardingData {
   password: string;
   background: string;
   education: string;
-  skills: string[];
-  skills_level: UserSkill[];
-  goal_skills: string[];
-  goals: string[];
+  goals: string;
   goal_vacancy: string;
+  skills: UserSkill[];
 }

@@ -376,7 +376,7 @@ async def retrieve_user_profile(user_id: UUID) -> UserProfileResponse:
     Returns:
         UserProfileResponse: User profile information
     """
-    roadmap_row = db.fetchrow(
+    roadmap_row = await db.fetchrow(
         """
             SELECT
                 roadmap_id
@@ -398,7 +398,7 @@ async def retrieve_user_profile(user_id: UUID) -> UserProfileResponse:
 
     user = await retrieve_user(user_id)
 
-    history_rows = db.fetch(
+    history_rows = await db.fetch(
         """
             SELECT
                 roadmap_id,

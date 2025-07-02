@@ -1,5 +1,5 @@
 "use client";
-import { OnboardingData } from "@/shared/types/types";
+import { OnboardingData, UserSkill } from "@/shared/types/types";
 import { ArrowLeft } from "lucide-react";
 import React, { useState } from "react";
 
@@ -8,9 +8,9 @@ interface TagsProps {
   title: string;
   placeholder: string;
   singleChoice: boolean;
+  isGoal: boolean;
   setData: (value: React.SetStateAction<OnboardingData>) => void;
   userData: OnboardingData;
-  fieldKey: keyof Pick<OnboardingData, "skills" | "goal_skills">;
   onNext: () => void;
   onBack: () => void;
 }
@@ -22,20 +22,38 @@ export const Tags: React.FC<TagsProps> = ({
   singleChoice,
   setData,
   userData,
-  fieldKey,
+  isGoal,
   onNext,
   onBack,
 }) => {
-  const [skills, setSkills] = useState<string[]>(userData[fieldKey] || []);
+  const [skills, setSkills] = useState<UserSkill[]>([]);
   const [text, setText] = useState<string>("");
   const [filteredSkills, setFilteredSkills] = useState<string[]>([]);
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
 
   const isValid = skills.length > 0;
 
+  React.useEffect(() => {
+    setSkills(userData.skills.filter((s) => s.is_goal === isGoal));
+  }, [userData, isGoal]);
+
+  React.useEffect(() => {
+    const allSkills = isGoal
+      ? userData.skills.filter((s) => !s.is_goal).map((s) => s.skill)
+      : userData.skills.filter((s) => s.is_goal).map((s) => s.skill);
+    const overlap = skills.some((s) => allSkills.includes(s.skill));
+    if (overlap) {
+      setError("Skill tags and Goal tags must not overlap");
+    } else {
+      setError("");
+    }
+  }, [skills, userData.skills, isGoal]);
+
   function handleAcceptData() {
+    if (error) return;
     if (isValid) {
-      setData({ ...userData, [fieldKey]: skills });
+      setData({ ...userData, skills: [...userData.skills, ...skills] });
       onNext();
     }
   }
@@ -58,10 +76,13 @@ export const Tags: React.FC<TagsProps> = ({
 
   const handleChooseTag = (tag: string) => {
     if (singleChoice) {
-      setSkills([tag]);
+      setSkills([{ skill: tag, is_goal: isGoal, skill_level: "Beginner" }]);
     } else {
-      if (!skills.includes(tag)) {
-        setSkills((prev) => [...prev, tag]);
+      if (!skills.some((s) => s.skill === tag)) {
+        setSkills((prev) => [
+          ...prev,
+          { skill: tag, is_goal: isGoal, skill_level: "Beginner" },
+        ]);
       }
     }
 
@@ -70,7 +91,7 @@ export const Tags: React.FC<TagsProps> = ({
   };
 
   const handleRemoveSkill = (tag: string) => {
-    setSkills((prev) => prev.filter((s) => s !== tag));
+    setSkills((prev) => prev.filter((s) => s.skill !== tag));
   };
 
   return (
@@ -111,12 +132,12 @@ export const Tags: React.FC<TagsProps> = ({
         <div className="min-h-8 max-w-full flex flex-wrap justify-center gap-2">
           {skills.map((skill) => (
             <button
-              key={skill}
+              key={skill.skill}
               type="button"
-              onClick={() => handleRemoveSkill(skill)}
+              onClick={() => handleRemoveSkill(skill.skill)}
               className="flex items-center border border-ui-border rounded px-3 py-1 shadow-sm transition-all duration-200 hover:bg-bg-subtle text-sm"
             >
-              {skill}
+              {skill.skill}
             </button>
           ))}
         </div>
@@ -132,17 +153,18 @@ export const Tags: React.FC<TagsProps> = ({
 
           <button
             type="submit"
-            disabled={!isValid}
+            disabled={!isValid || !!error}
             onClick={handleAcceptData}
-            className={`h-[50px] w-50 py-2 hover:bg-brand-primary text-white font-semibold rounded-md transition-all duration-300 ${
-              isValid
-                ? "bg-brand-primary hover:bg-brand-primary/90"
+            className={`h-[50px] w-50 py-2 text-white font-semibold rounded-md transition-all duration-300 ${
+              isValid && !error
+                ? "bg-brand-primary"
                 : "bg-brand-primary/50 cursor-not-allowed"
             }`}
           >
             Continue
           </button>
         </div>
+        {error && <div className="text-red-500 text-xs mt-2">{error}</div>}
       </div>
     </article>
   );

@@ -31,13 +31,17 @@ export const SliderLevel: React.FC<SliderLevelProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setData((prev) => ({
-      ...prev,
-      skills_level: {
-        ...prev.skills_level,
-        [tag]: levels[levelIndex],
-      },
-    }));
+
+    setData((prev) => {
+      const filteredSkills = prev.skills.filter((s) => s.skill !== tag);
+      return {
+        ...prev,
+        skills: [
+          ...filteredSkills,
+          { skill: tag, skill_level: levels[levelIndex], is_goal: false },
+        ],
+      };
+    });
     onNext();
   };
 

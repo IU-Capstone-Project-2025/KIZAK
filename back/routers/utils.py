@@ -12,9 +12,10 @@ async def get_skills_list() -> set[str]:
 
 
 @router.get("/check_login/{login}")
-async def check_login(login: str) -> bool:
+async def check_login(login: str) -> dict:
     try:
         await retrieve_user_by_login(login)
-        return True
+        return {"exists": True}
     except HTTPException:
-        return False
+        return {"exists": False}
+
