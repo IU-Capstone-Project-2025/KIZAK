@@ -48,7 +48,7 @@ class CourseVectorSearch:
             hnsw_config={
                             "m": 8,
                             "ef_construct": 50,
-                            "full_scan_threshold": 1000
+                            "full_scan_threshold": 10
                         }
 
         )
@@ -75,7 +75,7 @@ class CourseVectorSearch:
         logger.info("uploading completed")
 
 
-    def load_and_prepare_data(self, csv_path='ml/courses_final.csv'):
+    def load_and_prepare_data(self, csv_path='courses_final.csv'):
         logger.info(f"Loading and preparing data from {csv_path}")
 
         self.df = pd.read_csv(csv_path)

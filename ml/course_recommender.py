@@ -41,7 +41,7 @@ flag_file = ".qdrant_initialized"
 if not os.path.exists(flag_file):
     logger.info("Initialization of Qdrant, uploading courses data...")
     search_engine.create_collection()
-    search_engine.upload_to_qdrant()
+    search_engine.load_and_prepare_data()
     with open(flag_file, "w") as f:
         f.write("initialized")
 else:
