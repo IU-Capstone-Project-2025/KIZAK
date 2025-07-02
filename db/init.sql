@@ -74,3 +74,8 @@ CREATE TABLE roadmap_link (
     from_node UUID REFERENCES Roadmap_Node(node_id) ON DELETE CASCADE,
     to_node UUID REFERENCES Roadmap_Node(node_id) ON DELETE CASCADE
 );
+CREATE TABLE roadmap_history (
+    roadmap_id UUID REFERENCES User_Roadmap(roadmap_id) ON DELETE CASCADE,
+    node_id UUID REFERENCES Roadmap_Node(node_id) ON DELETE CASCADE,
+    last_opened TIMESTAMP WITH TIME ZONE
+);

@@ -6,8 +6,10 @@ from utils.logger import logger
 from fastapi import HTTPException
 from models.user import UserCreate, UserResponse
 from models.user import UserUpdate, UserSkill, UserPassword
+from models.user import UserProfileResponse
 
 from db.db_connector import db
+from db.roadmap import get_roadmap_progress
 
 
 async def create_user(user: UserCreate) -> UserResponse:
@@ -319,7 +321,7 @@ async def get_user_from_db(login: str) -> UserPassword:
                 SELECT
                     users.user_id,
                     users.login,
-                    users.password, 
+                    users.password,
                     users.creation_date
                 FROM users
                 WHERE users.login = $1
@@ -363,3 +365,62 @@ async def get_userResp_from_db(login: str) -> UserResponse:
         return UserResponse(**user_response)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+async def retrieve_user_profile(user_id: UUID) -> UserProfileResponse:
+    """ Returns profile information based on user ID
+
+    Args:
+        user_id (UUID): User ID
+
+    Returns:
+        UserProfileResponse: User profile information
+    """
+    roadmap_row = db.fetchrow(
+        """
+            SELECT
+                roadmap_id
+            FROM
+                user_roadmap
+            WHERE
+                user_id = $1
+        """,
+        user_id
+    )
+
+    if not roadmap_row:
+        raise HTTPException(
+            status_code=404,
+            detail=f"User {user_id} does not have any roadmaps"
+        )
+
+    progress = await get_roadmap_progress(roadmap_row['roadmap_id'])
+
+    user = await retrieve_user(user_id)
+
+    history_rows = db.fetch(
+        """
+            SELECT
+                roadmap_id,
+                node_id,
+                last_opened
+            FROM
+                roadmap_history
+            WHERE
+                roadmap_id = $1
+        """,
+        roadmap_row['roadmap_id']
+    )
+
+    history = sorted(
+        [row['node_id'] for row in await history_rows],
+        key=lambda x: x["last_opened"],
+        reverse=True
+    )
+
+    return UserProfileResponse(
+        user=user,
+        roadmap_id=roadmap_row['roadmap_id'],
+        progress=progress,
+        history=history
+    )

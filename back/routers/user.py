@@ -2,19 +2,30 @@ from uuid import UUID
 from utils.logger import logger
 
 from db.user import create_user, remove_user, retrieve_user, update_user
+from db.user import retrieve_user_profile
 from fastapi import Response, status
 from fastapi.routing import APIRouter
-from models.user import UserCreate, UserResponse, UserUpdate
+from models.user import UserCreate, UserProfileResponse, UserResponse
+from models.user import UserUpdate
 
 router = APIRouter()
-
-
 
 
 @router.get("/users/{user_id}", response_model=UserResponse, tags=["User"])
 async def get_user(user_id: UUID) -> UserResponse:
     logger.info(f"Getting user {user_id}")
     return await retrieve_user(user_id)
+
+
+@router.get(
+    "/users/profile/{user_id}/",
+    response_model=UserProfileResponse,
+    tags=["User"],
+    status_code=status.HTTP_200_OK
+)
+async def get_user_profile(user_id: UUID) -> UserProfileResponse:
+    logger.info(f"Getting user profile for {user_id}")
+    return await retrieve_user_profile(user_id)
 
 
 @router.post(
@@ -43,8 +54,7 @@ async def put_user(user: UserUpdate) -> UserResponse:
 @router.delete(
     "/users/{user_id}",
     tags=["User"],
-    status_code=status.
-    HTTP_204_NO_CONTENT
+    status_code=status.HTTP_204_NO_CONTENT
 )
 async def delete_user(user_id: UUID) -> None:
     logger.info(f"Deleting user {user_id}")
