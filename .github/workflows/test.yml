@@ -66,8 +66,8 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y postgresql-client
-          PGPASSWORD=$DB_PASSWORD psql -h localhost \
-          -U $DB_USER -d $DB_NAME -f db/init.sql
+          PGPASSWORD="$DB_PASSWORD" psql -h localhost \
+          -U "$DB_USER" -d "$DB_NAME" -f db/init.sql
 
       - name: Run tests
         working-directory: back
