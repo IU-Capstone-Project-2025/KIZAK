@@ -4,7 +4,6 @@ import {
   SignUp,
   SingleString,
   BigString,
-  ProgressDots,
   Tags,
 } from "@/shared/components/onboarding";
 
@@ -30,17 +29,18 @@ export const getScreens = (
   ];
 
   const generateSkillLevelScreens = () => {
-    return userData.skills.map((skill) => (
-      <SliderLevel
-        key={`skill_level_${skill}`}
-        tag={skill}
-        setData={setUserData}
-        onNext={goToNextStep}
-        onBack={goToPreviousStep}
-      />
-    ));
+    return userData.skills
+      .filter((s) => s.is_goal === false)
+      .map((skill) => (
+        <SliderLevel
+          key={`skill_level_${skill.skill}`}
+          tag={skill.skill}
+          setData={setUserData}
+          onNext={goToNextStep}
+          onBack={goToPreviousStep}
+        />
+      ));
   };
-
   return [
     <SignUp
       key="signup"
@@ -75,7 +75,7 @@ export const getScreens = (
       title="Tell us about your skills"
       placeholder="Enter your skills..."
       singleChoice={false}
-      fieldKey="skills"
+      isGoal={false}
       setData={setUserData}
       userData={userData}
       onNext={goToNextStep}
@@ -97,7 +97,7 @@ export const getScreens = (
       title="Which goal skills are you aiming to achieve?"
       placeholder="Enter your skills..."
       singleChoice={false}
-      fieldKey="goal_skills"
+      isGoal={true}
       setData={setUserData}
       userData={userData}
       onNext={goToNextStep}

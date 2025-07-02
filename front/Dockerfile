@@ -24,4 +24,4 @@ COPY --from=builder /app/next.config.ts ./next.config.ts
 
 EXPOSE 3000
 
-CMD ["npx", "next", "start", "-H", "0.0.0.0", "-p", "3000"]
+CMD ["sh", "-c", "npx next start -H ${FRONTEND_HOST:-0.0.0.0} -p ${FRONTEND_PORT:-3000}"]

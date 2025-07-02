@@ -24,8 +24,32 @@ class UserSkill(BaseModel):
     )
 
 
+class UserPassword(BaseModel):
+    login: str = Field(
+        ...,
+        description="Login identifier for the user",
+        examples=["johndoe", "user123"]
+    )
+    password: str = Field(
+        ...,
+        description="""User password""",
+        examples=["P@ssw0rd!"]
+    )
+    user_id: UUID = Field(
+        ...,
+        description="Unique identifier for the user",
+        examples=["123e4567-e89b-12d3-a456-426614174000"]
+    )
+    creation_date: datetime = Field(
+        ...,
+        description="Timestamp when the user was created",
+        examples=["2025-06-24T15:30:00Z"]
+    )
+
+
 class UserBase(BaseModel):
-    """Base schema for user data shared between create and response operations."""
+    """Base schema for user data shared between
+       create and response operations."""
     login: str = Field(
         ...,
         description="Unique login identifier for the user",
@@ -33,7 +57,7 @@ class UserBase(BaseModel):
     )
     password: str = Field(
         ...,
-        description="User password (hashed or plain depending on security policy)",
+        description="User password",
         examples=["P@ssw0rd!"],
     )
     background: str = Field(
@@ -61,8 +85,16 @@ class UserBase(BaseModel):
         description="List of user's skills with levels and goal flags",
         examples=[
             [
-                {"skill": "Python", "skill_level": "Intermediate", "is_goal": False},
-                {"skill": "Machine Learning", "skill_level": "Beginner", "is_goal": True}
+                {
+                    "skill": "Python",
+                    "skill_level": "Intermediate",
+                    "is_goal": False
+                },
+                {
+                    "skill": "Machine Learning",
+                    "skill_level": "Beginner",
+                    "is_goal": True
+                }
             ]
         ]
     )
@@ -74,7 +106,8 @@ class UserCreate(UserBase):
 
 
 class UserResponse(UserBase):
-    """Schema for user data returned in responses, includes system-generated fields."""
+    """Schema for user data returned in responses,
+    includes system-generated fields."""
     user_id: UUID = Field(
         ...,
         description="Unique identifier for the user",
@@ -88,7 +121,8 @@ class UserResponse(UserBase):
 
 
 class UserUpdate(BaseModel):
-    """Schema for updating existing user data; all fields optional except user_id."""
+    """Schema for updating existing user data;
+    all fields optional except user_id."""
     user_id: UUID = Field(
         ...,
         description="Unique identifier of the user to update",
@@ -101,7 +135,7 @@ class UserUpdate(BaseModel):
     )
     password: Optional[str] = Field(
         None,
-        description="(Optional) Updated password (hashed or plain depending on policy)",
+        description="(Optional) Updated password",
         examples=["N3wP@ssw0rd"]
     )
     background: Optional[str] = Field(
@@ -126,11 +160,85 @@ class UserUpdate(BaseModel):
     )
     skills: Optional[List[UserSkill]] = Field(
         None,
-        description="(Optional) Updated list of user's skills; replaces existing skills if provided",
+        description="""(Optional) Updated list of user's skills;
+        replaces existing skills if provided""",
         examples=[
             [
-                {"skill": "Go", "skill_level": "Beginner", "is_goal": True},
-                {"skill": "Docker", "skill_level": "Intermediate", "is_goal": False}
+                {
+                    "skill": "Go",
+                    "skill_level": "Beginner",
+                    "is_goal": True
+                },
+                {
+                    "skill": "Docker",
+                    "skill_level": "Intermediate",
+                    "is_goal": False
+                }
             ]
+        ]
+    )
+
+
+class LoginRequest(BaseModel):
+    """Schema for user login requests."""
+    login: str = Field(
+        ...,
+        description="Login identifier for the user",
+        examples=["johndoe", "user123"]
+    )
+    password: str = Field(
+        ...,
+        description="User password",
+        examples=["P@ssw0rd!"]
+    )
+
+
+class UserProfileResponse(BaseModel):
+    """Schema for user profile response"""
+    user: UserResponse = Field(
+        ...,
+        description="User profile information",
+        examples=[
+            {
+                "user_id": "123e4567-e89b-12d3-a456-426614174000",
+                "login": "johndoe",
+                "background": "5 years experience in software development",
+                "education": "Bachelor's in Computer Science",
+                "goals": "Become a team lead",
+                "goal_vacancy": "Senior Software Engineer",
+                "skills": [
+                    {
+                        "skill": "Python",
+                        "skill_level": "Intermediate",
+                        "is_goal": False
+                    },
+                    {
+                        "skill": "Machine Learning",
+                        "skill_level": "Beginner",
+                        "is_goal": True
+                    }
+                ]
+            }
+        ]
+    )
+    roadmap_id: UUID = Field(
+        ...,
+        description="Unique identifier for the user's roadmap",
+        examples=["123e4567-e89b-12d3-a456-426614174000"]
+    )
+    progress: int = Field(
+        ...,
+        description="Progress percentage for the user's roadmap",
+        examples=[75, 0, 100],
+        gt=0,
+        lt=100
+    )
+    history: List[UUID] = Field(
+        ...,
+        description="List of UUIDs representing the user's roadmap history",
+        examples=[
+            ["123e4567-e89b-12d3-a456-426614174000"],
+            ["123e4567-e89b-12d3-a456-426614174000",
+                "123e4567-e89b-12d3-a456-426614174001"]
         ]
     )
