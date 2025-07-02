@@ -1,51 +1,52 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { ProgressDots } from "@/shared/components/onboarding";
 import { getScreens } from "@/shared/utils/getScreens";
 import { usePageTransition } from "@/shared/components/transition/transition-provider";
-
-export type SkillLevels = "Beginner" | "Intermediate" | "Advanced";
-
-export interface ChosenSkill {
-  skill: string;
-  skillLevel: SkillLevels;
-}
-
-export interface UserSkill {
-  skill: string;
-  level: SkillLevels;
-}
-
-export interface OnboardingData {
-  login: string;
-  password: string;
-  background: string;
-  education: string;
-  skills: string[];
-  skills_level: UserSkill[];
-  goal_skills: string[];
-  goals: string[];
-  goal_vacancy: string;
-}
+import { OnboardingData } from "@/shared/types/types";
 
 export default function OnBoarding() {
-  const [userData, setUserData] = useState<OnboardingData>({
+  const defaultUserData: OnboardingData = {
     login: "",
     password: "",
     background: "",
     education: "",
     skills: [],
-    skills_level: [],
-    goal_skills: [],
-    goals: [],
+    goals: "",
     goal_vacancy: "",
-  });
+  };
 
+  const [userData, setUserData] = useState<OnboardingData>(defaultUserData);
   const [step, setStep] = useState<number>(0);
   const [displayedStep, setDisplayedStep] = useState<number>(0);
   const [animating, setAnimating] = useState<boolean>(false);
   const { handleClick } = usePageTransition();
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedUserData = localStorage.getItem("onboardingUserData");
+      if (savedUserData) setUserData(JSON.parse(savedUserData));
+
+      const savedStep = localStorage.getItem("onboardingStep");
+      if (savedStep) {
+        setStep(Number(savedStep));
+        setDisplayedStep(Number(savedStep));
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("onboardingUserData", JSON.stringify(userData));
+    }
+  }, [userData]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("onboardingStep", String(step));
+    }
+  }, [step]);
 
   const goToNextStep = async () => {
     if (step < screens.length - 1) {
@@ -57,39 +58,12 @@ export default function OnBoarding() {
       }, 300);
     } else {
       try {
-        if (!userData.background.trim()) {
-          alert("Пожалуйста, укажите background");
-          return;
-        }
-
-        const allSkills: {
-          skill: string;
-          skill_level: SkillLevels;
-          is_goal: boolean;
-        }[] = userData.skills_level.map((skillObj) => ({
-          skill: skillObj.skill,
-          skill_level: skillObj.level,
-          is_goal: userData.goal_skills.includes(skillObj.skill),
-        }));
-
-        const payload = {
-          login: userData.login,
-          password: userData.password,
-          background: userData.background,
-          education: userData.education,
-          goals: Array.isArray(userData.goals)
-            ? userData.goals.join(", ")
-            : userData.goals,
-          goal_vacancy: userData.goal_vacancy,
-          skills: allSkills,
-        };
-
         const response = await fetch("http://localhost:8000/users/", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(payload),
+          body: JSON.stringify(userData),
         });
 
         if (!response.ok) {
@@ -107,6 +81,10 @@ export default function OnBoarding() {
 
         const data = await response.json();
         const userId = data.user_id;
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("onboardingUserData");
+          localStorage.removeItem("onboardingStep");
+        }
         handleClick(`/main/${userId}`, 0);
       } catch (error) {
         console.error("Ошибка при завершении онбординга:", error);
