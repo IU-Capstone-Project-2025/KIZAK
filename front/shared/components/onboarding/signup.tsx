@@ -22,9 +22,7 @@ export const SignUp: React.FC<Props> = ({ setData, userData, onNext }) => {
     setLoginError("");
     try {
       const res = await fetch(
-        `http://localhost:8000/users/check_login?login=${encodeURIComponent(
-          login
-        )}`
+        `http://localhost:8000/check_login/${encodeURIComponent(login)}`
       );
       const data = await res.json();
       if (data.exists) {

@@ -20,7 +20,11 @@ export const MainContent: React.FC<Props> = ({ className = "", userId }) => {
         <MainRoadmap />
       </TransitionLink>
       <div className="flex-1 flex flex-wrap gap-4">
-        <MainProgress className="flex-1 min-w-[300px]" userId={userId} />
+        <MainProgress
+          progress={70}
+          className="flex-1 min-w-[300px]"
+          userId={userId}
+        />
         <UserProfileMain
           userName="netimaaa"
           userImage="/userProfile.jpg"
