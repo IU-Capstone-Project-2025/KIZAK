@@ -26,9 +26,7 @@ export const Tags: React.FC<TagsProps> = ({
   onNext,
   onBack,
 }) => {
-  const [skills, setSkills] = useState<UserSkill[]>(
-    userData.skills.filter((s) => s.is_goal === isGoal)
-  );
+  const [skills, setSkills] = useState<UserSkill[]>([]);
   const [text, setText] = useState<string>("");
   const [filteredSkills, setFilteredSkills] = useState<string[]>([]);
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
@@ -36,6 +34,12 @@ export const Tags: React.FC<TagsProps> = ({
 
   const isValid = skills.length > 0;
 
+  // Sync skills with userData and isGoal
+  React.useEffect(() => {
+    setSkills(userData.skills.filter((s) => s.is_goal === isGoal));
+  }, [userData, isGoal]);
+
+  // Check for overlap and set error
   React.useEffect(() => {
     const allSkills = isGoal
       ? userData.skills.filter((s) => !s.is_goal).map((s) => s.skill)
@@ -49,16 +53,7 @@ export const Tags: React.FC<TagsProps> = ({
   }, [skills, userData.skills, isGoal]);
 
   function handleAcceptData() {
-    const allSkills = isGoal
-      ? userData.skills.filter((s) => !s.is_goal).map((s) => s.skill)
-      : userData.skills.filter((s) => s.is_goal).map((s) => s.skill);
-    const overlap = skills.some((s) => allSkills.includes(s.skill));
-    if (overlap) {
-      setError("Skill tags and Goal tags must not overlap");
-      return;
-    } else {
-      setError("");
-    }
+    if (error) return;
     if (isValid) {
       setData({ ...userData, skills: [...userData.skills, ...skills] });
       onNext();
