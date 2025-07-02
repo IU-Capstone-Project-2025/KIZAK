@@ -34,12 +34,10 @@ export const Tags: React.FC<TagsProps> = ({
 
   const isValid = skills.length > 0;
 
-  // Sync skills with userData and isGoal
   React.useEffect(() => {
     setSkills(userData.skills.filter((s) => s.is_goal === isGoal));
   }, [userData, isGoal]);
 
-  // Check for overlap and set error
   React.useEffect(() => {
     const allSkills = isGoal
       ? userData.skills.filter((s) => !s.is_goal).map((s) => s.skill)
