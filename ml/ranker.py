@@ -72,10 +72,10 @@ class CourseRanker:
 
             course_skills = self.get_skill_words(raw_course_skills)
 
-            logger.info(
-                f"Course ID: {course.get('id')}, "
-                f"skills type: {type(course_skills)}, "
-                f"value: {course_skills}")
+            # logger.info(
+            #     f"Course ID: {course.get('id')}, "
+            #     f"skills type: {type(course_skills)}, "
+            #     f"value: {course_skills}")
 
             # normalized_gap = set(self.normalize_skill(s) for s in skill_gap)
             covered_skills = course_skills.intersection(skill_gap)

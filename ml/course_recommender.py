@@ -8,6 +8,13 @@ import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # 0 = all logs, 1 = INFO, 2 = WARNING, 3 = ERROR
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 
+import logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s"
+)
+logger = logging.getLogger(__name__)
+
 import time
 
 with open('job_skill.json', 'r', encoding='utf-8') as f:
@@ -32,13 +39,13 @@ user_query = input(">>> ").strip()
 search_engine = CourseVectorSearch()
 flag_file = ".qdrant_initialized"
 if not os.path.exists(flag_file):
-    print("Initialization of Qdrant, uploading courses data...")
+    logger.info("Initialization of Qdrant, uploading courses data...")
     search_engine.create_collection()
     search_engine.upload_to_qdrant()
     with open(flag_file, "w") as f:
         f.write("initialized")
 else:
-    print("Qdrant was previously initialized")
+    logger.info("Qdrant was previously initialized")
 
 # analysis of user's skills, define lacking ones
 gap_analyzer = SkillGapAnalyzer(role_to_skills)
@@ -47,12 +54,14 @@ missing_skills = gap_result["missing_skills"]
 print(f"\nSkill gap for '{user_role}': {missing_skills}")
 
 start_time = time.time()
+logger.info('starting qdrant search')
 
 # vectorize user info
 title_vec, desc_vec, skills_vec = search_engine.encode_query(user_role, user_query, user_skills)
 results = search_engine.search_courses_batch_weighted(title_vec, desc_vec, skills_vec)
 
 end_time = time.time()
+logger.info('end of qdrant search')
 execution_time = end_time - start_time
 
 # search courses in db
@@ -62,8 +71,8 @@ search_results = search_engine.search_courses_batch_weighted(
     skills_vector=skills_vec,
     limit=30
 )
-print('Time of query to vector db execution')
-print(f"{execution_time*1000:.4f} ms")
+logger.info('Time of query to vector db searching')
+logger.info(f"{execution_time*1000:.4f} ms")
 
 # vector search results
 print("\ntop-5 courses from vector search (before ranking):")
@@ -98,6 +107,6 @@ for i, course in enumerate(ranked_courses[:5]):
     print(f"   Rating: {course['course'].get('rating')}")
     print("---")
 
-print("Ranking quality metrics:", metrics)
+print("Ranking quality metric:", metrics)
 
 
