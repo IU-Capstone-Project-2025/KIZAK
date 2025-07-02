@@ -391,3 +391,28 @@ async def delete_link(link_id: UUID):
         if result == "DELETE 0":
             logger.error(f"Link {link_id} not found")
             raise HTTPException(status_code=404, detail="Resource not found")
+
+
+async def get_roadmap_progress(roadmap_id: UUID) -> int:
+    """Get roadmap progress based on progres of each node
+
+    Args:
+        feature-profile-api (UUID): Roadmap ID
+
+    Returns:
+        Progress (int): Roadmap progress in percents
+
+    """
+    progress = db.fetch(
+        """
+            SELECT
+                SUM(progress) / COUNT(*)
+            FROM
+                roadmap_node
+            WHERE
+                roadmap_id = $1
+        """,
+        roadmap_id
+    )
+
+    return int(progress)
