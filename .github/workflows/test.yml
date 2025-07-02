@@ -54,7 +54,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: back
-        run: poetry install
+        run: poetry install --no-root
 
       - name: Wait for PostgreSQL to be ready
         run: |
