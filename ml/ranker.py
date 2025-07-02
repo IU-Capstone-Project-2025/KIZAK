@@ -56,8 +56,7 @@ class CourseRanker:
             weights = {
                 "coverage": 0.45,
                 "priority": 0.45,
-                "rating": 0.1,
-                # "free": 0.1
+                "rating": 0.1
             }
         # get priorities only for needed role
         priorities = self.priorities_by_role.get(target_role, {})
@@ -99,8 +98,6 @@ class CourseRanker:
                     weights["coverage"] * coverage_score +
                     weights["priority"] * mean_priority_score +
                     weights["rating"] * rating_score
-                    # +
-                    # weights["free"] * price_score
             )
 
             ranked.append({
