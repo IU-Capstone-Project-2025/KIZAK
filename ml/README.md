@@ -70,7 +70,7 @@ The script will ask:
 
 It will then display:
 
-* User skill gap for targer job
+* User skill gap for target job
 * Top courses found via vector search
 * Final ranked recommendations
 

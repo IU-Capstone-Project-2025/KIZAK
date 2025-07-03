@@ -33,7 +33,7 @@ class CourseVectorSearch:
         self.qdrant_data = None
 
     def create_collection(self):
-        logger.info(f"check if colletion exists '{self.collection_name}'")
+        logger.info(f"check if collection exists '{self.collection_name}'")
         if self.client.collection_exists(self.collection_name):
             logger.info(f"deleting collection '{self.collection_name}'")
             self.client.delete_collection(self.collection_name)
@@ -56,7 +56,7 @@ class CourseVectorSearch:
     def _prepare_vectors(self):
         logger.info("deleting NaNs")
         self.df = self.df.dropna(subset=["title", "description", "skills"]).reset_index(drop=True)
-        logger.info("vectorizing cources...")
+        logger.info("vectorizing courses...")
         self.df["vectors"] = self.df.apply(self._vectorize, axis=1)
         logger.info("vectorization completed")
 
@@ -150,7 +150,7 @@ class CourseVectorSearch:
 
         sorted_results = sorted(weighted_scores.values(), key=lambda x: x['weighted_score'], reverse=True)
 
-        logger.info(f"chosed {len(sorted_results[:limit])} best courses")
+        logger.info(f"Chosen {len(sorted_results[:limit])} best courses")
 
         return [
             {

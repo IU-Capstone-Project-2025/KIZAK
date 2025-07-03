@@ -44,11 +44,11 @@ class CourseRanker:
         words = set()
         for skill in skills:
             normalized = self.normalize_skill(skill)
-            splitted = normalized.split()
-            words.update(splitted)
+            splited = normalized.split()
+            words.update(splited)
         return words
 
-    def rank_courses(self, courses: List[Dict], # from cosine similarity serach
+    def rank_courses(self, courses: List[Dict], # from cosine similarity search
                      skill_gap: List[str], #from skillgap
                      target_role: str, # from user onboarding info
                      weights: Dict[str, float] = None) -> List[Dict]: # alpha beta for ranking
