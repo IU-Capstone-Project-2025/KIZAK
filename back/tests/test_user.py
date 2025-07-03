@@ -68,7 +68,7 @@ async def test_update_user(async_client, created_user, fake_second_user_data):
     actual = UserResponse(**json_response)
     updated_user["creation_date"] = created_user["creation_date"]
     expected = UserResponse(**updated_user)
-    assert actual.model_dump() == expected.model_dump()
+    assert actual == expected
 
 
 @pytest.mark.asyncio
