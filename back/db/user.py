@@ -143,6 +143,7 @@ async def retrieve_user(user_id: UUID) -> UserResponse:
             )
 
             skills = [UserSkill(**s) for s in skills_response]
+            skills.sort(key=lambda skill: skill.skill)
 
             if not user_response:
                 logger.error(f"Failed to retrieve user {user_id}")
