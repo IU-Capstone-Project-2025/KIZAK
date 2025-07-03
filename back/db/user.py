@@ -258,6 +258,7 @@ async def update_user(user: UserUpdate) -> UserResponse:
             )
 
             skills = [UserSkill(**s) for s in skills_response]
+            skills.sort(key=lambda skill: skill.skill)
 
             return UserResponse(**user_response, skills=skills)
     except Exception:
