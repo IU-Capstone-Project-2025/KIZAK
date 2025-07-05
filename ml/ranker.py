@@ -72,12 +72,6 @@ class CourseRanker:
 
             course_skills = self.get_skill_words(raw_course_skills)
 
-            # logger.info(
-            #     f"Course ID: {course.get('id')}, "
-            #     f"skills type: {type(course_skills)}, "
-            #     f"value: {course_skills}")
-
-            # normalized_gap = set(self.normalize_skill(s) for s in skill_gap)
             covered_skills = course_skills.intersection(skill_gap)
 
 
@@ -90,9 +84,6 @@ class CourseRanker:
 
             rating = course.get("rating", 0) or 0 #course stars
             rating_score = rating / self.rating_max
-
-            # # bcs everybody love halyava :)
-            # price_score = 1 if course.get("price", 0) == 0 else 0
 
             score = (
                     weights["coverage"] * coverage_score +
