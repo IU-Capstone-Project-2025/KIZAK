@@ -16,11 +16,8 @@ router = APIRouter()
 
 
 @router.get("/users/{user_id}", response_model=UserResponse, tags=["User"])
-async def get_user(user_id: UUID, current_user: Annotated[
-    UserBase, Depends(get_current_active_user)]
-                   ) -> UserResponse:
+async def get_user(user_id: UUID) -> UserResponse:
     logger.info(f"Getting user {user_id}")
-
 
     return await retrieve_user(user_id)
 
@@ -31,8 +28,7 @@ async def get_user(user_id: UUID, current_user: Annotated[
     tags=["User"],
     status_code=status.HTTP_200_OK
 )
-async def get_user_profile(user_id: UUID,  current_user: Annotated[
-    UserBase, Depends(get_current_active_user)]) -> UserProfileResponse:
+async def get_user_profile(user_id: UUID) -> UserProfileResponse:
     logger.info(f"Getting user profile for {user_id}")
     return await retrieve_user_profile(user_id)
 
@@ -56,8 +52,7 @@ async def post_user(new_user: UserCreate, response: Response) -> UserResponse:
     response_model=UserResponse,
     tags=["User"]
 )
-async def put_user(user: UserUpdate,  current_user: Annotated[
-    UserBase, Depends(get_current_active_user)]) -> UserResponse:
+async def put_user(user: UserUpdate) -> UserResponse:
     logger.info(f"Putting user {user.user_id}")
     user.password = get_password_hash(user.password)
     return await update_user(user)
