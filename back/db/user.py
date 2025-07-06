@@ -1,13 +1,13 @@
 from typing import Any
+
 from uuid import UUID
 
 from utils.logger import logger
 
-from fastapi import HTTPException
+from fastapi import HTTPException, Depends, status
 from models.user import UserCreate, UserResponse
 from models.user import UserUpdate, UserSkill, UserPassword
 from models.user import UserProfileResponse
-
 from db.db_connector import db
 from db.roadmap import get_roadmap_progress
 
@@ -287,7 +287,6 @@ async def remove_user(user_id: UUID) -> None:
 
 async def _update(table: str, fields: dict[str, Any], user_id: UUID,
                   conn) -> bool:
-
     logger.info(f"Updating {user_id} user fields {', '.join(fields.keys())}")
     values = list(fields.values()) + [user_id]
 

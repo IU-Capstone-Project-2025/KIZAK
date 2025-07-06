@@ -1,8 +1,6 @@
 from datetime import datetime
 from typing import List, Optional
 from uuid import UUID
-import bcrypt
-import jwt
 
 from pydantic import BaseModel, Field
 
@@ -93,25 +91,6 @@ class UserBase(BaseModel):
 
     is_active: bool = Field(default=False)
 
-    @staticmethod
-    def hash_password(password) -> str:
-        """Transforms password from it's raw textual form to
-        cryptographic hashes
-        """
-        return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode("utf-8")
-
-    def validate_password(self, password) -> bool:
-        """Confirms password validity"""
-        return bcrypt.checkpw(password.encode(), self.password.encode())
-
-    def generate_token(self) -> dict:
-        """Generate access token for user"""
-        return {
-            "access_token": jwt.encode(
-                {"full_name": self.login},
-                "ApplicationSecretKey"
-            )
-        }
 
 class UserCreate(UserBase):
     """Schema for creating a new user. Inherits all fields from UserBase."""
