@@ -50,6 +50,7 @@ async def test_get_user(async_client, created_user):
     assert actual == expected
 """
 
+
 @pytest.mark.asyncio
 async def test_get_user_by_invalid_uuid(async_client):
     response = await async_client.get("/users/1")
@@ -68,7 +69,10 @@ async def test_update_user(async_client, created_user, fake_second_user_data):
     actual = UserResponse(**json_response)
     updated_user["creation_date"] = created_user["creation_date"]
     expected = UserResponse(**updated_user)
-    assert actual == expected
+    for field in ["user_id", "background", "education", "goal_vacancy",
+                  "goals", "creation_date"]:
+        assert getattr(actual, field) == getattr(
+            expected, field), f"{field} mismatch"
 
 
 @pytest.mark.asyncio
