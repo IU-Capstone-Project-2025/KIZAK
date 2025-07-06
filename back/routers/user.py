@@ -54,7 +54,8 @@ async def post_user(new_user: UserCreate, response: Response) -> UserResponse:
 )
 async def put_user(user: UserUpdate) -> UserResponse:
     logger.info(f"Putting user {user.user_id}")
-    user.password = get_password_hash(user.password)
+    if user.password is not None:
+        user.password = get_password_hash(user.password)
     return await update_user(user)
 
 
