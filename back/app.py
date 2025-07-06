@@ -2,8 +2,9 @@ from contextlib import asynccontextmanager
 
 import uvicorn
 from db.db_connector import db
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import OAuth2PasswordBearer
 from routers.resource import router as ResourceRouter
 from routers.roadmap import router as RoadmapRouter
 from routers.user import router as UserRouter
@@ -29,6 +30,8 @@ app = FastAPI(
     version="0.1.0",
     lifespan=lifespan,
 )
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 app.add_middleware(
     CORSMiddleware,

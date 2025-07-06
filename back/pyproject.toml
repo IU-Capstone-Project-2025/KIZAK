@@ -15,7 +15,8 @@ pytest-asyncio = "^0.21.0"
 faker = "^23.0.0"
 httpx = "^0.24.0"
 pytest-cov = "^5.0.0"
-
+bcrypt = "^4.1.2"
+pyjwt = "^2.8.0"
 
 [build-system]
 requires = ["poetry-core"]

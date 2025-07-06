@@ -1,6 +1,8 @@
 from datetime import datetime
 from typing import List, Optional
 from uuid import UUID
+import bcrypt
+import jwt
 
 from pydantic import BaseModel, Field
 
@@ -34,16 +36,6 @@ class UserPassword(BaseModel):
         ...,
         description="""User password""",
         examples=["P@ssw0rd!"]
-    )
-    user_id: UUID = Field(
-        ...,
-        description="Unique identifier for the user",
-        examples=["123e4567-e89b-12d3-a456-426614174000"]
-    )
-    creation_date: datetime = Field(
-        ...,
-        description="Timestamp when the user was created",
-        examples=["2025-06-24T15:30:00Z"]
     )
 
 
@@ -99,6 +91,27 @@ class UserBase(BaseModel):
         ]
     )
 
+    is_active: bool = Field(default=False)
+
+    @staticmethod
+    def hash_password(password) -> str:
+        """Transforms password from it's raw textual form to
+        cryptographic hashes
+        """
+        return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode("utf-8")
+
+    def validate_password(self, password) -> bool:
+        """Confirms password validity"""
+        return bcrypt.checkpw(password.encode(), self.password.encode())
+
+    def generate_token(self) -> dict:
+        """Generate access token for user"""
+        return {
+            "access_token": jwt.encode(
+                {"full_name": self.login},
+                "ApplicationSecretKey"
+            )
+        }
 
 class UserCreate(UserBase):
     """Schema for creating a new user. Inherits all fields from UserBase."""
@@ -239,6 +252,6 @@ class UserProfileResponse(BaseModel):
         examples=[
             ["123e4567-e89b-12d3-a456-426614174000"],
             ["123e4567-e89b-12d3-a456-426614174000",
-                "123e4567-e89b-12d3-a456-426614174001"]
+             "123e4567-e89b-12d3-a456-426614174001"]
         ]
     )
