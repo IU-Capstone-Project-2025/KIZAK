@@ -2,7 +2,7 @@ name: API Tests
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
   pull_request:
 
 jobs:
@@ -37,6 +37,9 @@ jobs:
       FRONTEND_PORT: 3000
       FRONTEND_HOST_PORT: 3000
       POETRY_VIRTUALENVS_CREATE: false
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      ALGORITHM: ${{ secrets.ALGORITHM }}
+      ACCESS_TOKEN_EXPIRE_MINUTES: ${{ secrets.ACCESS_TOKEN_EXPIRE_MINUTES }}
 
     steps:
       - name: Checkout code
