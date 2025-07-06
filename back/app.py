@@ -2,7 +2,7 @@ from contextlib import asynccontextmanager
 
 import uvicorn
 from db.db_connector import db
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from routers.resource import router as ResourceRouter
 from routers.roadmap import router as RoadmapRouter

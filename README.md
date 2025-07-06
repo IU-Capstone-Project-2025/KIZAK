@@ -1,3 +1,5 @@
+![pylint]()
+
 <div align="center">
 
 # KIZAK Capstone Project

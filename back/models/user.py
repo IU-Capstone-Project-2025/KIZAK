@@ -35,16 +35,6 @@ class UserPassword(BaseModel):
         description="""User password""",
         examples=["P@ssw0rd!"]
     )
-    user_id: UUID = Field(
-        ...,
-        description="Unique identifier for the user",
-        examples=["123e4567-e89b-12d3-a456-426614174000"]
-    )
-    creation_date: datetime = Field(
-        ...,
-        description="Timestamp when the user was created",
-        examples=["2025-06-24T15:30:00Z"]
-    )
 
 
 class UserBase(BaseModel):
@@ -98,6 +88,8 @@ class UserBase(BaseModel):
             ]
         ]
     )
+
+    is_active: bool = Field(default=False)
 
 
 class UserCreate(UserBase):
@@ -239,6 +231,6 @@ class UserProfileResponse(BaseModel):
         examples=[
             ["123e4567-e89b-12d3-a456-426614174000"],
             ["123e4567-e89b-12d3-a456-426614174000",
-                "123e4567-e89b-12d3-a456-426614174001"]
+             "123e4567-e89b-12d3-a456-426614174001"]
         ]
     )
