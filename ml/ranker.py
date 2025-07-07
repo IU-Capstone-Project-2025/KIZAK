@@ -150,8 +150,8 @@ class CourseRanker:
             priority_score_sum = sum(priorities.get(skill, 0.0) for skill in covered_skills)
             mean_priority_score = priority_score_sum / len(covered_skills) if covered_skills else 0
 
-            # todo: count non starred courses as also good and not just 0
-            rating = course.get("rating", 0) or 0 #course stars
+            raw_rating = course.get("rating", None)
+            rating = raw_rating if raw_rating is not None else 0.3 * self.rating_max
             rating_score = rating / self.rating_max
 
             score = (
