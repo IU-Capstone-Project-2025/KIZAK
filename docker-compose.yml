@@ -14,7 +14,7 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
       - HF_HOME=/models
-    restart: unless-stopped   
+    restart: unless-stopped
     env_file:
       - path: ./.env.example
         required: True

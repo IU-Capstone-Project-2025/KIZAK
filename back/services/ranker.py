@@ -42,8 +42,8 @@ class CourseRanker:
         words = set()
         for skill in skills:
             normalized = self.normalize_skill(skill)
-            splited = normalized.split()
-            words.update(splited)
+            split = normalized.split()
+            words.update(split)
         return words
 
     def rank_courses(self, courses: List[Dict], # from cosine similarity search
