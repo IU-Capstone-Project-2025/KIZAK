@@ -108,7 +108,7 @@ KIZAK is an AI-powered learning assistant designed to guide users through their 
 
 ### Requirements
 
-**To run this project make shure that your docker-compose version is 2.24.0 or higher**
+**To run this project make sure that your docker-compose version is 2.24.0 or higher**
 ```
 docker-compose -v
 # Docker Compose version v2.24.0-desktop.1
