@@ -3,6 +3,7 @@ from typing import List, Dict, Any
 from sklearn.metrics import ndcg_score
 import numpy as np
 import re
+import random
 
 import logging
 
@@ -61,27 +62,81 @@ class CourseRanker:
         self.rating_max = rating_max
 
     def _filter_low_quality_courses(self, courses: List[Dict]) -> List[Dict]:
-        # throw out courses without any skills or with bad rating
+        """throw out courses without any skills or with bad rating"""
         return [
             c for c in courses
             if c.get("skills") and (c.get("rating", 0) or 0) >= 2.5
         ]
 
-    def rank_courses(self, courses: List[Dict], # from cosine similarity search
+    def _limit_similar_courses(self, ranked: List[Dict], max_similar: int) -> List[Dict]:
+        """
+        reduce number of courses with similar skills sets to max_similar.
+        similarity defines as nof intersected skills >= 50% smaller set
+        """
+        limited = []
+        skill_sets = []
+
+        def is_similar(skills1, skills2):
+            set1, set2 = set(skills1), set(skills2)
+            intersection = len(set1.intersection(set2))
+            threshold = min(len(set1), len(set2)) * 0.5
+            return intersection >= threshold
+
+        for item in ranked:
+            skills = item["covered_skills"]
+            similar_count = sum(is_similar(skills, s) for s in skill_sets)
+            if similar_count < max_similar:
+                limited.append(item)
+                skill_sets.append(skills)
+            # esle - skip course
+
+        return limited
+
+    def _shuffle_similar_scores(self, ranked: List[Dict], epsilon: float = 0.01) -> List[Dict]:
+        """
+        shuffle courses with similar scores (diff <= epsilon), to reduce position bias.
+        """
+        if not ranked:
+            return ranked
+
+        shuffled = []
+        buffer = [ranked[0]]
+
+        for i in range(1, len(ranked)):
+            prev_score = buffer[-1]["ranking_score"]
+            curr_score = ranked[i]["ranking_score"]
+
+            if abs(curr_score - prev_score) <= epsilon:
+                buffer.append(ranked[i])
+            else:
+                random.shuffle(buffer)
+                shuffled.extend(buffer)
+                buffer = [ranked[i]]
+
+        random.shuffle(buffer)
+        shuffled.extend(buffer)
+
+        return shuffled
+
+    def rank_courses(self,
+                     courses: List[Dict], # from cosine similarity search
                      skill_gap: List[str], #from skillgap
                      target_role: str, # from user onboarding info
                      weights: Dict[str, float] = None, # alpha beta for ranking
-                     strategy: str = "v1" # to recalculate if offline metrics are bad
+                     strategy_name: str = "basic" # to recalculate if offline metrics are bad
                      ) -> List[Dict]:
+        #identify startegy
+        strategy = self.STRATEGIES.get(strategy_name, self.STRATEGIES["basic"])
+
+        # choose weights of strategy
         if weights is None:
-            if strategy == "v1":
-                weights = {"coverage": 0.45, "priority": 0.45, "rating": 0.1}
-            elif strategy == "v2":
-                weights = {"coverage": 0.7, "priority": 0.2, "rating": 0.1}
-                courses = self._filter_low_quality_courses(courses)
+            weights = strategy["weights"]
 
         # get priorities from job-skills mapping
         priorities = self.priorities_by_role.get(target_role, {})
+
+        known_skills = set()  # todo: get fromm skill gap anal
+
         ranked = []
         for course in courses:
             course_skills = course.get("skills", [])
@@ -105,13 +160,39 @@ class CourseRanker:
                     weights["rating"] * rating_score
             )
 
+            # now penalties :(
+
+            # diversity penalty — for intersection with already picked courses
+            if strategy["diversity_penalty"] > 0 and ranked:
+                overlap = 0
+                for prev in ranked:
+                    overlap += len(set(prev["covered_skills"]).intersection(covered_skills))
+                overlap /= len(ranked)
+                score -= strategy["diversity_penalty"] * overlap
+
+            # known skills penalty — for using skills that user know
+            if strategy["known_skills_penalty"] > 0:
+                known_overlap = len(known_skills.intersection(covered_skills))
+                score -= strategy["known_skills_penalty"] * known_overlap
+
             ranked.append({
                 "course": course,
                 "ranking_score": round(score, 4),
                 "covered_skills": list(covered_skills)
             })
-        # dict course - how cool it is
-        return sorted(ranked, key=lambda x: x["ranking_score"], reverse=True)
+
+        # sort by score
+        ranked = sorted(ranked, key=lambda x: x["ranking_score"], reverse=True)
+
+        max_sim = strategy.get("max_top_similar_courses")
+        if max_sim is not None:
+            ranked = self._limit_similar_courses(ranked, max_sim)
+
+        if strategy.get("position_bias_shuffle"):
+            ranked = self._shuffle_similar_scores(ranked)
+
+        return ranked
+
 
     def evaluate_ranking(self,
                          ranked_courses: List[Dict], #init ranking
@@ -192,7 +273,7 @@ class CourseRanker:
                 skill_gap,
                 target_role,
                 weights=params["weights"],
-                strategy=strategy
+                strategy_name=strategy
             )
 
             metrics = self.evaluate_ranking(ranked, target_role)
