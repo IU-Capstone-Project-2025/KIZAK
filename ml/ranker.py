@@ -153,6 +153,19 @@ class CourseRanker:
             "position_bias": round(position_bias, 4)
         }
 
+    def check_skill_gain(self, metrics: Dict[str, float], threshold: float = 0.5) -> bool:
+        # todo: threshold of skill gain
+        return metrics.get("skill_gain", 0) >= threshold
+
+    def check_diversity(self, metrics: Dict[str, float], threshold: float = 1.5) -> bool:
+        # todo: entropy threshold
+        return metrics.get("diversity_score", 0) >= threshold
+
+    def check_position_bias(self, metrics: Dict[str, float], max_threshold: float = 5.0) -> bool:
+        # todo: threshold of pos bias
+        # position_bias — the << the better (too concentrated sjills on the top is not cool)
+        return metrics.get("position_bias", 0) <= max_threshold
+
     def rank_with_fallback(self,
                            courses: List[Dict],
                            skill_gap: List[str],
