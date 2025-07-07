@@ -4,6 +4,8 @@ from uuid import UUID
 
 from pydantic import BaseModel, Field
 
+from models.roadmap import RoadmapInfo
+
 
 class UserSkill(BaseModel):
     """Schema for a user's individual skill entry."""
@@ -110,6 +112,7 @@ class UserResponse(UserBase):
         description="Timestamp when the user was created",
         examples=["2025-06-24T15:30:00Z"]
     )
+    roadmap: Optional[RoadmapInfo] = None
 
 
 class UserUpdate(BaseModel):
