@@ -13,13 +13,55 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 class CourseRanker:
+    STRATEGIES = {
+        "basic": {
+            # basic balanced rankin, no penalties
+            "weights": {"coverage": 0.45, "priority": 0.45, "rating": 0.1},
+            "filter_low_quality": False,  # allow low tarred courses
+            "diversity_penalty": 0.0,  # allow intersection of skill coverages among courses
+            "known_skills_penalty": 0.0,  # allow courses with known skills
+            "position_bias_shuffle": False,  # do not shuffly similar scored courses
+            "max_top_similar_courses": None,  # allow similar in skills set courses
+        },
+
+        "skill_gain_focus": {
+            # More weight to coverage, do filtration and penalties for known skills
+            "weights": {"coverage": 0.7, "priority": 0.2, "rating": 0.1},
+            "filter_low_quality": True,  # throw out bad starred courses
+            "diversity_penalty": 0.3,  # moderate penalty for intersection of skills btw courses
+            "known_skills_penalty": 0.2,  # moderate penalty for teaching already known skills
+            "position_bias_shuffle": True,  # shuffle similar scorred
+            "max_top_similar_courses": None,
+        },
+
+        "diversity_focus": {
+            # Give priority to skills variance, large penalty for similarity, small for known skills
+            "weights": {"coverage": 0.4, "priority": 0.3, "rating": 0.3},
+            "filter_low_quality": True,
+            "diversity_penalty": 0.5,  # big penalty for skills set intersection
+            "known_skills_penalty": 0.1,  # small penalty for known skills
+            "position_bias_shuffle": True,
+            "max_top_similar_courses": 5,  # max # similar in skills sets courses
+        },
+
+        "position_bias_control": {
+            # Control concentration of good courses by shuffling and small penalties
+            "weights": {"coverage": 0.5, "priority": 0.4, "rating": 0.1},
+            "filter_low_quality": False,
+            "diversity_penalty_weight": 0.2,
+            "known_skills_penalty_weight": 0.1,
+            "position_bias_shuffle": True,
+            "max_top_similar_courses": 3,  # max # similar in skills sets courses
+        }
+    #     todo: add strategies to re-rank based on feedback (if needed)
+    }
 
     def __init__(self, priorities_by_role: Dict[str, Dict[str, int]], rating_max: float = 5.0):
         self.priorities_by_role = priorities_by_role
         self.rating_max = rating_max
 
     def _filter_low_quality_courses(self, courses: List[Dict]) -> List[Dict]:
-        # еthrow out courses without any skills or with bad rating
+        # throw out courses without any skills or with bad rating
         return [
             c for c in courses
             if c.get("skills") and (c.get("rating", 0) or 0) >= 2.5
@@ -71,7 +113,6 @@ class CourseRanker:
         # dict course - how cool it is
         return sorted(ranked, key=lambda x: x["ranking_score"], reverse=True)
 
-    # todo: update, add diversity etc
     def evaluate_ranking(self,
                          ranked_courses: List[Dict], #init ranking
                          target_role: str,
@@ -116,23 +157,55 @@ class CourseRanker:
                            courses: List[Dict],
                            skill_gap: List[str],
                            target_role: str,
-                           max_attempts: int = 3 #attenpt to improve 3 times
+                           max_attempts: int = 5 #attenpt to improve 3 times
                            ) -> List[Dict]:
         """Cyclic ranks with different strategies until offline metrics are better"""
 
-        strategies = ["v1", "v2"]
-        for i in range(min(max_attempts, len(strategies))):
-            strategy = strategies[i]
-            logger.info(f"Ranking attempt {i + 1} with strategy '{strategy}'")
-            ranked = self.rank_courses(courses, skill_gap, target_role, strategy=strategy)
-            metrics = self.evaluate_ranking(ranked, skill_gap, target_role)
+        tried_strategies = set()
+        strategy = "basic"  # start with basic one
+
+        for attempt in range(max_attempts):
+            if strategy in tried_strategies:
+                # if tried current strategy - choose different
+                strategy = "basic"
+
+            tried_strategies.add(strategy)
+
+            params = self.STRATEGIES[strategy]
+            logger.info(f"Ranking attempt {attempt + 1} with strategy '{strategy}'")
+
+            ranked = self.rank_courses(
+                courses,
+                skill_gap,
+                target_role,
+                weights=params["weights"],
+                strategy=strategy
+            )
+
+            metrics = self.evaluate_ranking(ranked, target_role)
             logger.info(f"Evaluation metrics: {metrics}")
 
-            # threshold
-            if metrics.get("NDCG@k", 0) > 0.3:
+            skill_gain_ok = self.check_skill_gain(ranked, skill_gap)
+            diversity_ok = self.check_diversity(ranked)
+            position_bias_ok = self.check_position_bias(ranked)
+
+            logger.info(
+                f"Skill gain OK: {skill_gain_ok}, Diversity OK: {diversity_ok}, Position bias OK: {position_bias_ok}")
+
+            if skill_gain_ok and diversity_ok and position_bias_ok:
                 return ranked
 
-        # if no improvement - return last variant
+            # choose next strategy
+            if not skill_gain_ok and "skill_gain_focus" not in tried_strategies:
+                strategy = "skill_gain_focus"
+            elif not diversity_ok and "diversity_focus" not in tried_strategies:
+                strategy = "diversity_focus"
+            elif not position_bias_ok and "position_bias_control" not in tried_strategies:
+                strategy = "position_bias_control"
+            else:
+                # all tried, return last (hopefully best)
+                break
+
         return ranked
 
     def update_ranking(self,
