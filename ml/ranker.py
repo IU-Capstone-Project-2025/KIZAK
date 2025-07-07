@@ -74,26 +74,43 @@ class CourseRanker:
     # todo: update, add diversity etc
     def evaluate_ranking(self,
                          ranked_courses: List[Dict], #init ranking
-                         skill_gap: List[str],
                          target_role: str,
                          k: int = 10 # top-k
                          ) -> Dict[str, float]:
         priorities = self.priorities_by_role.get(target_role, {})
 
-        predicted_relevances = []
+        # Skill Gain: priorities of covered skills in top-k courses
+        top_k = ranked_courses[:k]
+        skill_gain = sum(
+            priorities.get(skill, 0.0)
+            for item in top_k
+            for skill in item["covered_skills"]
+        )
 
-        for item in ranked_courses[:k]:
-            covered_skills = item["covered_skills"]
-            rel = sum(1 / priorities.get(skill, 5) for skill in covered_skills)
-            predicted_relevances.append(rel)
+        # Diversity: entropy(variety) of skills in top-k
+        from collections import Counter
+        all_skills = [s for item in top_k for s in item["covered_skills"]]
+        skill_counts = Counter(all_skills)
+        total = sum(skill_counts.values())
+        diversity_score = 0.0
+        if total > 0:
+            diversity_score = -sum(
+                (count / total) * np.log2(count / total)
+                for count in skill_counts.values()
+            )
 
-        ideal_relevances = sorted(predicted_relevances, reverse=True)
+        # Position bias: how necessary skills are concentrated in the upper positions
+        position_bias = sum(
+            priorities.get(skill, 0.0) / np.log2(idx + 2)
+            for idx, item in enumerate(top_k)
+            for skill in item["covered_skills"]
+        )
 
-        if not any(predicted_relevances):
-            return {"NDCG@k": 0.0}
-
-        ndcg = ndcg_score([ideal_relevances], [predicted_relevances])
-        return {"NDCG@k": round(ndcg, 4)}
+        return {
+            "skill_gain": round(skill_gain, 4),
+            "diversity_score": round(diversity_score, 4),
+            "position_bias": round(position_bias, 4)
+        }
 
     def rank_with_fallback(self,
                            courses: List[Dict],
