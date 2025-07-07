@@ -403,7 +403,7 @@ async def get_roadmap_progress(roadmap_id: UUID) -> int:
         Progress (int): Roadmap progress in percents
 
     """
-    progress = db.fetch(
+    progress = await db.fetch(
         """
             SELECT
                 SUM(progress) / COUNT(*)
