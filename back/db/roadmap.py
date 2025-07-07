@@ -391,28 +391,31 @@ async def delete_link(link_id: UUID):
         if result == "DELETE 0":
             logger.error(f"Link {link_id} not found")
             raise HTTPException(status_code=404, detail="Resource not found")
-
+        
 
 async def get_roadmap_progress(roadmap_id: UUID) -> int:
     """Get roadmap progress based on progress of each node
 
     Args:
-        feature-profile-api (UUID): Roadmap ID
+        roadmap_id (UUID): Roadmap ID
 
     Returns:
-        Progress (int): Roadmap progress in percents
-
+        int: Roadmap progress in percent (0–100)
     """
-    progress = await db.fetchrow(
+    row = await db.fetchrow(
         """
-            SELECT
-                SUM(progress) / COUNT(*)
-            FROM
-                roadmap_node
-            WHERE
-                roadmap_id = $1
+        SELECT
+            CASE
+                WHEN COUNT(*) = 0 THEN 0
+                ELSE SUM(progress)::float / COUNT(*) 
+            END AS avg_progress
+        FROM
+            roadmap_node
+        WHERE
+            roadmap_id = $1
         """,
         roadmap_id
     )
 
+    progress = row["avg_progress"] if row and row["avg_progress"] is not None else 0
     return int(progress)
