@@ -85,7 +85,7 @@ export default function OnBoarding() {
           localStorage.removeItem("onboardingUserData");
           localStorage.removeItem("onboardingStep");
         }
-        handleClick(`/main/${userId}`, 0);
+        handleClick(`/main/${userId}`, 300);
       } catch (error) {
         console.error("Ошибка при завершении онбординга:", error);
       }
