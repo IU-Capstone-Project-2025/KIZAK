@@ -1,15 +1,23 @@
 from typing import List
 from uuid import UUID
 
+from services.ranker import CourseRanker
+from utils.conf import PRIORITIES_BY_ROLE, ROLE_TO_SKILLS
+from services.vector_search import CourseVectorSearch
+from services.skipGapAnalyzer import SkillGapAnalyzer
 from db.roadmap import create_roadmap, create_node, create_link
 
 from models.roadmap import RoadmapInfo, RoadmapCreate
 from models.roadmap import NodeResponse, NodeCreate
 from models.roadmap import LinkResponse, LinkCreate
 
-from app import analyzer, search_engine, ranker
+from models.user import UserSkill
 
 import dotenv
+
+search_engine = CourseVectorSearch()
+ranker = CourseRanker(PRIORITIES_BY_ROLE)
+analyzer = SkillGapAnalyzer(ROLE_TO_SKILLS)     
 
 dotenv.load_dotenv()
 
@@ -23,9 +31,16 @@ def _get_best_courses(user_role, user_skills, user_query):
 def _rank_courses(best_courses, user_skills, user_role):
     return ranker.rank_courses(best_courses, user_skills, user_role)
 
-async def generate_roadmap(user_id: UUID, user_role: str, user_skills: List[str], user_query: str) -> RoadmapInfo:
-    missing_skills = _get_missing_skills(user_skills, user_role)
-    best_courses = _get_best_courses(user_role, user_skills, user_query)
+async def generate_roadmap(
+    user_id: UUID,
+    user_role: str,
+    user_skills: List[UserSkill],
+    user_query: str
+) -> RoadmapInfo:
+    skills = [skill.skill for skill in user_skills]
+
+    missing_skills = _get_missing_skills(skills, user_role)
+    best_courses = _get_best_courses(user_role, skills, user_query)
     ranked_courses = _rank_courses(best_courses, missing_skills, user_role)
 
     print("Top 5 Recommended Courses:\n")

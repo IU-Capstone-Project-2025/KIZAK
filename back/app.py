@@ -1,10 +1,10 @@
 import uvicorn
 from db.db_connector import db
 
-from ml.vector_search import CourseVectorSearch
-from ml.ranker import CourseRanker
-from ml.skipGapAnalyzer import SkillGapAnalyzer
-from back.utils.conf import USER_SKILLS, ROLE_TO_SKILLS, PRIORITIES_BY_ROLE
+from services.vector_search import CourseVectorSearch
+from services.ranker import CourseRanker
+from services.skipGapAnalyzer import SkillGapAnalyzer
+from utils.conf import USER_SKILLS, ROLE_TO_SKILLS, PRIORITIES_BY_ROLE
 
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
@@ -16,16 +16,12 @@ from routers.user import router as UserRouter
 from routers.auth import router as AuthRouter
 from routers.utils import router as UtilsRouter
 
-
-
 import dotenv
 import os
 
 dotenv.load_dotenv()
 
-search_engine = CourseVectorSearch()
-ranker = CourseRanker(PRIORITIES_BY_ROLE)
-analyzer = SkillGapAnalyzer(ROLE_TO_SKILLS)
+os.environ["HF_HOME"] = "/models"
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

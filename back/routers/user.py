@@ -10,6 +10,8 @@ from models.user import UserCreate, UserProfileResponse, UserResponse, UserBase
 from models.user import UserUpdate
 from utils.security import get_current_active_user
 
+from services.roadmap_genaretor import generate_roadmap
+
 from utils.security import get_password_hash
 
 router = APIRouter()
@@ -42,6 +44,13 @@ async def get_user_profile(user_id: UUID) -> UserProfileResponse:
 async def post_user(new_user: UserCreate, response: Response) -> UserResponse:
     new_user.password = get_password_hash(new_user.password)
     user = await create_user(new_user)
+    roadmap = await generate_roadmap(
+        user.user_id,
+        user_role=user.goal_vacancy,
+        user_skills=user.skills,
+        user_query=user.goals
+    )
+    user.roadmap = roadmap
     logger.info(f"Created user {user.user_id}")
     response.headers["Location"] = f"/users/{user.user_id}"
     return user

@@ -1,6 +1,6 @@
 import json
 
-with open('ml/job_skill.json', 'r', encoding='utf-8') as f:
+with open('/app/utils/job_skill.json', 'r', encoding='utf-8') as f:
     job_skills_raw = json.load(f)
 
 ROLE_TO_SKILLS = dict()

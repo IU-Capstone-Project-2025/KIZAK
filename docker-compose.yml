@@ -10,9 +10,11 @@ services:
         condition: service_healthy
     volumes:
       - ./back:/app
+      - ./ml/models/huggingface:/root/.cache/huggingface
     environment:
       - PYTHONUNBUFFERED=1
-    restart: unless-stopped
+      - HF_HOME=/models
+    restart: unless-stopped   
     env_file:
       - path: ./.env.example
         required: True
