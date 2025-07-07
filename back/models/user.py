@@ -225,8 +225,8 @@ class UserProfileResponse(BaseModel):
         ...,
         description="Progress percentage for the user's roadmap",
         examples=[75, 0, 100],
-        gt=0,
-        lt=100
+        ge=0,
+        le=100
     )
     history: List[UUID] = Field(
         ...,

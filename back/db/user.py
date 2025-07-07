@@ -414,10 +414,12 @@ async def retrieve_user_profile(user_id: UUID) -> UserProfileResponse:
     )
 
     history = sorted(
-        [row['node_id'] for row in await history_rows],
+        [row['node_id'] for row in history_rows],
         key=lambda x: x["last_opened"],
         reverse=True
     )
+    
+    print(history)
 
     return UserProfileResponse(
         user=user,
