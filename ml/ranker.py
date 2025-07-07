@@ -1,7 +1,5 @@
-import ast
-from typing import List, Dict, Any
+from typing import List, Dict
 from sklearn.metrics import ndcg_score
-import numpy as np
 import re
 
 import logging

@@ -1,9 +1,9 @@
-import pandas as pd
 from sentence_transformers import SentenceTransformer
 from qdrant_client import QdrantClient
-from qdrant_client.models import VectorParams, Distance, PointStruct, NamedVector, SearchRequest
+from qdrant_client.models import NamedVector, SearchRequest
 from collections import defaultdict
 import torch
+import os
 
 import logging
 
@@ -16,111 +16,40 @@ logger = logging.getLogger(__name__)
 
 
 class CourseVectorSearch:
-    _instance = None
-
-    def __init__(self, csv_path='courses_final.csv', collection_name='courses', qdrant_host='localhost',
-                qdrant_port=6333, use_gpu=True):
-        logger.info("Initializing CourseVectorSearch (DB connection only)")
+    def __init__(self):
+        self._init_qdrant()
+        self._init_embedder()
+        
+    def _init_qdrant(self, collection_name: str='courses', debug: bool = False) -> None:       
+        logger.info("Initializing QDrant connection")
+        self.client = QdrantClient(
+            url=os.getenv("QD_URL"),
+            api_key=os.getenv("QD_API_KEY")
+        )
+        logger.info("Connected successfully")
         self.collection_name = collection_name
-        self.client = QdrantClient(host=qdrant_host, port=qdrant_port)
 
-        device = 'cuda'if torch.cuda.is_available() else 'cpu'
-        model_name = 'sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2'
-        self.skills_model = SentenceTransformer(model_name, device=device)
-        self.skills_model.max_seq_length = 512
-
-        self.df = pd.read_csv(csv_path)
-        self.qdrant_data = None
-
-    def create_collection(self):
-        logger.info(f"check if collection exists '{self.collection_name}'")
-        if self.client.collection_exists(self.collection_name):
-            logger.info(f"deleting collection '{self.collection_name}'")
-            self.client.delete_collection(self.collection_name)
-        logger.info(f"Creating new collection '{self.collection_name}'")
-        self.client.create_collection(
-            collection_name=self.collection_name,
-            vectors_config={
-                "title": VectorParams(size=384, distance=Distance.COSINE),
-                "description": VectorParams(size=384, distance=Distance.COSINE),
-                "skills": VectorParams(size=384, distance=Distance.COSINE)
-            },
-            hnsw_config={
-                            "m": 8,
-                            "ef_construct": 50,
-                            "full_scan_threshold": 10
-                        }
-
+    def _init_embedder(self, model='sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2', max_seq=512, use_gpu=True) -> None:
+        self.device = 'cuda' if torch.cuda.is_available() and use_gpu else 'cpu'
+        logger.info("Set device to %s", self.device)
+        
+        self.skills_model = SentenceTransformer(model)
+        logger.info("Loaded %s model", model)
+        self.skills_model.max_seq_length = max_seq
+        
+    def get_courses(self, user_role, user_query, user_skills):
+        logger.info("Vectorizing user data")
+        logger.info("Searching for best courses")
+        results = self.search_courses_batch_weighted(
+            self.skills_model.encode(user_role),
+            self.skills_model.encode(user_query),
+            self.skills_model.encode(", ".join(user_skills))
         )
-
-    def _prepare_vectors(self):
-        logger.info("deleting NaNs")
-        self.df = self.df.dropna(subset=["title", "description", "skills"]).reset_index(drop=True)
-        logger.info("vectorizing courses...")
-        self.df["vectors"] = self.df.apply(self._vectorize, axis=1)
-        logger.info("vectorization completed")
-
-
-    def _upload_to_qdrant(self):
-        logger.info(f"uploading {len(self.qdrant_data)} points to Qdrant")
-        points = [
-            PointStruct(
-                id=item["id"],
-                vector=item["vector"],
-                payload=item["payload"]
-            )
-            for item in self.qdrant_data
-        ]
-        self.client.upsert(collection_name=self.collection_name, points=points)
-        logger.info("uploading completed")
-
-
-    def load_and_prepare_data(self, csv_path='courses_final.csv'):
-        logger.info(f"Loading and preparing data from {csv_path}")
-
-        self.df = pd.read_csv(csv_path)
-        self._prepare_vectors()
-        self.qdrant_data = [self._prepare_for_qdrant(row) for _, row in self.df.iterrows()]
-
-        self._upload_to_qdrant()
-
-
-    def _vectorize(self, row):
-        return {
-            "title_vector": self.skills_model.encode(row["title"], show_progress_bar=False),
-            "desc_vector": self.skills_model.encode(row["description"], show_progress_bar=False),
-            "skills_vector": self.skills_model.encode(", ".join(row["skills"]), show_progress_bar=False)
-        }
-
-    def _prepare_for_qdrant(self, row):
-        row_id = int(row.name)
-        return {
-            "id": row_id,
-            "vector": {
-                "title": row["vectors"]["title_vector"].tolist(),
-                "description": row["vectors"]["desc_vector"].tolist(),
-                "skills": row["vectors"]["skills_vector"].tolist()
-            },
-            "payload": {
-                "title": row["title"],
-                "skills": row["skills"],
-                "difficulty": row["difficulty"],
-                "rating": float(row["rating"])
-            }
-        }
-
-
-    def encode_query(self, role, query, skills):
-        logger.info("vectorizing user query")
-        return (
-            self.skills_model.encode(role),
-            self.skills_model.encode(query),
-            self.skills_model.encode(", ".join(skills))
-        )
+        return results
 
     def search_courses_batch_weighted(self, title_vector, description_vector, skills_vector,
-                                      weights={'title': 0.2, 'description': 0.1, 'skills': 0.7}, limit=20):
-        logger.info("searching courses batch weighted")
+                                      weights={'title': 0.2, 'description': 0.1, 'skills': 0.7}, limit=30):
+        logger.info("Searching courses batch weighted")
         search_requests = [
             SearchRequest(vector=NamedVector(name="title", vector=title_vector), limit=50, with_payload=True),
             SearchRequest(vector=NamedVector(name="description", vector=description_vector), limit=20, with_payload=True),
@@ -136,7 +65,7 @@ class CourseVectorSearch:
             'point': None,
             'original_scores': {'title': 0, 'description': 0, 'skills': 0}
         })
-        logger.info("summing up and weighting searching results")
+        logger.info("Summing up and weighting searching results")
 
         vector_names = ['title', 'description', 'skills']
         for i, results in enumerate(batch_results):

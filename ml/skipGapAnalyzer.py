@@ -44,9 +44,3 @@ class SkillGapAnalyzer:
 # analyzer = SkillGapAnalyzer(ROLE_TO_SKILLS)
 # result = analyzer.compute_gap(USER_SKILLS, USER_ROLE)
 # print(result)
-
-
-with open('job_skill.json', 'r', encoding='utf-8') as f:
-    ROLE_TO_SKILLS = json.load(f)
-
-analyzer = SkillGapAnalyzer(ROLE_TO_SKILLS)
