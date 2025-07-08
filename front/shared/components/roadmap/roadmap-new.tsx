@@ -2,39 +2,40 @@
 
 import { useEffect, useRef, useState } from "react";
 import { RoadmapNode } from "./node";
-import { useRoadmapLayout } from "../../hooks/useRoadmapLayout";
+import {
+  RawNode,
+  useRoadmapLayout,
+  Progress,
+  PositionedNode,
+} from "../../hooks/useRoadmapLayout";
 import Link from "next/link";
+import { CustomSelect } from "./select";
 
-export const rawNodes = [
+export const rawNodes: RawNode[] = [
   {
     node_id: "node-1",
     title: "Introduction",
     summary: "Basics and learning goals",
-    progress: 100,
   },
   {
     node_id: "node-2",
     title: "HTML",
     summary: "Page markup and content structure",
-    progress: 100,
   },
   {
     node_id: "node-3",
     title: "CSS",
     summary: "Styling and positioning",
-    progress: 80,
   },
   {
     node_id: "node-4",
     title: "JavaScript",
     summary: "Fundamentals of logic and interaction",
-    progress: 30,
   },
   {
     node_id: "node-5",
     title: "React",
     summary: "Modern approach to UI",
-    progress: 0,
   },
 ];
 
@@ -56,6 +57,16 @@ interface Props {
 }
 
 export const RoadmapNew: React.FC<Props> = ({ userId, initialNodeId }) => {
+  const initialProgress: Record<string, Progress> = {
+    "node-1": "Done",
+    "node-2": "Done",
+    "node-3": "In progress",
+    "node-4": "In progress",
+    "node-5": "Not started",
+  };
+  const [progressMap, setProgressMap] =
+    useState<Record<string, Progress>>(initialProgress);
+
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [isDragging, setDragging] = useState(false);
   const [selectedNode, setSelectedNode] = useState<string | null>(
@@ -140,7 +151,6 @@ export const RoadmapNew: React.FC<Props> = ({ userId, initialNodeId }) => {
   const handleOnNodeClick = (nodeId: string) => {
     setSelectedNode(nodeId);
 
-    // 👇 Меняем адрес без перезагрузки
     window.history.pushState(null, "", `/roadmap/${userId}/${nodeId}`);
 
     const container = containerRef.current;
@@ -158,8 +168,6 @@ export const RoadmapNew: React.FC<Props> = ({ userId, initialNodeId }) => {
 
   const handleClose = () => {
     setSelectedNode(null);
-
-    // 👇 Удаляем nodeId из адреса
     window.history.pushState(null, "", `/roadmap/${userId}`);
   };
 
@@ -187,6 +195,18 @@ export const RoadmapNew: React.FC<Props> = ({ userId, initialNodeId }) => {
       });
     });
   };
+
+  const handleProgressChange = (nodeId: string, newProgress: Progress) => {
+    setProgressMap((prev) => ({ ...prev, [nodeId]: newProgress }));
+  };
+
+  const selectedNodeData: PositionedNode | null = selectedNode
+    ? nodes.find((n) => n.id === selectedNode) ?? null
+    : null;
+
+  const selectedNodeProgress: Progress = selectedNode
+    ? progressMap[selectedNode]
+    : "Not started";
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -217,7 +237,6 @@ export const RoadmapNew: React.FC<Props> = ({ userId, initialNodeId }) => {
     setOffset(checkLimit(center));
   }, []);
 
-  // 🎯 Анимация при открытии по initialNodeId
   useEffect(() => {
     if (!initialNodeId || measuring) return;
 
@@ -277,13 +296,7 @@ export const RoadmapNew: React.FC<Props> = ({ userId, initialNodeId }) => {
                 <RoadmapNode
                   title={node.title}
                   description={node.summary}
-                  progress={
-                    node.progress === 100
-                      ? "Done"
-                      : node.progress === 0
-                      ? "Not started"
-                      : "In progress"
-                  }
+                  progress={progressMap[node.id] || "Not started"}
                 />
               </div>
             ))}
@@ -331,69 +344,88 @@ export const RoadmapNew: React.FC<Props> = ({ userId, initialNodeId }) => {
               </svg>
             </button>
 
-            <h3 className="text-3xl font-extrabold mb-4 text-brand-primary">
-              Python OOP
-            </h3>
-            <p className="mb-4 text-lg leading-relaxed">
-              Basics of OOP for Python
-            </p>
+            {selectedNodeData && (
+              <>
+                <h3 className="text-3xl font-extrabold mb-4 text-brand-primary">
+                  {selectedNodeData.title}
+                </h3>
+                <p className="mb-4 text-lg leading-relaxed">
+                  {selectedNodeData.summary}
+                </p>
 
-            <Link
-              href="https://stepik.org/course/98974/promo?search=7287873917"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mb-6 text-brand-primary underline hover:text-yellow-400 transition"
-            >
-              Перейти к курсу
-            </Link>
+                <label
+                  htmlFor="progress-select"
+                  className="block font-semibold mb-2"
+                >
+                  Прогресс
+                </label>
+                <CustomSelect
+                  className="mb-4"
+                  options={["Not started", "In progress", "Done"]}
+                  value={selectedNodeProgress}
+                  onChange={(val) =>
+                    handleProgressChange(selectedNodeData.id, val)
+                  }
+                />
 
-            <div className="grid grid-cols-2 gap-x-12 gap-y-4 text-ui-dark text-sm font-semibold">
-              <div className="flex-between">
-                <span className="text-ui-muted">Уровень:</span>
-                <span>Beginner</span>
-              </div>
-              <div className="flex-between">
-                <span className="text-ui-muted">Цена:</span>
-                <span>Бесплатно</span>
-              </div>
-              <div className="flex-between">
-                <span className="text-ui-muted">Язык:</span>
-                <span>Russian</span>
-              </div>
-              <div className="flex-between">
-                <span className="text-ui-muted">Длительность:</span>
-                <span>10 часов</span>
-              </div>
-              <div className="flex-between">
-                <span className="text-ui-muted">Платформа:</span>
-                <span>KIZAK</span>
-              </div>
-              <div className="flex-between">
-                <span className="text-ui-muted">Рейтинг:</span>
-                <span>0</span>
-              </div>
-              <div className="flex-between">
-                <span className="text-ui-muted">Дата публикации:</span>
-                <span>2015-05-01</span>
-              </div>
-              <div className="flex-between">
-                <span className="text-ui-muted">Сертификат:</span>
-                <span className="text-status-success">Доступен</span>
-              </div>
-              <div className="col-span-2 mt-4">
-                <span className="text-ui-muted font-semibold">
-                  Навыки, изучаемые:
-                </span>
-                <div className="mt-1 flex flex-wrap gap-2">
-                  <span className="px-2 py-1 rounded shadow-sm font-medium border border-ui-border text-ui-dark">
-                    Python
-                  </span>
-                  <span className="px-2 py-1 rounded shadow-sm font-medium border border-ui-border text-ui-dark">
-                    OOP
-                  </span>
+                <Link
+                  href="https://stepik.org/course/98974/promo?search=7287873917"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mb-6 w-fit text-brand-primary underline hover:text-yellow-400 transition"
+                >
+                  Перейти к курсу
+                </Link>
+
+                <div className="grid grid-cols-2 gap-x-12 gap-y-4 text-ui-dark text-sm font-semibold">
+                  <div className="flex-between">
+                    <span className="text-ui-muted">Уровень:</span>
+                    <span>Beginner</span>
+                  </div>
+                  <div className="flex-between">
+                    <span className="text-ui-muted">Цена:</span>
+                    <span>Бесплатно</span>
+                  </div>
+                  <div className="flex-between">
+                    <span className="text-ui-muted">Язык:</span>
+                    <span>Russian</span>
+                  </div>
+                  <div className="flex-between">
+                    <span className="text-ui-muted">Длительность:</span>
+                    <span>10 часов</span>
+                  </div>
+                  <div className="flex-between">
+                    <span className="text-ui-muted">Платформа:</span>
+                    <span>KIZAK</span>
+                  </div>
+                  <div className="flex-between">
+                    <span className="text-ui-muted">Рейтинг:</span>
+                    <span>0</span>
+                  </div>
+                  <div className="flex-between">
+                    <span className="text-ui-muted">Дата публикации:</span>
+                    <span>2015-05-01</span>
+                  </div>
+                  <div className="flex-between">
+                    <span className="text-ui-muted">Сертификат:</span>
+                    <span className="text-status-success">Доступен</span>
+                  </div>
+                  <div className="col-span-2 mt-4">
+                    <span className="text-ui-muted font-semibold mb-2">
+                      Изучаемые навыки:
+                    </span>
+                    <div className="mt-1 flex flex-wrap gap-2">
+                      <span className="px-2 py-1 rounded shadow-sm font-medium border border-ui-border text-ui-dark">
+                        Python
+                      </span>
+                      <span className="px-2 py-1 rounded shadow-sm font-medium border border-ui-border text-ui-dark">
+                        OOP
+                      </span>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
+              </>
+            )}
           </div>
         </div>
       </div>

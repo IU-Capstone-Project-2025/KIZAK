@@ -1,13 +1,12 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { RoadmapNode } from "../components/roadmap/node";
 import { WORLD_SIZE } from "../components/roadmap/roadmap-new";
 
-type RawNode = {
+export type RawNode = {
   node_id: string;
   title: string;
   summary: string;
-  progress: number;
 };
 
 type RawLink = {
@@ -15,22 +14,17 @@ type RawLink = {
   to_node: string;
 };
 
+export type Progress = "Done" | "In progress" | "Not started";
+
 export type PositionedNode = {
   id: string;
   title: string;
   summary: string;
-  progress: number;
   width: number;
   height: number;
   x: number;
   y: number;
   connections: string[];
-};
-
-const convertProgress = (progress: number) => {
-  if (progress === 100) return "Done";
-  if (progress === 0) return "Not started";
-  else return "In progress";
 };
 
 export const useRoadmapLayout = (rawNodes: RawNode[], rawLinks: RawLink[]) => {
@@ -39,23 +33,28 @@ export const useRoadmapLayout = (rawNodes: RawNode[], rawLinks: RawLink[]) => {
 
   const refs = useRef(new Map<string, HTMLDivElement | null>());
 
-  const measureElements = rawNodes.map((el) => (
-    <div
-      key={el.node_id}
-      ref={(rf) => {
-        refs.current.set(el.node_id, rf);
-      }}
-      className="absolute opacity-0"
-    >
-      <RoadmapNode
-        title={el.title}
-        description={el.summary}
-        progress={convertProgress(el.progress)}
-      />
-    </div>
-  ));
+  const measureElements = useMemo(() => {
+    return rawNodes.map((el) => (
+      <div
+        key={el.node_id}
+        ref={(rf) => {
+          refs.current.set(el.node_id, rf);
+        }}
+        className="absolute opacity-0 pointer-events-none select-none"
+        style={{ userSelect: "none" }}
+      >
+        <RoadmapNode
+          title={el.title}
+          description={el.summary}
+          progress="Not started"
+        />
+      </div>
+    ));
+  }, [rawNodes]);
 
   useEffect(() => {
+    if (rawNodes.length === 0) return;
+
     let result: PositionedNode[] = [];
 
     rawNodes.forEach((node) => {
@@ -67,7 +66,6 @@ export const useRoadmapLayout = (rawNodes: RawNode[], rawLinks: RawLink[]) => {
         id: node.node_id,
         title: node.title,
         summary: node.summary,
-        progress: node.progress,
         width: rect.width,
         height: rect.height,
         x: 0,
@@ -78,8 +76,9 @@ export const useRoadmapLayout = (rawNodes: RawNode[], rawLinks: RawLink[]) => {
       });
     });
 
-    const padding = 60;
+    if (result.length === 0) return;
 
+    const padding = 60;
     const totalWidth =
       result.reduce((acc, node) => acc + node.width, 0) +
       padding * (result.length - 1);
@@ -95,7 +94,7 @@ export const useRoadmapLayout = (rawNodes: RawNode[], rawLinks: RawLink[]) => {
 
     setNodes(result);
     setMeasuring(false);
-  }, [rawNodes]);
+  }, [rawNodes, rawLinks]);
 
   return { nodes, measuring, measureElements };
 };
