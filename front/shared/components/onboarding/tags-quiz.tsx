@@ -1,10 +1,9 @@
 "use client";
 import { OnboardingData, UserSkill } from "@/shared/types/types";
 import { ArrowLeft } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface TagsProps {
-  tags: string[];
   title: string;
   placeholder: string;
   singleChoice: boolean;
@@ -16,7 +15,6 @@ interface TagsProps {
 }
 
 export const Tags: React.FC<TagsProps> = ({
-  tags,
   title,
   placeholder,
   singleChoice,
@@ -26,6 +24,7 @@ export const Tags: React.FC<TagsProps> = ({
   onNext,
   onBack,
 }) => {
+  const [allTags, setAllTags] = useState<string[]>([]);
   const [skills, setSkills] = useState<UserSkill[]>([]);
   const [text, setText] = useState<string>("");
   const [filteredSkills, setFilteredSkills] = useState<string[]>([]);
@@ -34,11 +33,28 @@ export const Tags: React.FC<TagsProps> = ({
 
   const isValid = skills.length > 0;
 
-  React.useEffect(() => {
+  // Fetch skills from backend
+  useEffect(() => {
+    const fetchSkills = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/skills_list/");
+        const data: string[] = await response.json();
+        setAllTags(data);
+      } catch (err) {
+        console.error("Failed to load skills:", err);
+      }
+    };
+
+    fetchSkills();
+  }, []);
+
+  // Initialize with existing skills
+  useEffect(() => {
     setSkills(userData.skills.filter((s) => s.is_goal === isGoal));
   }, [userData, isGoal]);
 
-  React.useEffect(() => {
+  // Check for overlap
+  useEffect(() => {
     const allSkills = isGoal
       ? userData.skills.filter((s) => !s.is_goal).map((s) => s.skill)
       : userData.skills.filter((s) => s.is_goal).map((s) => s.skill);
@@ -63,7 +79,7 @@ export const Tags: React.FC<TagsProps> = ({
     setText(value);
 
     if (value.trim().length > 0) {
-      const filt = tags.filter((skill) =>
+      const filt = allTags.filter((skill) =>
         skill.toLowerCase().includes(value.toLowerCase().trim())
       );
       setFilteredSkills(filt);

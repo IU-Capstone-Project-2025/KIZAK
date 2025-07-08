@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { RoadmapNode } from "./node";
 import { useRoadmapLayout } from "../../hooks/useRoadmapLayout";
+import Link from "next/link";
 
 export const rawNodes = [
   {
@@ -51,21 +52,20 @@ const dotColor = "#ccc";
 
 interface Props {
   userId: string;
+  initialNodeId?: string;
 }
 
-export const RoadmapNew: React.FC<Props> = ({ userId }) => {
+export const RoadmapNew: React.FC<Props> = ({ userId, initialNodeId }) => {
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [isDragging, setDragging] = useState(false);
-  const [selectedNode, setSelectedNode] = useState<string | null>(null);
+  const [selectedNode, setSelectedNode] = useState<string | null>(
+    initialNodeId || null
+  );
 
   const { nodes, measuring, measureElements } = useRoadmapLayout(
     rawNodes,
     rawLinks
   );
-
-  useEffect(() => {
-    console.log(selectedNode);
-  }, [selectedNode]);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -139,6 +139,10 @@ export const RoadmapNew: React.FC<Props> = ({ userId }) => {
 
   const handleOnNodeClick = (nodeId: string) => {
     setSelectedNode(nodeId);
+
+    // 👇 Меняем адрес без перезагрузки
+    window.history.pushState(null, "", `/roadmap/${userId}/${nodeId}`);
+
     const container = containerRef.current;
     const node = nodes.find((n) => n.id === nodeId);
     if (!container || !node) return;
@@ -150,6 +154,13 @@ export const RoadmapNew: React.FC<Props> = ({ userId }) => {
     const targetY = container.clientHeight / 2 - centerY;
 
     animateTo(targetX, targetY);
+  };
+
+  const handleClose = () => {
+    setSelectedNode(null);
+
+    // 👇 Удаляем nodeId из адреса
+    window.history.pushState(null, "", `/roadmap/${userId}`);
   };
 
   const drawLinks = () => {
@@ -194,15 +205,35 @@ export const RoadmapNew: React.FC<Props> = ({ userId }) => {
 
     drawDots();
     drawLinks();
-
-    if (!selectedNode) {
-      const center = {
-        x: container.clientWidth / 2 / 2 - WORLD_SIZE / 2,
-        y: container.clientHeight / 2 - WORLD_SIZE / 2,
-      };
-      setOffset(checkLimit(center));
-    }
   }, [measuring, selectedNode, nodes]);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    const center = {
+      x: container.clientWidth / 2 / 2 - WORLD_SIZE / 2,
+      y: container.clientHeight / 2 - WORLD_SIZE / 2,
+    };
+    setOffset(checkLimit(center));
+  }, []);
+
+  // 🎯 Анимация при открытии по initialNodeId
+  useEffect(() => {
+    if (!initialNodeId || measuring) return;
+
+    const node = nodes.find((n) => n.id === initialNodeId);
+    const container = containerRef.current;
+    if (!node || !container) return;
+
+    const halfWidth = container.clientWidth / 2;
+    const centerX = node.x + node.width / 2;
+    const centerY = node.y + node.height / 2;
+    const targetX = halfWidth / 2 - centerX;
+    const targetY = container.clientHeight / 2 - centerY;
+
+    animateTo(targetX, targetY);
+    setSelectedNode(initialNodeId);
+  }, [initialNodeId, measuring, nodes]);
 
   return (
     <div
@@ -214,11 +245,7 @@ export const RoadmapNew: React.FC<Props> = ({ userId }) => {
       className="relative w-full h-full overflow-hidden rounded-b-xl flex"
       style={{ userSelect: isDragging ? "none" : "auto" }}
     >
-      <div
-        className={`relative h-full overflow-hidden ${
-          selectedNode ? "w-1/2" : "w-full"
-        }`}
-      >
+      <div className="relative h-full overflow-hidden w-full">
         <div
           className="absolute origin-center"
           style={{
@@ -238,7 +265,7 @@ export const RoadmapNew: React.FC<Props> = ({ userId }) => {
             nodes.map((node) => (
               <div
                 key={node.id}
-                className={`absolute cursor-pointer`}
+                className="absolute cursor-pointer"
                 style={{
                   left: node.x,
                   top: node.y,
@@ -265,8 +292,8 @@ export const RoadmapNew: React.FC<Props> = ({ userId }) => {
 
       <div
         className={`
-          absolute top-0 right-0 h-full w-1/2 bg-white p-6 overflow-auto shadow-inner z-10
-          transition-all duration-500
+          absolute top-0 right-0 h-full w-1/2 bg-none p-6 overflow-auto z-10
+          transition-all duration-300
           ${
             selectedNode
               ? "opacity-100 visible pointer-events-auto"
@@ -275,33 +302,99 @@ export const RoadmapNew: React.FC<Props> = ({ userId }) => {
         `}
       >
         <div className="w-full h-full">
-          {selectedNode &&
-            (() => {
-              const node = nodes.find((n) => n.id === selectedNode);
-              if (!node) return null;
-              return (
-                <div className="flex flex-col h-full justify-center items-center text-ui-dark">
-                  <h3 className="text-2xl font-bold mb-4">{node.title}</h3>
-                  <p className="mb-6">{node.summary}</p>
-                  <p className="text-lg">
-                    Progress:{" "}
-                    <span className="font-semibold">
-                      {node.progress === 100
-                        ? "Done"
-                        : node.progress === 0
-                        ? "Not started"
-                        : "In progress"}
-                    </span>
-                  </p>
-                  <button
-                    onClick={() => setSelectedNode(null)}
-                    className="mt-auto px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
-                  >
-                    Close
-                  </button>
+          <div
+            className="relative flex flex-col h-full p-6 rounded-md shadow-md overflow-auto
+               bg-bg-main text-ui-dark border border-ui-border"
+          >
+            <button
+              onClick={handleClose}
+              aria-label="Close"
+              className="absolute top-4 right-4 w-8 h-8 flex-center rounded-full
+                 text-ui-muted hover:text-ui-dark
+                 cursor-pointer
+                 transition-colors duration-200 ease-in-out"
+              title="Закрыть"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-5 h-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+
+            <h3 className="text-3xl font-extrabold mb-4 text-brand-primary">
+              Python OOP
+            </h3>
+            <p className="mb-4 text-lg leading-relaxed">
+              Basics of OOP for Python
+            </p>
+
+            <Link
+              href="https://stepik.org/course/98974/promo?search=7287873917"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mb-6 text-brand-primary underline hover:text-yellow-400 transition"
+            >
+              Перейти к курсу
+            </Link>
+
+            <div className="grid grid-cols-2 gap-x-12 gap-y-4 text-ui-dark text-sm font-semibold">
+              <div className="flex-between">
+                <span className="text-ui-muted">Уровень:</span>
+                <span>Beginner</span>
+              </div>
+              <div className="flex-between">
+                <span className="text-ui-muted">Цена:</span>
+                <span>Бесплатно</span>
+              </div>
+              <div className="flex-between">
+                <span className="text-ui-muted">Язык:</span>
+                <span>Russian</span>
+              </div>
+              <div className="flex-between">
+                <span className="text-ui-muted">Длительность:</span>
+                <span>10 часов</span>
+              </div>
+              <div className="flex-between">
+                <span className="text-ui-muted">Платформа:</span>
+                <span>KIZAK</span>
+              </div>
+              <div className="flex-between">
+                <span className="text-ui-muted">Рейтинг:</span>
+                <span>0</span>
+              </div>
+              <div className="flex-between">
+                <span className="text-ui-muted">Дата публикации:</span>
+                <span>2015-05-01</span>
+              </div>
+              <div className="flex-between">
+                <span className="text-ui-muted">Сертификат:</span>
+                <span className="text-status-success">Доступен</span>
+              </div>
+              <div className="col-span-2 mt-4">
+                <span className="text-ui-muted font-semibold">
+                  Навыки, изучаемые:
+                </span>
+                <div className="mt-1 flex flex-wrap gap-2">
+                  <span className="px-2 py-1 rounded shadow-sm font-medium border border-ui-border text-ui-dark">
+                    Python
+                  </span>
+                  <span className="px-2 py-1 rounded shadow-sm font-medium border border-ui-border text-ui-dark">
+                    OOP
+                  </span>
                 </div>
-              );
-            })()}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
