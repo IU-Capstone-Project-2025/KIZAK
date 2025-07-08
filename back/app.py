@@ -1,14 +1,19 @@
-from contextlib import asynccontextmanager
-
 import uvicorn
 from db.db_connector import db
-from fastapi import FastAPI
+
+from services.vector_search import CourseVectorSearch
+from services.ranker import CourseRanker
+from services.skipGapAnalyzer import SkillGapAnalyzer
+from utils.conf import USER_SKILLS, ROLE_TO_SKILLS, PRIORITIES_BY_ROLE
+
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from contextlib import asynccontextmanager
+
 from routers.resource import router as ResourceRouter
 from routers.roadmap import router as RoadmapRouter
 from routers.user import router as UserRouter
 from routers.auth import router as AuthRouter
-
 from routers.utils import router as UtilsRouter
 
 import dotenv
@@ -16,9 +21,12 @@ import os
 
 dotenv.load_dotenv()
 
+os.environ["HF_HOME"] = "/models"
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await db.connect()
+
     yield
     await db.close()
 
@@ -42,7 +50,7 @@ app.add_middleware(
 app.include_router(UserRouter, tags=["User"])
 app.include_router(RoadmapRouter)
 app.include_router(ResourceRouter, tags=["Resource"])
-app.include_router(AuthRouter, tags=["auth"])
+app.include_router(AuthRouter, tags=["Auth"])
 app.include_router(UtilsRouter, tags=["Utils"])
 
 

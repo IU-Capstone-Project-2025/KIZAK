@@ -1,13 +1,13 @@
 from typing import Any
+
 from uuid import UUID
 
 from utils.logger import logger
 
-from fastapi import HTTPException
+from fastapi import HTTPException, Depends, status
 from models.user import UserCreate, UserResponse
 from models.user import UserUpdate, UserSkill, UserPassword
 from models.user import UserProfileResponse
-
 from db.db_connector import db
 from db.roadmap import get_roadmap_progress
 
@@ -95,9 +95,9 @@ async def retrieve_user_by_login(login: str) -> UserResponse:
             """
                 SELECT skill, skill_level, is_goal
                 FROM user_skills
-                WHERE login = $1
+                WHERE user_id = $1
             """,
-            login
+            user_response["user_id"]
         )
 
         skills = [UserSkill(**s) for s in skills_response]
@@ -287,7 +287,6 @@ async def remove_user(user_id: UUID) -> None:
 
 async def _update(table: str, fields: dict[str, Any], user_id: UUID,
                   conn) -> bool:
-
     logger.info(f"Updating {user_id} user fields {', '.join(fields.keys())}")
     values = list(fields.values()) + [user_id]
 
@@ -415,10 +414,12 @@ async def retrieve_user_profile(user_id: UUID) -> UserProfileResponse:
     )
 
     history = sorted(
-        [row['node_id'] for row in await history_rows],
+        [row['node_id'] for row in history_rows],
         key=lambda x: x["last_opened"],
         reverse=True
     )
+    
+    print(history)
 
     return UserProfileResponse(
         user=user,

@@ -10,7 +10,11 @@ from models.user import UserResponse
 from models.roadmap import RoadmapResponse, NodeResponse, LinkResponse
 from models.resource import ResourceResponse
 from utils.logger import logger
+import os
 
+os.environ.setdefault("SECRET_KEY", "test-secret-key")
+os.environ.setdefault("JWT_SECRET_KEY", "test-secret-key")
+os.environ.setdefault("PASSWORD_SALT", "test-salt")
 
 class FakeTransaction:
     def __init__(self, conn):

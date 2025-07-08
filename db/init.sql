@@ -7,7 +7,8 @@ CREATE TABLE users (
     background TEXT,
     education TEXT,
     goals TEXT,
-    goal_vacancy VARCHAR(100)
+    goal_vacancy VARCHAR(100),
+    isActive BOOLEAN
 );
 -- User skills
 CREATE TABLE user_skills (
