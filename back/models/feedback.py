@@ -26,7 +26,7 @@ class FeedbackBase(BaseModel):
     )
     is_liked: bool = Field(
         ...,
-        description="Does usel likes this recomendation&",
+        description="Does usel likes this recommendation",
         examples=[True]
     )
     reason: Optional[str] = Field(
