@@ -9,4 +9,4 @@ USER_SKILLS = set()
 for role, skills in job_skills_raw.items():
     ROLE_TO_SKILLS[role] = [item["skill"] for item in skills]
     PRIORITIES_BY_ROLE[role] = {item["skill"]: item["priority"] for item in skills}
-    USER_SKILLS.add(ROLE_TO_SKILLS.values())
+    USER_SKILLS.update(ROLE_TO_SKILLS[role])

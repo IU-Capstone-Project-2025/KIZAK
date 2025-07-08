@@ -425,6 +425,8 @@ async def retrieve_user_profile(user_id: UUID) -> UserProfileResponse:
         key=lambda x: x["last_opened"],
         reverse=True
     )
+    
+    print(history)
 
     return UserProfileResponse(
         user=user,
