@@ -35,7 +35,8 @@ async def generate_roadmap(
     user_id: UUID,
     user_role: str,
     user_skills: List[UserSkill],
-    user_query: str
+    user_query: str,
+    excluded_courses: List[UUID] = []
 ) -> RoadmapInfo:
     skills = [skill.skill for skill in user_skills]
 
@@ -43,8 +44,13 @@ async def generate_roadmap(
     best_courses = _get_best_courses(user_role, skills, user_query)
     ranked_courses = _rank_courses(best_courses, missing_skills, user_role)
 
-    print("Top 5 Recommended Courses:\n")
-    for i, course_entry in enumerate(ranked_courses[:5], 1):
+    filtered_courses = [
+        course for course in ranked_courses
+        if UUID(course["course"]["details"]["id"]) not in excluded_courses
+    ]
+
+    print("Top 10 Recommended Courses:\n")
+    for i, course_entry in enumerate(filtered_courses[:10], 1):
         title = course_entry["course"]["details"]["title"]
         uuid = course_entry["course"]["details"]["id"]
         print(f"{i}. {title} (UUID: {uuid})")
@@ -54,7 +60,7 @@ async def generate_roadmap(
     )
 
     nodes = []
-    for course_entry in ranked_courses[:5]:
+    for course_entry in filtered_courses[:10]:
         details = course_entry["course"]["details"]
         node = await create_node(
             NodeCreate(
