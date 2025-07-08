@@ -56,9 +56,7 @@ CREATE TABLE roadmap_node (
     title VARCHAR(100) NOT NULL,
     summary TEXT,
     resource_id UUID,
-    progress INTEGER CHECK (
-        progress BETWEEN 0 AND 100
-    ) DEFAULT 0
+    progress VARCHAR(50) DEFAULT 'Not started'
 );
 CREATE TABLE roadmap_link (
     link_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -70,7 +68,8 @@ CREATE TABLE roadmap_history (
     roadmap_id UUID REFERENCES User_Roadmap(roadmap_id) ON DELETE CASCADE,
     title TEXT,
     node_id UUID REFERENCES Roadmap_Node(node_id) ON DELETE CASCADE,
-    last_opened TIMESTAMP WITH TIME ZONE
+    last_opened TIMESTAMP WITH TIME ZONE,
+    progress VARCHAR(50)
 );
 CREATE TABLE roadmap_feedback (
     roadmap_id UUID REFERENCES User_Roadmap(roadmap_id) ON DELETE CASCADE,

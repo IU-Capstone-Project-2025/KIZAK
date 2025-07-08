@@ -62,7 +62,7 @@ async def generate_roadmap(
                 title=details["title"],
                 summary=details["original_point"].get("summary", ""),
                 resource_id=UUID(details["id"]),
-                progress=0
+                progress="Not started"
             )
         )
         nodes.append(node)

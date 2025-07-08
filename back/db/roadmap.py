@@ -402,20 +402,19 @@ async def get_roadmap_progress(roadmap_id: UUID) -> int:
     Returns:
         int: Roadmap progress in percent (0–100)
     """
-    row = await db.fetchrow(
-        """
-        SELECT
-            CASE
-                WHEN COUNT(*) = 0 THEN 0
-                ELSE SUM(progress)::float / COUNT(*) 
-            END AS avg_progress
-        FROM
-            roadmap_node
-        WHERE
-            roadmap_id = $1
-        """,
+    rows = await db.fetch(
+        "SELECT progress FROM roadmap_node WHERE roadmap_id = $1",
         roadmap_id
     )
 
-    progress = row["avg_progress"] if row and row["avg_progress"] is not None else 0
-    return int(progress)
+    if not rows:
+        return 0
+
+    progress_values = {
+        'Not started': 0,
+        'In progress': 50,
+        'Done': 100
+    }
+
+    total = sum(progress_values.get(row['progress'], 0) for row in rows)
+    return round(total / len(rows))

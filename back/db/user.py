@@ -405,7 +405,8 @@ async def retrieve_user_profile(user_id: UUID) -> UserProfileResponse:
                 roadmap_id,
                 node_id,
                 last_opened,
-                title
+                title,
+                progress
             FROM
                 roadmap_history
             WHERE
@@ -418,7 +419,8 @@ async def retrieve_user_profile(user_id: UUID) -> UserProfileResponse:
     history = [
         {
             "node_id": row['node_id'],
-            "title": row['title']
+            "title": row['title'],
+            "progress": row["progress"]
         }
         for row in history_rows
     ]
