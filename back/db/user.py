@@ -404,7 +404,8 @@ async def retrieve_user_profile(user_id: UUID) -> UserProfileResponse:
             SELECT
                 roadmap_id,
                 node_id,
-                last_opened
+                last_opened,
+                title
             FROM
                 roadmap_history
             WHERE
@@ -414,7 +415,13 @@ async def retrieve_user_profile(user_id: UUID) -> UserProfileResponse:
     )
 
     history = sorted(
-        [row['node_id'] for row in await history_rows],
+        [
+            {
+                "node_id": row['node_id'], 
+                "title":row['title']
+            } 
+         for row in await history_rows
+        ],
         key=lambda x: x["last_opened"],
         reverse=True
     )
