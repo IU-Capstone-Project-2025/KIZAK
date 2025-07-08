@@ -118,9 +118,23 @@ class CourseRanker:
 
         return shuffled
 
+    def normalize_skill(self, skill: str) -> str:
+        skill = skill.lower()
+        skill = re.sub(r"[^a-z0-9\s]", "", skill)
+        return skill.strip()
+
+    def get_skill_words(self, skills: list[str]) -> set[str]:
+        words = set()
+        for skill in skills:
+            normalized = self.normalize_skill(skill)
+            splited = normalized.split()
+            words.update(splited)
+        return words
+
     def rank_courses(self,
                      courses: List[Dict], # from cosine similarity search
                      skill_gap: List[str], #from skillgap
+                     known_skills: List[str],
                      target_role: str, # from user onboarding info
                      weights: Dict[str, float] = None, # alpha beta for ranking
                      strategy_name: str = "basic" # to recalculate if offline metrics are bad
@@ -135,11 +149,22 @@ class CourseRanker:
         # get priorities from job-skills mapping
         priorities = self.priorities_by_role.get(target_role, {})
 
-        known_skills = set()  # todo: get fromm skill gap anal
+        # known_skills = set(known_skills)  # todo: get fromm skill gap anal
 
         ranked = []
         for course in courses:
-            course_skills = course.get("skills", [])
+            # temporarily return kostyl normalizing
+            raw_course_skills = course.get("skills", [])
+            if isinstance(raw_course_skills, str):
+                try:
+                    import ast
+                    raw_course_skills = ast.literal_eval(raw_course_skills)
+                except Exception:
+                    raw_course_skills = []
+
+            course_skills = self.get_skill_words(raw_course_skills)
+
+            # course_skills = course.get("skills", [])
 
             covered_skills = set(course_skills).intersection(set(skill_gap))
 
@@ -172,7 +197,7 @@ class CourseRanker:
 
             # known skills penalty — for using skills that user know
             if strategy["known_skills_penalty"] > 0:
-                known_overlap = len(known_skills.intersection(covered_skills))
+                known_overlap = len(set(known_skills).intersection(covered_skills))
                 score -= strategy["known_skills_penalty"] * known_overlap
 
             ranked.append({
@@ -250,6 +275,7 @@ class CourseRanker:
     def rank_with_fallback(self,
                            courses: List[Dict],
                            skill_gap: List[str],
+                           known_skills: List[str],
                            target_role: str,
                            max_attempts: int = 5 #attenpt to improve 3 times
                            ) -> List[Dict]:
@@ -271,6 +297,7 @@ class CourseRanker:
             ranked = self.rank_courses(
                 courses,
                 skill_gap,
+                known_skills,
                 target_role,
                 weights=params["weights"],
                 strategy_name=strategy
@@ -279,9 +306,9 @@ class CourseRanker:
             metrics = self.evaluate_ranking(ranked, target_role)
             logger.info(f"Evaluation metrics: {metrics}")
 
-            skill_gain_ok = self.check_skill_gain(ranked, skill_gap)
-            diversity_ok = self.check_diversity(ranked)
-            position_bias_ok = self.check_position_bias(ranked)
+            skill_gain_ok = self.check_skill_gain(metrics)
+            diversity_ok = self.check_diversity(metrics)
+            position_bias_ok = self.check_position_bias(metrics)
 
             logger.info(
                 f"Skill gain OK: {skill_gain_ok}, Diversity OK: {diversity_ok}, Position bias OK: {position_bias_ok}")
