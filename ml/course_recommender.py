@@ -99,7 +99,7 @@ ranker = CourseRanker(priorities_by_role)
 ranked_courses = ranker.rank_with_fallback(courses, missing_skills, known_skills, user_role)
 
 # quality of ranking
-# metrics = ranker.evaluate_ranking(ranked_courses, missing_skills, user_role)
+metrics = ranker.get_metrics()
 
 print("\nRecommended courses:")
 for i, course in enumerate(ranked_courses[:5]):
@@ -108,7 +108,9 @@ for i, course in enumerate(ranked_courses[:5]):
     print(f"   Rating: {course['course'].get('rating')}")
     print("---")
 
-# output in logger
-# print("Ranking quality metric:", metrics)
+
+print("Ranking quality metric:")
+for i, metric in enumerate(metrics):
+    print(f"{metric}: {metrics[metric]}")
 
 

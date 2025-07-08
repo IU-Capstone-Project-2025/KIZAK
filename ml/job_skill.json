@@ -3830,11 +3830,11 @@
     "priority": 0.85
   },
   {
-    "skill": "html5",
+    "skill": "html",
     "priority": 0.85
   },
   {
-    "skill": "css3",
+    "skill": "css",
     "priority": 0.85
   },
   {
@@ -3911,7 +3911,7 @@
   }
 ],
   "cybersecurity specialist": [
-    {"skill": "security", "priority": 1.0},
+    {"skill": "cybersecurity", "priority": 1.0},
     {"skill": "cloud security", "priority": 0.9},
     {"skill": "linux", "priority": 0.85},
     {"skill": "powershell", "priority": 0.8},

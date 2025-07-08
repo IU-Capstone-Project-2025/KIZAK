@@ -61,11 +61,22 @@ class CourseRanker:
         self.priorities_by_role = priorities_by_role
         self.rating_max = rating_max
 
+        # diversity, skill gain and positional bias from last ranking
+        self.last_metrics = {}
+
+        # to change dynamically
+        self.skill_gain_threshold = 6.0
+        self.diversity_threshold = 2.5
+        self.position_bias_threshold = 4.0
+
+    def get_metrics(self):
+        return self.last_metrics
+
     def _filter_low_quality_courses(self, courses: List[Dict]) -> List[Dict]:
         """throw out courses without any skills or with bad rating"""
         return [
             c for c in courses
-            if c.get("skills") and (c.get("rating", 0) or 0) >= 2.5
+            if c.get("skills") and (c.get("rating", 0) or 0) >= 3
         ]
 
     def _limit_similar_courses(self, ranked: List[Dict], max_similar: int) -> List[Dict]:
@@ -149,7 +160,7 @@ class CourseRanker:
         # get priorities from job-skills mapping
         priorities = self.priorities_by_role.get(target_role, {})
 
-        # known_skills = set(known_skills)  # todo: get fromm skill gap anal
+        # known_skills = set(known_skills)
 
         ranked = []
         for course in courses:
@@ -259,18 +270,18 @@ class CourseRanker:
             "position_bias": round(position_bias, 4)
         }
 
-    def check_skill_gain(self, metrics: Dict[str, float], threshold: float = 0.5) -> bool:
+    def check_skill_gain(self, metrics: Dict[str, float]) -> bool:
         # todo: threshold of skill gain
-        return metrics.get("skill_gain", 0) >= threshold
+        return metrics.get("skill_gain", 0) >= self.skill_gain_threshold
 
-    def check_diversity(self, metrics: Dict[str, float], threshold: float = 1.5) -> bool:
+    def check_diversity(self, metrics: Dict[str, float]) -> bool:
         # todo: entropy threshold
-        return metrics.get("diversity_score", 0) >= threshold
+        return metrics.get("diversity_score", 0) >= self.diversity_threshold
 
-    def check_position_bias(self, metrics: Dict[str, float], max_threshold: float = 5.0) -> bool:
+    def check_position_bias(self, metrics: Dict[str, float]) -> bool:
         # todo: threshold of pos bias
         # position_bias — the << the better (too concentrated sjills on the top is not cool)
-        return metrics.get("position_bias", 0) <= max_threshold
+        return metrics.get("position_bias", 0) <= self.position_bias_threshold
 
     def rank_with_fallback(self,
                            courses: List[Dict],
@@ -304,6 +315,7 @@ class CourseRanker:
             )
 
             metrics = self.evaluate_ranking(ranked, target_role)
+            self.last_metrics = metrics
             logger.info(f"Evaluation metrics: {metrics}")
 
             skill_gain_ok = self.check_skill_gain(metrics)
