@@ -15,6 +15,7 @@ from routers.roadmap import router as RoadmapRouter
 from routers.user import router as UserRouter
 from routers.auth import router as AuthRouter
 from routers.utils import router as UtilsRouter
+from routers.feedback import router as FeedbackRouter
 
 import dotenv
 import os
@@ -52,6 +53,7 @@ app.include_router(RoadmapRouter)
 app.include_router(ResourceRouter, tags=["Resource"])
 app.include_router(AuthRouter, tags=["Auth"])
 app.include_router(UtilsRouter, tags=["Utils"])
+app.include_router(FeedbackRouter, tags=["Feedback"])
 
 
 if __name__ == "__main__":
