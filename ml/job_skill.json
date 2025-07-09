@@ -1,0 +1,4054 @@
+{
+  ".net developer": [
+    {
+      "skill": ".net",
+      "priority": 0.95
+    },
+    {
+      "skill": ".net core",
+      "priority": 0.9
+    },
+    {
+      "skill": ".net framework",
+      "priority": 0.85
+    },
+    {
+      "skill": "asp.net",
+      "priority": 0.85
+    },
+    {
+      "skill": "c#",
+      "priority": 0.86
+    },
+    {
+      "skill": "c++",
+      "priority": 0.5
+    },
+    {
+      "skill": "entity framework",
+      "priority": 0.8
+    },
+    {
+      "skill": "git",
+      "priority": 0.65
+    },
+    {
+      "skill": "html",
+      "priority": 0.38
+    },
+    {
+      "skill": "linux",
+      "priority": 0.63
+    },
+    {
+      "skill": "mvc",
+      "priority": 0.8
+    },
+    {
+      "skill": "oracle pl sql",
+      "priority": 0.83
+    },
+    {
+      "skill": "postgresql",
+      "priority": 0.83
+    },
+    {
+      "skill": "rabbitmq",
+      "priority": 0.25
+    },
+    {
+      "skill": "rest",
+      "priority": 0.5
+    },
+    {
+      "skill": "scrum",
+      "priority": 0.25
+    },
+    {
+      "skill": "sql",
+      "priority": 0.83
+    },
+    {
+      "skill": "xml",
+      "priority": 0.25
+    },
+    {
+      "skill": "английский язык",
+      "priority": 0.28
+    },
+    {
+      "skill": "ооп",
+      "priority": 0.25
+    },
+    {
+      "skill": "субд",
+      "priority": 0.25
+    },
+    { "skill": "linq", "priority": 0.8 },
+    { "skill": "html", "priority": 0.5 },
+  { "skill": "razor", "priority": 0.5 }
+
+  ],
+  "1c developer":[
+  { "skill": "1c бухгалтерия", "priority": 0.95 },
+  { "skill": "1c предприятие", "priority": 0.9 },
+  { "skill": "1с битрикс", "priority": 0.4 },
+  { "skill": "1с документооборот", "priority": 0.75 },
+  { "skill": "1с зарплата и управление персоналом", "priority": 0.6 },
+  { "skill": "1с комплексная автоматизация", "priority": 0.65 },
+  { "skill": "1с программирование", "priority": 0.9 },
+  { "skill": "1с управление предприятием", "priority": 0.6 },
+  { "skill": "1с управление производственным предприятием", "priority": 0.6 },
+  { "skill": "1с управление торговлей", "priority": 0.6 },
+  { "skill": "erp системы на базе 1с", "priority": 0.65 },
+  { "skill": "git", "priority": 0.65 },
+  { "skill": "linux", "priority": 0.4 },
+  { "skill": "ms sql", "priority": 0.8 },
+  { "skill": "mysql", "priority": 0.3 },
+  { "skill": "xml", "priority": 0.25 },
+  { "skill": "английский язык", "priority": 0.3 },
+  { "skill": "обновление конфигурации 1с", "priority": 0.7 }
+],
+  "android developer": [
+    {
+      "skill": "android",
+      "priority": 0.95
+    },
+    {
+      "skill": "android sdk",
+      "priority": 0.9
+    },
+    {
+      "skill": "dagger",
+      "priority": 0.85
+    },
+    {
+      "skill": "git",
+      "priority": 0.75
+    },
+    {
+      "skill": "java",
+      "priority": 0.89
+    },
+    {
+      "skill": "kotlin",
+      "priority": 0.95
+    },
+    {
+      "skill": "mvp",
+      "priority": 0.6
+    },
+    {
+      "skill": "mvvm",
+      "priority": 0.8
+    },
+    {
+      "skill": "retrofit",
+      "priority": 0.75
+    },
+    {
+      "skill": "room",
+      "priority": 0.7
+    },
+    {
+      "skill": "rxjava",
+      "priority": 0.8
+    },
+    {
+      "skill": "ооп",
+      "priority": 0.25
+    },
+    { "skill": "coroutines", "priority": 0.85 },
+  { "skill": "jetpack compose", "priority": 0.8 },
+  { "skill": "viewmodel", "priority": 0.75 },
+  { "skill": "livedata", "priority": 0.7 },
+  { "skill": "navigation component", "priority": 0.7 },
+  { "skill": "gradle", "priority": 0.65 },
+  { "skill": "unit testing", "priority": 0.6 }
+  ],
+  "associate data engineer": [
+    {
+      "skill": "airflow",
+      "priority": 0.95
+    },
+    {
+      "skill": "aws",
+      "priority": 0.9
+    },
+    {
+      "skill": "azure",
+      "priority": 0.8
+    },
+    {
+      "skill": "databricks",
+      "priority": 0.8
+    },
+    {
+      "skill": "excel",
+      "priority": 0.6
+    },
+    {
+      "skill": "gcp",
+      "priority": 0.75
+    },
+    {
+      "skill": "git",
+      "priority": 0.65
+    },
+    {
+      "skill": "go",
+      "priority": 0.3
+    },
+    {
+      "skill": "hadoop",
+      "priority": 0.5
+    },
+    {
+      "skill": "java",
+      "priority": 0.6
+    },
+    {
+      "skill": "jenkins",
+      "priority": 0.25
+    },
+    {
+      "skill": "jira",
+      "priority": 0.2
+    },
+    {
+      "skill": "kafka",
+      "priority": 0.6
+    },
+    {
+      "skill": "linux",
+      "priority": 0.7
+    },
+    {
+      "skill": "nosql",
+      "priority": 0.83
+    },
+    {
+      "skill": "oracle",
+      "priority": 0.25
+    },
+    {
+      "skill": "power bi",
+      "priority": 0.25
+    },
+    {
+      "skill": "pyspark",
+      "priority": 0.7
+    },
+    {
+      "skill": "python",
+      "priority": 0.92
+    },
+    {
+      "skill": "redshift",
+      "priority": 0.5
+    },
+    {
+      "skill": "scala",
+      "priority": 0.4
+    },
+    {
+      "skill": "shell",
+      "priority": 0.6
+    },
+    {
+      "skill": "snowflake",
+      "priority": 0.6
+    },
+    {
+      "skill": "spark",
+      "priority": 0.75
+    },
+    {
+      "skill": "sql",
+      "priority": 0.9
+    },
+    {
+      "skill": "sql server",
+      "priority": 0.83
+    },
+    {
+      "skill": "tableau",
+      "priority": 0.25
+    },
+  { "skill": "dbt", "priority": 0.75 },
+  { "skill": "cloud storage", "priority": 0.7 },
+  { "skill": "docker", "priority": 0.6 },
+    { "skill": "data modeling", "priority": 0.7 }
+  ],
+  "aws data engineer": [
+    {
+      "skill": "airflow",
+      "priority": 0.95
+    },
+    {
+      "skill": "aws",
+      "priority": 0.95
+    },
+    {
+      "skill": "azure",
+      "priority": 0.3
+    },
+    {
+      "skill": "databricks",
+      "priority": 0.6
+    },
+    {
+      "skill": "docker",
+      "priority": 0.75
+    },
+    {
+      "skill": "dynamodb",
+      "priority": 0.7
+    },
+    {
+      "skill": "git",
+      "priority": 0.65
+    },
+    {
+      "skill": "hadoop",
+      "priority": 0.4
+    },
+    {
+      "skill": "java",
+      "priority": 0.6
+    },
+    {
+      "skill": "jenkins",
+      "priority": 0.25
+    },
+    {
+      "skill": "kafka",
+      "priority": 0.6
+    },
+    {
+      "skill": "nosql",
+      "priority": 0.83
+    },
+    {
+      "skill": "oracle",
+      "priority": 0.25
+    },
+    {
+      "skill": "pyspark",
+      "priority": 0.7
+    },
+    {
+      "skill": "python",
+      "priority": 0.92
+    },
+    {
+      "skill": "redshift",
+      "priority": 0.75
+    },
+    {
+      "skill": "scala",
+      "priority": 0.4
+    },
+    {
+      "skill": "snowflake",
+      "priority": 0.25
+    },
+    {
+      "skill": "spark",
+      "priority": 0.75
+    },
+    {
+      "skill": "sql",
+      "priority": 0.9
+    },
+    { "skill": "lambda", "priority": 0.7 },
+    {
+      "skill": "terraform",
+      "priority": 0.6
+    }
+  ],
+  "azure data engineer": [
+  { "skill": "azure", "priority": 0.95 },
+  { "skill": "databricks", "priority": 0.9 },
+  { "skill": "java", "priority": 0.6 },
+  { "skill": "power bi", "priority": 0.75 },
+  { "skill": "pyspark", "priority": 0.8 },
+  { "skill": "python", "priority": 0.92 },
+  { "skill": "scala", "priority": 0.4 },
+  { "skill": "snowflake", "priority": 0.3 },
+  { "skill": "spark", "priority": 0.8 },
+  { "skill": "sql", "priority": 0.9 },
+  { "skill": "sql server", "priority": 0.85 },
+  { "skill": "ssis", "priority": 0.6 },
+  { "skill": "t sql", "priority": 0.85 },
+    { "skill": "azure data factory", "priority": 0.9 },
+  { "skill": "azure synapse", "priority": 0.85 },
+  { "skill": "azure blob", "priority": 0.8 },
+  { "skill": "delta lake", "priority": 0.7 },
+  { "skill": "azure devops", "priority": 0.6 },
+  { "skill": "azure functions", "priority": 0.5 }
+  ],
+  "backend developer": [
+    {
+      "skill": "airflow",
+      "priority": 0.5
+    },
+    {
+      "skill": "aws",
+      "priority": 0.8
+    },
+    {
+      "skill": "azure",
+      "priority": 0.3
+    },
+    {
+      "skill": "c#",
+      "priority": 0.8
+    },
+    {
+      "skill": "c++",
+      "priority": 0.75
+    },
+    {
+      "skill": "docker",
+      "priority": 0.8
+    },
+    {
+      "skill": "elasticsearch",
+      "priority": 0.5
+    },
+    {
+      "skill": "gcp",
+      "priority": 0.3
+    },
+    {
+      "skill": "git",
+      "priority": 0.8
+    },
+    {
+      "skill": "go",
+      "priority": 0.55
+    },
+    {
+      "skill": "golang",
+      "priority": 0.55
+    },
+    {
+      "skill": "graphql",
+      "priority": 0.6
+    },
+    {
+      "skill": "hadoop",
+      "priority": 0.25
+    },
+    {
+      "skill": "java",
+      "priority": 0.89
+    },
+    {
+      "skill": "javascript",
+      "priority": 0.45
+    },
+    {
+      "skill": "kafka",
+      "priority": 0.6
+    },
+    {
+      "skill": "kotlin",
+      "priority": 0.2
+    },
+    {
+      "skill": "kubernetes",
+      "priority": 0.6
+    },
+    {
+      "skill": "laravel",
+      "priority": 0.4
+    },
+    {
+      "skill": "linux",
+      "priority": 0.7
+    },
+    {
+      "skill": "mongodb",
+      "priority": 0.75
+    },
+    {
+      "skill": "mysql",
+      "priority": 0.83
+    },
+    {
+      "skill": "node.js",
+      "priority": 0.8
+    },
+    {
+      "skill": "nosql",
+      "priority": 0.83
+    },
+    {
+      "skill": "php",
+      "priority": 0.45
+    },
+    {
+      "skill": "postgresql",
+      "priority": 0.83
+    },
+    {
+      "skill": "python",
+      "priority": 0.92
+    },
+    {
+      "skill": "redis",
+      "priority": 0.6
+    },
+    {
+      "skill": "ruby",
+      "priority": 0.42
+    },
+    {
+      "skill": "scala",
+      "priority": 0.4
+    },
+    {
+      "skill": "spark",
+      "priority": 0.25
+    },
+    {
+      "skill": "spring",
+      "priority": 0.8
+    },
+    {
+      "skill": "sql",
+      "priority": 0.9
+    },
+    {
+      "skill": "typescript",
+      "priority": 0.7
+    },
+    {
+      "skill": "ооп",
+      "priority": 0.6
+    },
+    { "skill": "rest api", "priority": 0.9 },
+  { "skill": "unit testing", "priority": 0.7 },
+  { "skill": "ci cd", "priority": 0.7 },
+  { "skill": "grpc", "priority": 0.5 },
+  { "skill": "message brokers", "priority": 0.6 }
+  ],
+  "bi analyst": [
+  { "skill": "aws", "priority": 0.7 },
+  { "skill": "azure", "priority": 0.7 },
+  { "skill": "dax", "priority": 0.85 },
+  { "skill": "excel", "priority": 0.9 },
+  { "skill": "oracle", "priority": 0.6 },
+  { "skill": "power bi", "priority": 0.85 },
+  { "skill": "python", "priority": 0.6 },
+  { "skill": "qlik", "priority": 0.5 },
+  { "skill": "r", "priority": 0.4 },
+  { "skill": "sap", "priority": 0.25 },
+  { "skill": "sas", "priority": 0.25 },
+  { "skill": "snowflake", "priority": 0.5 },
+  { "skill": "sql", "priority": 0.9 },
+  { "skill": "sql server", "priority": 0.8 },
+  { "skill": "ssis", "priority": 0.5 },
+  { "skill": "ssrs", "priority": 0.5 },
+  { "skill": "tableau", "priority": 0.75 }
+],
+  "big data engineer": [
+    {
+      "skill": "airflow",
+      "priority": 0.95
+    },
+    {
+      "skill": "aws",
+      "priority": 0.9
+    },
+    {
+      "skill": "azure",
+      "priority": 0.75
+    },
+    {
+      "skill": "cassandra",
+      "priority": 0.8
+    },
+    {
+      "skill": "databricks",
+      "priority": 0.75
+    },
+    {
+      "skill": "docker",
+      "priority": 0.6
+    },
+    {
+      "skill": "gcp",
+      "priority": 0.6
+    },
+    {
+      "skill": "git",
+      "priority": 0.8
+    },
+    {
+      "skill": "hadoop",
+      "priority": 0.6
+    },
+    {
+      "skill": "java",
+      "priority": 0.89
+    },
+    {
+      "skill": "jenkins",
+      "priority": 0.4
+    },
+    {
+      "skill": "kafka",
+      "priority": 0.7
+    },
+    {
+      "skill": "kubernetes",
+      "priority": 0.5
+    },
+    {
+      "skill": "linux",
+      "priority": 0.8
+    },
+    {
+      "skill": "mongodb",
+      "priority": 0.55
+    },
+    {
+      "skill": "nosql",
+      "priority": 0.7
+    },
+    {
+      "skill": "pyspark",
+      "priority": 0.85
+    },
+    {
+      "skill": "python",
+      "priority": 0.98
+    },
+    {
+      "skill": "scala",
+      "priority": 0.6
+    },
+    {
+      "skill": "shell",
+      "priority": 0.5
+    },
+    {
+      "skill": "snowflake",
+      "priority": 0.4
+    },
+    {
+      "skill": "spark",
+      "priority": 0.78
+    },
+    {
+      "skill": "sql",
+      "priority": 0.83
+    },
+    {
+      "skill": "tableau",
+      "priority": 0.25
+    },
+    {
+      "skill": "cloud storage",
+      "priority": 0.7
+    }
+  ],
+  "business data analyst": [
+    {
+      "skill": "excel",
+      "priority": 0.85
+    },
+    {
+      "skill": "flow",
+      "priority": 0.4
+    },
+    {
+      "skill": "oracle",
+      "priority": 0.3
+    },
+    {
+      "skill": "power bi",
+      "priority": 0.8
+    },
+    {
+      "skill": "powerpoint",
+      "priority": 0.9
+    },
+    {
+      "skill": "python",
+      "priority": 0.6
+    },
+    {
+      "skill": "r",
+      "priority": 0.25
+    },
+    {
+      "skill": "sap",
+      "priority": 0.25
+    },
+    {
+      "skill": "sas",
+      "priority": 0.25
+    },
+    {
+      "skill": "sql",
+      "priority": 0.83
+    },
+    {
+      "skill": "sql server",
+      "priority": 0.83
+    },
+    {
+      "skill": "tableau",
+      "priority": 0.7
+    },
+    {
+      "skill": "vba",
+      "priority": 0.5
+    },
+    {
+      "skill": "word",
+      "priority": 0.8
+    },
+    {
+      "skill": "data visualization",
+      "priority": 0.8
+    }
+  ],
+  "clinical data analyst": [
+    {
+      "skill": "azure",
+      "priority": 0.7
+    },
+    {
+      "skill": "excel",
+      "priority": 0.9
+    },
+    {
+      "skill": "flow",
+      "priority": 0.4
+    },
+    {
+      "skill": "oracle",
+      "priority": 0.6
+    },
+    {
+      "skill": "power bi",
+      "priority": 0.7
+    },
+    {
+      "skill": "powerpoint",
+      "priority": 0.6
+    },
+    {
+      "skill": "python",
+      "priority": 0.8
+    },
+    {
+      "skill": "r",
+      "priority": 0.4
+    },
+    {
+      "skill": "sap",
+      "priority": 0.25
+    },
+    {
+      "skill": "sas",
+      "priority": 0.6
+    },
+    {
+      "skill": "sql",
+      "priority": 0.9
+    },
+    {
+      "skill": "sql server",
+      "priority": 0.83
+    },
+    {
+      "skill": "tableau",
+      "priority": 0.5
+    },
+    {
+      "skill": "vba",
+      "priority": 0.5
+    },
+    {
+      "skill": "word",
+      "priority": 0.6
+    }
+  ],
+  "cloud data engineer": [
+    {
+      "skill": "airflow",
+      "priority": 0.95
+    },
+    {
+      "skill": "ansible",
+      "priority": 0.6
+    },
+    {
+      "skill": "aws",
+      "priority": 0.85
+    },
+    {
+      "skill": "azure",
+      "priority": 0.8
+    },
+    {
+      "skill": "bigquery",
+      "priority": 0.75
+    },
+    {
+      "skill": "databricks",
+      "priority": 0.5
+    },
+    {
+      "skill": "docker",
+      "priority": 0.5
+    },
+    {
+      "skill": "gcp",
+      "priority": 0.75
+    },
+    {
+      "skill": "git",
+      "priority": 0.8
+    },
+    {
+      "skill": "hadoop",
+      "priority": 0.4
+    },
+    {
+      "skill": "java",
+      "priority": 0.8
+    },
+    {
+      "skill": "jenkins",
+      "priority": 0.3
+    },
+    {
+      "skill": "kafka",
+      "priority": 0.5
+    },
+    {
+      "skill": "kubernetes",
+      "priority": 0.55
+    },
+    {
+      "skill": "linux",
+      "priority": 0.75
+    },
+    {
+      "skill": "mongodb",
+      "priority": 0.55
+    },
+    {
+      "skill": "nosql",
+      "priority": 0.75
+    },
+    {
+      "skill": "pyspark",
+      "priority": 0.7
+    },
+    {
+      "skill": "python",
+      "priority": 0.92
+    },
+    {
+      "skill": "redshift",
+      "priority": 0.5
+    },
+    {
+      "skill": "scala",
+      "priority": 0.5
+    },
+    {
+      "skill": "snowflake",
+      "priority": 0.5
+    },
+    {
+      "skill": "spark",
+      "priority": 0.7
+    },
+    {
+      "skill": "sql",
+      "priority": 0.83
+    },
+    { "skill": "cloud security", "priority": 0.6 },
+  { "skill": "logging", "priority": 0.6 },
+  { "skill": "ci cd", "priority": 0.6 },
+    {
+      "skill": "terraform",
+      "priority": 0.6
+    }
+  ],
+  "consulting data engineer": [
+  { "skill": "airflow", "priority": 0.9 },
+  { "skill": "aws", "priority": 0.9 },
+  { "skill": "azure", "priority": 0.85 },
+  { "skill": "bigquery", "priority": 0.75 },
+  { "skill": "databricks", "priority": 0.6 },
+  { "skill": "docker", "priority": 0.4 },
+  { "skill": "gcp", "priority": 0.7 },
+  { "skill": "git", "priority": 0.7 },
+  { "skill": "hadoop", "priority": 0.4 },
+  { "skill": "java", "priority": 0.85 },
+  { "skill": "kafka", "priority": 0.5 },
+  { "skill": "kubernetes", "priority": 0.5 },
+  { "skill": "mongodb", "priority": 0.5 },
+  { "skill": "nosql", "priority": 0.75 },
+  { "skill": "python", "priority": 0.9 },
+  { "skill": "scala", "priority": 0.5 },
+  { "skill": "spark", "priority": 0.6 },
+  { "skill": "sql", "priority": 0.85 },
+  { "skill": "sql server", "priority": 0.8 },
+  { "skill": "redshift", "priority": 0.4 },
+  { "skill": "snowflake", "priority": 0.4 },
+  { "skill": "tableau", "priority": 0.3 },
+  { "skill": "client management", "priority": 0.6 },
+  { "skill": "cloud security", "priority": 0.5 }
+],
+  "data analyst": [
+  { "skill": "excel", "priority": 0.9 },
+  { "skill": "sql", "priority": 0.9 },
+  { "skill": "python", "priority": 0.85 },
+  { "skill": "tableau", "priority": 0.7 },
+  { "skill": "power bi", "priority": 0.65 },
+  { "skill": "aws", "priority": 0.5 },
+  { "skill": "azure", "priority": 0.5 },
+  { "skill": "sql server", "priority": 0.5 },
+  { "skill": "powerpoint", "priority": 0.4 },
+  { "skill": "word", "priority": 0.3 },
+  { "skill": "r", "priority": 0.25 },
+    { "skill": "data visualization", "priority": 0.75 },
+  { "skill": "statistics", "priority": 0.7 }
+  ],
+  "data architect": [
+  { "skill": "airflow", "priority": 0.9 },
+  { "skill": "aws", "priority": 0.9 },
+  { "skill": "azure", "priority": 0.85 },
+  { "skill": "gcp", "priority": 0.85 },
+  { "skill": "databricks", "priority": 0.75 },
+  { "skill": "kafka", "priority": 0.7 },
+  { "skill": "python", "priority": 0.9 },
+  { "skill": "java", "priority": 0.8 },
+  { "skill": "sql", "priority": 0.85 },
+  { "skill": "sql server", "priority": 0.8 },
+  { "skill": "nosql", "priority": 0.7 },
+  { "skill": "mongodb", "priority": 0.65 },
+  { "skill": "snowflake", "priority": 0.6 },
+  { "skill": "redshift", "priority": 0.6 },
+  { "skill": "spark", "priority": 0.6 },
+  { "skill": "scala", "priority": 0.45 },
+  { "skill": "git", "priority": 0.65 },
+  { "skill": "hadoop", "priority": 0.4 },
+
+  { "skill": "data modeling", "priority": 0.85 },
+  { "skill": "data governance", "priority": 0.8 },
+  { "skill": "cloud architecture", "priority": 0.9 },
+  { "skill": "etl design", "priority": 0.75 },
+  { "skill": "security", "priority": 0.7 }
+],
+  "data engineer": [
+    {
+      "skill": "airflow",
+      "priority": 0.95
+    },
+    {
+      "skill": "aws",
+      "priority": 0.9
+    },
+    {
+      "skill": "azure",
+      "priority": 0.85
+    },
+    {
+      "skill": "bigquery",
+      "priority": 0.8
+    },
+    {
+      "skill": "databricks",
+      "priority": 0.75
+    },
+    {
+      "skill": "docker",
+      "priority": 0.36
+    },
+    {
+      "skill": "gcp",
+      "priority": 0.75
+    },
+    {
+      "skill": "git",
+      "priority": 0.65
+    },
+    {
+      "skill": "hadoop",
+      "priority": 0.25
+    },
+    {
+      "skill": "java",
+      "priority": 0.89
+    },
+    {
+      "skill": "kafka",
+      "priority": 0.25
+    },
+    {
+      "skill": "kubernetes",
+      "priority": 0.36
+    },
+    {
+      "skill": "linux",
+      "priority": 0.63
+    },
+    {
+      "skill": "mongodb",
+      "priority": 0.55
+    },
+    {
+      "skill": "nosql",
+      "priority": 0.83
+    },
+    {
+      "skill": "oracle",
+      "priority": 0.25
+    },
+    {
+      "skill": "power bi",
+      "priority": 0.25
+    },
+    {
+      "skill": "pyspark",
+      "priority": 0.25
+    },
+    {
+      "skill": "python",
+      "priority": 0.92
+    },
+    {
+      "skill": "redshift",
+      "priority": 0.25
+    },
+    {
+      "skill": "scala",
+      "priority": 0.4
+    },
+    {
+      "skill": "snowflake",
+      "priority": 0.25
+    },
+    {
+      "skill": "spark",
+      "priority": 0.25
+    },
+    {
+      "skill": "sql",
+      "priority": 0.83
+    },
+    {"skill": "bash", "priority": 0.5},
+  {"skill": "jenkins", "priority": 0.4},
+  {"skill": "rest api", "priority": 0.4},
+  {"skill": "sqlalchemy", "priority": 0.3},
+    {
+      "skill": "sql server",
+      "priority": 0.83
+    }
+  ],
+  "data integration specialist": [
+    {
+      "skill": "aws",
+      "priority": 0.95
+    },
+    {
+      "skill": "azure",
+      "priority": 0.9
+    },
+    {
+      "skill": "bash",
+      "priority": 0.6
+    },
+    {
+      "skill": "c#",
+      "priority": 0.6
+    },
+    {
+      "skill": "confluence",
+      "priority": 0.3
+    },
+    {
+      "skill": "databricks",
+      "priority": 0.25
+    },
+    {
+      "skill": "docker",
+      "priority": 0.5
+    },
+    {
+      "skill": "excel",
+      "priority": 0.25
+    },
+    {
+      "skill": "flow",
+      "priority": 0.25
+    },
+    {
+      "skill": "gcp",
+      "priority": 0.75
+    },
+    {
+      "skill": "git",
+      "priority": 0.65
+    },
+    {
+      "skill": "go",
+      "priority": 0.3
+    },
+    {
+      "skill": "java",
+      "priority": 0.89
+    },
+    {
+      "skill": "javascript",
+      "priority": 0.6
+    },
+    {
+      "skill": "jenkins",
+      "priority": 0.25
+    },
+    {
+      "skill": "jira",
+      "priority": 0.25
+    },
+    {
+      "skill": "kafka",
+      "priority": 0.4
+    },
+    {
+      "skill": "kubernetes",
+      "priority": 0.36
+    },
+    {
+      "skill": "linux",
+      "priority": 0.63
+    },
+    {
+      "skill": "nosql",
+      "priority": 0.83
+    },
+    {
+      "skill": "oracle",
+      "priority": 0.25
+    },
+    {
+      "skill": "python",
+      "priority": 0.92
+    },
+    {
+      "skill": "sap",
+      "priority": 0.25
+    },
+    {
+      "skill": "shell",
+      "priority": 0.55
+    },
+    {
+      "skill": "snowflake",
+      "priority": 0.25
+    },
+    {
+      "skill": "spark",
+      "priority": 0.4
+    },
+    {
+      "skill": "sql",
+      "priority": 0.83
+    },
+    {
+      "skill": "sql server",
+      "priority": 0.83
+    },
+    {
+      "skill": "ssis",
+      "priority": 0.25
+    },
+    {
+      "skill": "t sql",
+      "priority": 0.83
+    },
+    {
+      "skill": "tableau",
+      "priority": 0.25
+    },
+  { "skill": "rest api", "priority": 0.6 },
+  { "skill": "json", "priority": 0.5 },
+  { "skill": "xml", "priority": 0.4 },
+  { "skill": "etl", "priority": 0.7 },
+  { "skill": "api gateway", "priority": 0.4 },
+  { "skill": "message queues", "priority": 0.4 },
+    {
+      "skill": "windows",
+      "priority": 0.25
+    }
+  ],
+  "data manager": [
+    {
+      "skill": "aws",
+      "priority": 0.95
+    },
+    {
+      "skill": "azure",
+      "priority": 0.9
+    },
+    {
+      "skill": "databricks",
+      "priority": 0.85
+    },
+    {
+      "skill": "excel",
+      "priority": 0.8
+    },
+    {
+      "skill": "gcp",
+      "priority": 0.75
+    },
+    {
+      "skill": "hadoop",
+      "priority": 0.25
+    },
+    {
+      "skill": "java",
+      "priority": 0.3
+    },
+    {
+      "skill": "jira",
+      "priority": 0.25
+    },
+    {
+      "skill": "oracle",
+      "priority": 0.25
+    },
+    {
+      "skill": "power bi",
+      "priority": 0.25
+    },
+    {
+      "skill": "powerpoint",
+      "priority": 0.6
+    },
+    {
+      "skill": "project management",
+      "priority": 0.8
+    },
+    {
+      "skill": "python",
+      "priority": 0.6
+    },
+    {
+      "skill": "sap",
+      "priority": 0.25
+    },
+    {
+      "skill": "sas",
+      "priority": 0.25
+    },
+    {
+      "skill": "snowflake",
+      "priority": 0.25
+    },
+    {
+      "skill": "spark",
+      "priority": 0.25
+    },
+    {
+      "skill": "sql",
+      "priority": 0.83
+    },
+    {
+      "skill": "sql server",
+      "priority": 0.83
+    },
+    {
+      "skill": "tableau",
+      "priority": 0.25
+    },
+    {
+      "skill": "word",
+      "priority": 0.3
+    },
+    {
+      "skill": "английский язык",
+      "priority": 0.5
+    },
+    {
+      "skill": "ведение переговоров",
+      "priority": 0.6
+    },
+    {
+      "skill": "деловая коммуникация",
+      "priority": 0.6
+    },
+    { "skill": "budgeting", "priority": 0.5 },
+    {
+      "skill": "управление проектами",
+      "priority": 0.6
+    }
+  ],
+  "data platform engineer": [
+    {
+      "skill": "airflow",
+      "priority": 0.95
+    },
+    {
+      "skill": "ansible",
+      "priority": 0.9
+    },
+    {
+      "skill": "aws",
+      "priority": 0.85
+    },
+    {
+      "skill": "azure",
+      "priority": 0.8
+    },
+    {
+      "skill": "bash",
+      "priority": 0.75
+    },
+    {
+      "skill": "bigquery",
+      "priority": 0.5
+    },
+    {
+      "skill": "databricks",
+      "priority": 0.6
+    },
+    {
+      "skill": "docker",
+      "priority": 0.65
+    },
+    {
+      "skill": "gcp",
+      "priority": 0.75
+    },
+    {
+      "skill": "git",
+      "priority": 0.65
+    },
+    {
+      "skill": "go",
+      "priority": 0.4
+    },
+    {
+      "skill": "hadoop",
+      "priority": 0.25
+    },
+    {
+      "skill": "java",
+      "priority": 0.8
+    },
+    {
+      "skill": "jenkins",
+      "priority": 0.4
+    },
+    {
+      "skill": "kafka",
+      "priority": 0.5
+    },
+    {
+      "skill": "kubernetes",
+      "priority": 0.6
+    },
+    {
+      "skill": "linux",
+      "priority": 0.63
+    },
+    {
+      "skill": "mongodb",
+      "priority": 0.55
+    },
+    {
+      "skill": "nosql",
+      "priority": 0.83
+    },
+    {
+      "skill": "python",
+      "priority": 0.92
+    },
+    {
+      "skill": "redshift",
+      "priority": 0.25
+    },
+    {
+      "skill": "scala",
+      "priority": 0.4
+    },
+    {
+      "skill": "shell",
+      "priority": 0.4
+    },
+    {
+      "skill": "snowflake",
+      "priority": 0.4
+    },
+    {
+      "skill": "spark",
+      "priority": 0.3
+    },
+    {
+      "skill": "sql",
+      "priority": 0.83
+    },{ "skill": "data modeling", "priority": 0.75 },
+  { "skill": "ci cd", "priority": 0.6 },
+  { "skill": "prometheus", "priority": 0.4 },
+  { "skill": "grafana", "priority": 0.4 },
+    {
+      "skill": "terraform",
+      "priority": 0.5
+    }
+  ],
+  "data scientist": [
+    {
+      "skill": "aws",
+      "priority": 0.8
+    },
+    {
+      "skill": "azure",
+      "priority": 0.8
+    },
+    {
+      "skill": "databricks",
+      "priority": 0.85
+    },
+    {
+      "skill": "excel",
+      "priority": 0.8
+    },
+    {
+      "skill": "gcp",
+      "priority": 0.75
+    },
+    {
+      "skill": "git",
+      "priority": 0.65
+    },
+    {
+      "skill": "hadoop",
+      "priority": 0.25
+    },
+    {
+      "skill": "java",
+      "priority": 0.5
+    },
+    {
+      "skill": "keras",
+      "priority": 0.5
+    },
+    {
+      "skill": "numpy",
+      "priority": 0.7
+    },
+    {
+      "skill": "pandas",
+      "priority": 0.7
+    },
+    {
+      "skill": "power bi",
+      "priority": 0.25
+    },
+    {
+      "skill": "python",
+      "priority": 0.92
+    },
+    {
+      "skill": "pytorch",
+      "priority": 0.7
+    },
+    {
+      "skill": "r",
+      "priority": 0.25
+    },
+    {
+      "skill": "sas",
+      "priority": 0.25
+    },
+    {
+      "skill": "scala",
+      "priority": 0.4
+    },
+    {
+      "skill": "scikit learn",
+      "priority": 0.75
+    },
+    {
+      "skill": "spark",
+      "priority": 0.25
+    },
+    {
+      "skill": "sql",
+      "priority": 0.83
+    },
+    {
+      "skill": "tableau",
+      "priority": 0.25
+    },
+  { "skill": "data visualization", "priority": 0.75 },
+  { "skill": "feature engineering", "priority": 0.7 },
+  { "skill": "statistics", "priority": 0.75 },
+  { "skill": "deep learning", "priority": 0.8 },
+    {
+      "skill": "tensorflow",
+      "priority": 0.65
+    }
+  ],
+  "data warehouse engineer": [
+    {
+      "skill": "airflow",
+      "priority": 0.8
+    },
+    {
+      "skill": "aws",
+      "priority": 0.8
+    },
+    {
+      "skill": "azure",
+      "priority": 0.85
+    },
+    {
+      "skill": "excel",
+      "priority": 0.6
+    },
+    {
+      "skill": "flow",
+      "priority": 0.4
+    },
+    {
+      "skill": "git",
+      "priority": 0.65
+    },
+    {
+      "skill": "hadoop",
+      "priority": 0.25
+    },
+    {
+      "skill": "java",
+      "priority": 0.6
+    },
+    {
+      "skill": "jira",
+      "priority": 0.25
+    },
+    {
+      "skill": "kafka",
+      "priority": 0.25
+    },
+    {
+      "skill": "linux",
+      "priority": 0.63
+    },
+    {
+      "skill": "oracle",
+      "priority": 0.25
+    },
+    {
+      "skill": "power bi",
+      "priority": 0.25
+    },
+    {
+      "skill": "python",
+      "priority": 0.92
+    },
+    {
+      "skill": "redshift",
+      "priority": 0.8
+    },
+    {
+      "skill": "sap",
+      "priority": 0.25
+    },
+    {
+      "skill": "sas",
+      "priority": 0.25
+    },
+    {
+      "skill": "snowflake",
+      "priority": 0.7
+    },
+    {
+      "skill": "spark",
+      "priority": 0.4
+    },
+    {
+      "skill": "sql",
+      "priority": 0.83
+    },
+    {
+      "skill": "sql server",
+      "priority": 0.83
+    },
+    {
+      "skill": "ssis",
+      "priority": 0.6
+    },
+    {
+      "skill": "ssrs",
+      "priority": 0.25
+    },
+    {
+      "skill": "t sql",
+      "priority": 0.83
+    },
+    { "skill": "etl", "priority": 0.9 },
+    {
+      "skill": "tableau",
+      "priority": 0.25
+    }
+  ],
+  "database engineer": [
+    {
+      "skill": "ansible",
+      "priority": 0.8
+    },
+    {
+      "skill": "aws",
+      "priority": 0.9
+    },
+    {
+      "skill": "azure",
+      "priority": 0.85
+    },
+    {
+      "skill": "cassandra",
+      "priority": 0.8
+    },
+    {
+      "skill": "excel",
+      "priority": 0.4
+    },
+    {
+      "skill": "git",
+      "priority": 0.65
+    },
+    {
+      "skill": "kubernetes",
+      "priority": 0.36
+    },
+    {
+      "skill": "linux",
+      "priority": 0.63
+    },
+    {
+      "skill": "mongodb",
+      "priority": 0.55
+    },
+    {
+      "skill": "mysql",
+      "priority": 0.83
+    },
+    {
+      "skill": "nosql",
+      "priority": 0.83
+    },
+    {
+      "skill": "oracle",
+      "priority": 0.25
+    },
+    {
+      "skill": "postgresql",
+      "priority": 0.83
+    },
+    {
+      "skill": "powershell",
+      "priority": 0.4
+    },
+    {
+      "skill": "python",
+      "priority": 0.92
+    },
+    {
+      "skill": "redis",
+      "priority": 0.6
+    },
+    {
+      "skill": "shell",
+      "priority": 0.5
+    },
+    {
+      "skill": "snowflake",
+      "priority": 0.3
+    },
+    {
+      "skill": "sql",
+      "priority": 0.98
+    },
+    {
+      "skill": "sql server",
+      "priority": 0.83
+    },
+    {
+      "skill": "ssis",
+      "priority": 0.5
+    },
+    {
+      "skill": "t sql",
+      "priority": 0.83
+    },
+    {
+      "skill": "tableau",
+      "priority": 0.25
+    },
+    {
+      "skill": "unix",
+      "priority": 0.25
+    },
+    { "skill": "database security", "priority": 0.85 },
+    {
+      "skill": "windows",
+      "priority": 0.25
+    }
+  ],
+   "devops engineer": [
+    {
+      "skill": "ansible",
+      "priority": 0.95
+    },
+    {
+      "skill": "aws",
+      "priority": 0.9
+    },
+    {
+      "skill": "azure",
+      "priority": 0.85
+    },
+    {
+      "skill": "bash",
+      "priority": 0.8
+    },
+    {
+      "skill": "chef",
+      "priority": 0.5
+    },
+    {
+      "skill": "ci cd",
+      "priority": 0.98
+    },
+    {
+      "skill": "docker",
+      "priority": 0.8
+    },
+    {
+      "skill": "gcp",
+      "priority": 0.85
+    },
+    {
+      "skill": "git",
+      "priority": 0.75
+    },
+    {
+      "skill": "github",
+      "priority": 0.65
+    },
+    {
+      "skill": "gitlab",
+      "priority": 0.65
+    },
+    {
+      "skill": "go",
+      "priority": 0.55
+    },
+    {
+      "skill": "java",
+      "priority": 0.5
+    },
+    {
+      "skill": "jenkins",
+      "priority": 0.8
+    },
+    {
+      "skill": "kafka",
+      "priority": 0.25
+    },
+    {
+      "skill": "kubernetes",
+      "priority": 0.9
+    },
+    {
+      "skill": "linux",
+      "priority": 0.63
+    },
+    {
+      "skill": "mongodb",
+      "priority": 0.3
+    },
+    {
+      "skill": "postgresql",
+      "priority": 0.73
+    },
+    {
+      "skill": "powershell",
+      "priority": 0.25
+    },
+    {
+      "skill": "puppet",
+      "priority": 0.4
+    },
+    {
+      "skill": "python",
+      "priority": 0.9
+    },
+    {
+      "skill": "ruby",
+      "priority": 0.42
+    },
+    {
+      "skill": "shell",
+      "priority": 0.6
+    },
+    {
+      "skill": "sql",
+      "priority": 0.4
+    },
+    {
+      "skill": "terraform",
+      "priority": 0.8
+    },
+    { "skill": "prometheus", "priority": 0.7 },
+  { "skill": "grafana", "priority": 0.7 },
+  { "skill": "helm", "priority": 0.65 },
+  { "skill": "nginx", "priority": 0.5 },
+  { "skill": "logstash", "priority": 0.4 },
+  { "skill": "elk stack", "priority": 0.5 },
+  { "skill": "alertmanager", "priority": 0.4 },
+    {
+      "skill": "windows",
+      "priority": 0.5
+    }
+  ],
+  "digital analyst": [
+    {
+      "skill": "aws",
+      "priority": 0.7
+    },
+    {
+      "skill": "azure",
+      "priority": 0.7
+    },
+    {
+      "skill": "bigquery",
+      "priority": 0.85
+    },
+    {
+      "skill": "css",
+      "priority": 0.4
+    },
+    {
+      "skill": "databricks",
+      "priority": 0.75
+    },
+    {
+      "skill": "excel",
+      "priority": 0.8
+    },
+    {
+      "skill": "gcp",
+      "priority": 0.75
+    },
+    {
+      "skill": "html",
+      "priority": 0.5
+    },
+    {
+      "skill": "javascript",
+      "priority": 0.5
+    },
+    {
+      "skill": "kafka",
+      "priority": 0.25
+    },
+    {
+      "skill": "looker",
+      "priority": 0.6
+    },
+    {
+      "skill": "power bi",
+      "priority": 0.6
+    },
+    {
+      "skill": "powerpoint",
+      "priority": 0.5
+    },
+    {
+      "skill": "python",
+      "priority": 0.92
+    },
+    {
+      "skill": "r",
+      "priority": 0.4
+    },
+    {
+      "skill": "sas",
+      "priority": 0.25
+    },
+    {
+      "skill": "snowflake",
+      "priority": 0.7
+    },
+    {
+      "skill": "spark",
+      "priority": 0.25
+    },
+    {
+      "skill": "sql",
+      "priority": 0.83
+    },
+    { "skill": "ab testing", "priority": 0.7 },
+    {
+      "skill": "tableau",
+      "priority": 0.7
+    }
+  ],
+  "etl developer": [
+    {
+      "skill": "aws",
+      "priority": 0.8
+    },
+    {
+      "skill": "azure",
+      "priority": 0.8
+    },
+    {
+      "skill": "git",
+      "priority": 0.8
+    },
+    {
+      "skill": "hadoop",
+      "priority": 0.75
+    },
+    {
+      "skill": "java",
+      "priority": 0.6
+    },
+    {
+      "skill": "jira",
+      "priority": 0.25
+    },
+    {
+      "skill": "linux",
+      "priority": 0.63
+    },
+    {
+      "skill": "mysql",
+      "priority": 0.83
+    },
+    {
+      "skill": "oracle",
+      "priority": 0.6
+    },
+    {
+      "skill": "postgresql",
+      "priority": 0.83
+    },
+    {
+      "skill": "python",
+      "priority": 0.92
+    },
+    {
+      "skill": "redshift",
+      "priority": 0.6
+    },
+    {
+      "skill": "sas",
+      "priority": 0.25
+    },
+    {
+      "skill": "scala",
+      "priority": 0.4
+    },
+    {
+      "skill": "shell",
+      "priority": 0.4
+    },
+    {
+      "skill": "snowflake",
+      "priority": 0.6
+    },
+    {
+      "skill": "spark",
+      "priority": 0.5
+    },
+    {
+      "skill": "sql",
+      "priority": 0.83
+    },
+    {
+      "skill": "sql server",
+      "priority": 0.83
+    },
+    {
+      "skill": "ssis",
+      "priority": 0.7
+    },
+    { "skill": "airflow", "priority": 0.75 },
+  { "skill": "data pipelines", "priority": 0.8 },
+  { "skill": "etl tools", "priority": 0.95 },
+    {
+      "skill": "unix",
+      "priority": 0.4
+    }
+  ],
+  "financial data analyst": [
+    {
+      "skill": "excel",
+      "priority": 0.95
+    },
+    {
+      "skill": "oracle",
+      "priority": 0.8
+    },
+    {
+      "skill": "power bi",
+      "priority": 0.75
+    },
+    {
+      "skill": "powerpoint",
+      "priority": 0.35
+    },
+    {
+      "skill": "python",
+      "priority": 0.92
+    },
+    {
+      "skill": "r",
+      "priority": 0.4
+    },
+    {
+      "skill": "sap",
+      "priority": 0.25
+    },
+    {
+      "skill": "sas",
+      "priority": 0.25
+    },
+    {
+      "skill": "sql",
+      "priority": 0.83
+    },
+    {
+      "skill": "tableau",
+      "priority": 0.5
+    },
+    {
+      "skill": "vba",
+      "priority": 0.5
+    },
+    { "skill": "financial modeling", "priority": 0.85 },
+  { "skill": "forecasting", "priority": 0.75 },
+    { "skill": "kpi tracking", "priority": 0.6 },
+  { "skill": "data visualization", "priority": 0.6 },
+    {
+      "skill": "word",
+      "priority": 0.25
+    }
+  ],
+  "frontend developer": [
+    {
+      "skill": "angular",
+      "priority": 0.95
+    },
+    {
+      "skill": "angularjs",
+      "priority": 0.8
+    },
+    {
+      "skill": "bootstrap",
+      "priority": 0.85
+    },
+    {
+      "skill": "css",
+      "priority": 0.9
+    },
+    {
+      "skill": "es6",
+      "priority": 0.7
+    },
+    {
+      "skill": "git",
+      "priority": 0.65
+    },
+    {
+      "skill": "html",
+      "priority": 0.9
+    },
+    {
+      "skill": "javascript",
+      "priority": 0.95
+    },
+    {
+      "skill": "node.js",
+      "priority": 0.34
+    },
+    {
+      "skill": "react",
+      "priority": 0.8
+    },
+    {
+      "skill": "redux",
+      "priority": 0.6
+    },
+    {
+      "skill": "rest",
+      "priority": 0.7
+    },
+    {
+      "skill": "scss",
+      "priority": 0.6
+    },
+    {
+      "skill": "sql",
+      "priority": 0.4
+    },
+    {
+      "skill": "typescript",
+      "priority": 0.8
+    },
+    {
+      "skill": "vue.js",
+      "priority": 0.25
+    },
+    {
+      "skill": "webpack",
+      "priority": 0.6
+    },
+    {
+      "skill": "английский язык",
+      "priority": 0.28
+    },
+    { "skill": "tailwind css", "priority": 0.75 },
+  { "skill": "next.js", "priority": 0.7 },
+  { "skill": "jest", "priority": 0.6 },
+  { "skill": "figma", "priority": 0.5 },
+  { "skill": "responsive design", "priority": 0.8 },
+    {
+      "skill": "ооп",
+      "priority": 0.5
+    }
+  ],
+  "fullstack developer": [
+    {
+      "skill": "angular",
+      "priority": 0.95
+    },
+    {
+      "skill": "aws",
+      "priority": 0.9
+    },
+    {
+      "skill": "azure",
+      "priority": 0.85
+    },
+    {
+      "skill": "c#",
+      "priority": 0.8
+    },
+    {
+      "skill": "css",
+      "priority": 0.85
+    },
+    {
+      "skill": "docker",
+      "priority": 0.6
+    },
+    {
+      "skill": "gcp",
+      "priority": 0.75
+    },
+    {
+      "skill": "git",
+      "priority": 0.65
+    },
+    {
+      "skill": "go",
+      "priority": 0.55
+    },
+    {
+      "skill": "graphql",
+      "priority": 0.6
+    },
+    {
+      "skill": "html",
+      "priority": 0.7
+    },
+    {
+      "skill": "java",
+      "priority": 0.89
+    },
+    {
+      "skill": "javascript",
+      "priority": 0.95
+    },
+    {
+      "skill": "jenkins",
+      "priority": 0.25
+    },
+    {
+      "skill": "kubernetes",
+      "priority": 0.56
+    },
+    {
+      "skill": "linux",
+      "priority": 0.63
+    },
+    {
+      "skill": "mongodb",
+      "priority": 0.55
+    },
+    {
+      "skill": "mysql",
+      "priority": 0.83
+    },
+    {
+      "skill": "node.js",
+      "priority": 0.8
+    },
+    {
+      "skill": "nosql",
+      "priority": 0.7
+    },
+    {
+      "skill": "php",
+      "priority": 0.45
+    },
+    {
+      "skill": "postgresql",
+      "priority": 0.83
+    },
+    {
+      "skill": "python",
+      "priority": 0.92
+    },
+    {
+      "skill": "react",
+      "priority": 0.86
+    },
+    {
+      "skill": "ruby",
+      "priority": 0.42
+    },
+    {
+      "skill": "spring",
+      "priority": 0.7
+    },
+    {
+      "skill": "sql",
+      "priority": 0.83
+    },
+     { "skill": "express.js", "priority": 0.8 },
+  { "skill": "next.js", "priority": 0.7 },
+  { "skill": "rest", "priority": 0.8 },
+  { "skill": "figma", "priority": 0.4 },
+  { "skill": "unit testing", "priority": 0.6 },
+  { "skill": "jest", "priority": 0.5 },
+  { "skill": "ci cd", "priority": 0.6 },
+  { "skill": "scss", "priority": 0.6 },
+    {
+      "skill": "typescript",
+      "priority": 0.8
+    }
+  ],
+  "golang developer": [
+    {
+      "skill": "aws",
+      "priority": 0.8
+    },
+    {
+      "skill": "azure",
+      "priority": 0.8
+    },
+    {
+      "skill": "databricks",
+      "priority": 0.8
+    },
+    {
+      "skill": "docker",
+      "priority": 0.75
+    },
+    {
+      "skill": "gcp",
+      "priority": 0.75
+    },
+    {
+      "skill": "git",
+      "priority": 0.65
+    },
+    {
+      "skill": "golang",
+      "priority": 0.98
+    },
+    {
+      "skill": "hadoop",
+      "priority": 0.25
+    },
+    {
+      "skill": "kafka",
+      "priority": 0.7
+    },
+    {
+      "skill": "kubernetes",
+      "priority": 0.6
+    },
+    {
+      "skill": "linux",
+      "priority": 0.63
+    },
+    {
+      "skill": "mongodb",
+      "priority": 0.55
+    },
+    {
+      "skill": "mysql",
+      "priority": 0.83
+    },
+    {
+      "skill": "nosql",
+      "priority": 0.83
+    },
+    {
+      "skill": "oracle",
+      "priority": 0.25
+    },
+    {
+      "skill": "postgresql",
+      "priority": 0.83
+    },
+    {
+      "skill": "pyspark",
+      "priority": 0.6
+    },
+    {
+      "skill": "python",
+      "priority": 0.7
+    },
+    {
+      "skill": "rabbitmq",
+      "priority": 0.6
+    },
+    {
+      "skill": "redis",
+      "priority": 0.6
+    },
+    {
+      "skill": "scala",
+      "priority": 0.4
+    },
+    {
+      "skill": "snowflake",
+      "priority": 0.6
+    },
+    {
+      "skill": "spark",
+      "priority": 0.6
+    },
+    {
+      "skill": "sql",
+      "priority": 0.83
+    },
+  { "skill": "airflow", "priority": 0.9 },
+  { "skill": "protobuf", "priority": 0.8 },
+  { "skill": "grpc", "priority": 0.8 },
+  { "skill": "terraform", "priority": 0.6 },
+  { "skill": "ci cd", "priority": 0.6 },
+  { "skill": "prometheus", "priority": 0.5 },
+  { "skill": "grafana", "priority": 0.5 },
+
+    {
+      "skill": "sql server",
+      "priority": 0.83
+    }
+  ],
+  "ios developer": [
+  { "skill": "swift", "priority": 0.95 },
+  { "skill": "xcode", "priority": 0.95 },
+  { "skill": "uikit", "priority": 0.9 },
+  { "skill": "mvvm", "priority": 0.88 },
+  { "skill": "git", "priority": 0.83 },
+  { "skill": "cocoapods", "priority": 0.8 },
+  { "skill": "rest api", "priority": 0.78 },
+  { "skill": "alamofire", "priority": 0.75 },
+  { "skill": "json", "priority": 0.75 },
+  { "skill": "core data", "priority": 0.7 },
+  { "skill": "solid", "priority": 0.7 },
+  { "skill": "unit testing", "priority": 0.7 },
+  { "skill": "rxswift", "priority": 0.65 },
+  { "skill": "combine", "priority": 0.6 },
+  { "skill": "firebase", "priority": 0.55 },
+  { "skill": "ci cd", "priority": 0.5 },
+  { "skill": "viper", "priority": 0.45 },
+  { "skill": "oauth", "priority": 0.3 },
+  { "skill": "graphql", "priority": 0.25 }
+],
+  "java developer": [
+    {
+      "skill": "apache maven",
+      "priority": 0.85
+    },
+    {
+      "skill": "docker",
+      "priority": 0.8
+    },
+    {
+      "skill": "git",
+      "priority": 0.85
+    },
+    {
+      "skill": "hibernate orm",
+      "priority": 0.8
+    },
+    {
+      "skill": "java",
+      "priority": 0.98
+    },
+    {
+      "skill": "java core",
+      "priority": 0.9
+    },
+    {
+      "skill": "java ee",
+      "priority": 0.89
+    },
+    {
+      "skill": "java se",
+      "priority": 0.89
+    },
+    {
+      "skill": "junit",
+      "priority": 0.7
+    },
+    {
+      "skill": "kafka",
+      "priority": 0.4
+    },
+    {
+      "skill": "postgresql",
+      "priority": 0.83
+    },
+    {
+      "skill": "rest",
+      "priority": 0.7
+    },
+    {
+      "skill": "spring",
+      "priority": 0.8
+    },
+    {
+      "skill": "sql",
+      "priority": 0.83
+    },
+    {
+      "skill": "ооп",
+      "priority": 0.4
+    }
+  ],
+  "junior data analyst": [
+    {
+      "skill": "excel",
+      "priority": 0.95
+    },
+    {
+      "skill": "power bi",
+      "priority": 0.9
+    },
+    {
+      "skill": "powerpoint",
+      "priority": 0.8
+    },
+    {
+      "skill": "python",
+      "priority": 0.8
+    },
+    {
+      "skill": "r",
+      "priority": 0.75
+    },
+    {
+      "skill": "sas",
+      "priority": 0.25
+    },
+    {
+      "skill": "sql",
+      "priority": 0.83
+    },
+    {
+      "skill": "tableau",
+      "priority": 0.7
+    },
+    {
+      "skill": "vba",
+      "priority": 0.4
+    },
+    { "skill": "data visualization", "priority": 0.75 },
+  { "skill": "data cleaning", "priority": 0.7 },
+    {
+      "skill": "word",
+      "priority": 0.25
+    }
+  ],
+  "junior data engineer": [
+  { "skill": "python", "priority": 0.9 },
+  { "skill": "sql", "priority": 0.85 },
+  { "skill": "aws", "priority": 0.85 },
+  { "skill": "airflow", "priority": 0.8 },
+  { "skill": "gcp", "priority": 0.75 },
+  { "skill": "azure", "priority": 0.7 },
+  { "skill": "bigquery", "priority": 0.7 },
+  { "skill": "databricks", "priority": 0.7 },
+  { "skill": "docker", "priority": 0.6 },
+  { "skill": "git", "priority": 0.6 },
+  { "skill": "nosql", "priority": 0.6 },
+  { "skill": "sql server", "priority": 0.6 },
+  { "skill": "postgresql", "priority": 0.6 },
+  { "skill": "java", "priority": 0.5 },
+  { "skill": "kubernetes", "priority": 0.4 },
+  { "skill": "mongodb", "priority": 0.4 },
+  { "skill": "spark", "priority": 0.3 },
+  { "skill": "scala", "priority": 0.3 },
+  { "skill": "ssis", "priority": 0.25 },
+  { "skill": "redshift", "priority": 0.25 },
+  { "skill": "snowflake", "priority": 0.25 },
+  { "skill": "kafka", "priority": 0.25 },
+  { "skill": "pyspark", "priority": 0.25 },
+  { "skill": "tableau", "priority": 0.25 },
+  { "skill": "oracle", "priority": 0.25 }
+],
+  "junior data scientist": [
+  { "skill": "python", "priority": 0.9 },
+  { "skill": "sql", "priority": 0.85 },
+  { "skill": "statistics", "priority": 0.8 },
+  { "skill": "aws", "priority": 0.75 },
+  { "skill": "azure", "priority": 0.7 },
+  { "skill": "bigquery", "priority": 0.7 },
+  { "skill": "databricks", "priority": 0.7 },
+  { "skill": "pandas", "priority": 0.7 },
+  { "skill": "numpy", "priority": 0.7 },
+  { "skill": "scikit-learn", "priority": 0.65 },
+  { "skill": "tensorflow", "priority": 0.4 },
+  { "skill": "pytorch", "priority": 0.4 },
+  { "skill": "r", "priority": 0.4 },
+  { "skill": "spark", "priority": 0.3 },
+  { "skill": "scala", "priority": 0.3 },
+  { "skill": "git", "priority": 0.6 },
+  { "skill": "docker", "priority": 0.5 },
+  { "skill": "airflow", "priority": 0.4 },
+  { "skill": "sas", "priority": 0.25 },
+  { "skill": "tableau", "priority": 0.25 },
+  { "skill": "power bi", "priority": 0.25 }
+],
+ "lead data engineer": [
+  { "skill": "airflow", "priority": 0.95 },
+  { "skill": "aws", "priority": 0.9 },
+  { "skill": "azure", "priority": 0.85 },
+  { "skill": "gcp", "priority": 0.85 },
+  { "skill": "databricks", "priority": 0.8 },
+  { "skill": "python", "priority": 0.9 },
+  { "skill": "java", "priority": 0.85 },
+  { "skill": "sql", "priority": 0.85 },
+  { "skill": "nosql", "priority": 0.8 },
+  { "skill": "mysql", "priority": 0.8 },
+  { "skill": "sql server", "priority": 0.8 },
+  { "skill": "mongodb", "priority": 0.7 },
+  { "skill": "docker", "priority": 0.75 },
+  { "skill": "kubernetes", "priority": 0.6 },
+  { "skill": "git", "priority": 0.7 },
+  { "skill": "spark", "priority": 0.5 },
+  { "skill": "scala", "priority": 0.5 },
+  { "skill": "redshift", "priority": 0.4 },
+  { "skill": "snowflake", "priority": 0.4 },
+  { "skill": "hadoop", "priority": 0.35 },
+  { "skill": "kafka", "priority": 0.5 },
+  { "skill": "pyspark", "priority": 0.4 },
+  { "skill": "leadership", "priority": 0.9 },
+  { "skill": "system architecture", "priority": 0.9 },
+  { "skill": "project management", "priority": 0.75 }
+],
+ "lead data scientist": [
+  { "skill": "aws", "priority": 0.75 },
+  { "skill": "azure", "priority": 0.7 },
+  { "skill": "gcp", "priority": 0.85 },
+  { "skill": "python", "priority": 0.95 },
+  { "skill": "deep learning", "priority": 0.85 },
+  { "skill": "statistics", "priority": 0.85 },
+  { "skill": "sql", "priority": 0.85 },
+  { "skill": "bigquery", "priority": 0.7 },
+  { "skill": "databricks", "priority": 0.7 },
+  { "skill": "pandas", "priority": 0.7 },
+  { "skill": "numpy", "priority": 0.7 },
+  { "skill": "scikit-learn", "priority": 0.65 },
+  { "skill": "tensorflow", "priority": 0.6 },
+  { "skill": "pytorch", "priority": 0.6 },
+  { "skill": "r", "priority": 0.4 },
+  { "skill": "scala", "priority": 0.4 },
+  { "skill": "spark", "priority": 0.5 },
+  { "skill": "git", "priority": 0.7 },
+  { "skill": "docker", "priority": 0.6 },
+  { "skill": "airflow", "priority": 0.5 },
+  { "skill": "java", "priority": 0.3 },
+  { "skill": "project management", "priority": 0.75 },
+  { "skill": "product thinking", "priority": 0.7 }
+],
+  "machine learning engineer": [
+  { "skill": "python", "priority": 0.95 },
+  { "skill": "tensorflow", "priority": 0.9 },
+  { "skill": "pytorch", "priority": 0.9 },
+  { "skill": "scikit-learn", "priority": 0.85 },
+  { "skill": "docker", "priority": 0.75 },
+  { "skill": "kubernetes", "priority": 0.65 },
+  { "skill": "airflow", "priority": 0.65 },
+  { "skill": "aws", "priority": 0.85 },
+  { "skill": "gcp", "priority": 0.8 },
+  { "skill": "azure", "priority": 0.8 },
+  { "skill": "linux", "priority": 0.7 },
+  { "skill": "git", "priority": 0.7 },
+  { "skill": "numpy", "priority": 0.7 },
+  { "skill": "pandas", "priority": 0.7 },
+  { "skill": "sql", "priority": 0.65 },
+  { "skill": "java", "priority": 0.5 },
+  { "skill": "c++", "priority": 0.5 },
+  { "skill": "scala", "priority": 0.4 },
+  { "skill": "spark", "priority": 0.35 },
+  { "skill": "kafka", "priority": 0.3 },
+  { "skill": "hadoop", "priority": 0.25 },
+  { "skill": "r", "priority": 0.25 }
+],
+  "middle data analyst": [
+  {"skill": "sql", "priority": 0.95},
+  {"skill": "excel", "priority": 0.9},
+  {"skill": "python", "priority": 0.9},
+  {"skill": "power bi", "priority": 0.85},
+  {"skill": "tableau", "priority": 0.85},
+  {"skill": "git", "priority": 0.75},
+  {"skill": "statistics", "priority": 0.75},
+  {"skill": "data visualization", "priority": 0.75},
+  {"skill": "r", "priority": 0.5},
+  {"skill": "aws", "priority": 0.5},
+  {"skill": "azure", "priority": 0.5},
+  {"skill": "presentation", "priority": 0.6},
+  {"skill": "vba", "priority": 0.25},
+  {"skill": "word", "priority": 0.25},
+  {"skill": "sap", "priority": 0.25},
+  {"skill": "sas", "priority": 0.25},
+  {"skill": "matlab", "priority": 0.25}
+],
+  "middle data engineer": [
+    {
+      "skill": "airflow",
+      "priority": 0.9
+    },
+    {
+      "skill": "aws",
+      "priority": 0.9
+    },
+    {
+      "skill": "azure",
+      "priority": 0.85
+    },
+    {
+      "skill": "bigquery",
+      "priority": 0.8
+    },
+    {
+      "skill": "databricks",
+      "priority": 0.75
+    },
+    {
+      "skill": "docker",
+      "priority": 0.7
+    },
+    {
+      "skill": "gcp",
+      "priority": 0.75
+    },
+    {
+      "skill": "git",
+      "priority": 0.7
+    },
+    {
+      "skill": "hadoop",
+      "priority": 0.4
+    },
+    {
+      "skill": "java",
+      "priority": 0.7
+    },
+    {
+      "skill": "kafka",
+      "priority": 0.6
+    },
+    {
+      "skill": "kubernetes",
+      "priority": 0.36
+    },
+    {
+      "skill": "mongodb",
+      "priority": 0.65
+    },
+    {
+      "skill": "nosql",
+      "priority": 0.75
+    },
+    {
+      "skill": "pyspark",
+      "priority": 0.7
+    },
+    {
+      "skill": "python",
+      "priority": 0.92
+    },
+    {
+      "skill": "r",
+      "priority": 0.2
+    },
+    {
+      "skill": "redshift",
+      "priority": 0.6
+    },
+    {
+      "skill": "scala",
+      "priority": 0.5
+    },
+    {
+      "skill": "shell",
+      "priority": 0.5
+    },
+    {
+      "skill": "snowflake",
+      "priority": 0.6
+    },
+    {
+      "skill": "spark",
+      "priority": 0.7
+    },
+    {
+      "skill": "sql",
+      "priority": 0.89
+    },
+    {
+      "skill": "sql server",
+      "priority": 0.83
+    },
+    {
+      "skill": "terraform",
+      "priority": 0.6
+    }
+  ],
+  "middle data scientist": [
+  {
+    "skill": "python",
+    "priority": 0.95
+  },
+  {
+    "skill": "pandas",
+    "priority": 0.9
+  },
+  {
+    "skill": "numpy",
+    "priority": 0.85
+  },
+  {
+    "skill": "scikit learn",
+    "priority": 0.83
+  },
+  {
+    "skill": "sql",
+    "priority": 0.8
+  },
+  {
+    "skill": "git",
+    "priority": 0.75
+  },
+  {
+    "skill": "tensorflow",
+    "priority": 0.6
+  },
+  {
+    "skill": "pytorch",
+    "priority": 0.6
+  },
+  {
+    "skill": "docker",
+    "priority": 0.6
+  },
+  {
+    "skill": "databricks",
+    "priority": 0.55
+  },
+  {
+    "skill": "aws",
+    "priority": 0.5
+  },
+  {
+    "skill": "azure",
+    "priority": 0.45
+  },
+  {
+    "skill": "scala",
+    "priority": 0.4
+  },
+  {
+    "skill": "spark",
+    "priority": 0.4
+  },
+  {
+    "skill": "matplotlib",
+    "priority": 0.4
+  },
+  {
+    "skill": "seaborn",
+    "priority": 0.35
+  },
+  {
+    "skill": "mlflow",
+    "priority": 0.3
+  },
+  {
+    "skill": "hadoop",
+    "priority": 0.25
+  },
+  {
+    "skill": "c++",
+    "priority": 0.2
+  },
+  {
+    "skill": "java",
+    "priority": 0.2
+  }
+],
+  "mlops dataops": [
+  {
+    "skill": "airflow",
+    "priority": 0.9
+  },
+  {
+    "skill": "ansible",
+    "priority": 0.85
+  },
+  {
+    "skill": "aws",
+    "priority": 0.85
+  },
+  {
+    "skill": "azure",
+    "priority": 0.8
+  },
+  {
+    "skill": "docker",
+    "priority": 0.8
+  },
+  {
+    "skill": "gcp",
+    "priority": 0.75
+  },
+  {
+    "skill": "git",
+    "priority": 0.7
+  },
+  {
+    "skill": "jenkins",
+    "priority": 0.7
+  },
+  {
+    "skill": "kubernetes",
+    "priority": 0.8
+  },
+  {
+    "skill": "linux",
+    "priority": 0.75
+  },
+  {
+    "skill": "mlflow",
+    "priority": 0.7
+  },
+  {
+    "skill": "prometheus",
+    "priority": 0.65
+  },
+  {
+    "skill": "python",
+    "priority": 0.9
+  },
+  {
+    "skill": "shell",
+    "priority": 0.7
+  },
+  {
+    "skill": "terraform",
+    "priority": 0.75
+  },
+  {
+    "skill": "sql",
+    "priority": 0.7
+  },
+  {
+    "skill": "scala",
+    "priority": 0.4
+  },
+  {
+    "skill": "spark",
+    "priority": 0.4
+  },
+  {
+    "skill": "kafka",
+    "priority": 0.4
+  }
+],
+  "php developer": [
+  {
+    "skill": "php",
+    "priority": 0.95
+  },
+  {
+    "skill": "laravel",
+    "priority": 0.9
+  },
+  {
+    "skill": "symfony",
+    "priority": 0.85
+  },
+  {
+    "skill": "mysql",
+    "priority": 0.83
+  },
+  {
+    "skill": "postgresql",
+    "priority": 0.8
+  },
+  {
+    "skill": "sql",
+    "priority": 0.8
+  },
+  {
+    "skill": "git",
+    "priority": 0.75
+  },
+  {
+    "skill": "docker",
+    "priority": 0.7
+  },
+  {
+    "skill": "linux",
+    "priority": 0.7
+  },
+  {
+    "skill": "javascript",
+    "priority": 0.7
+  },
+  {
+    "skill": "html",
+    "priority": 0.6
+  },
+  {
+    "skill": "css",
+    "priority": 0.6
+  },
+  {
+    "skill": "ajax",
+    "priority": 0.6
+  },
+  {
+    "skill": "oop",
+    "priority": 0.6
+  },
+  {
+    "skill": "redis",
+    "priority": 0.5
+  },
+  {
+    "skill": "rabbitmq",
+    "priority": 0.45
+  },
+  {
+    "skill": "mongodb",
+    "priority": 0.4
+  },
+  {
+    "skill": "1с битрикс",
+    "priority": 0.4
+  },
+  {
+    "skill": "mvc",
+    "priority": 0.4
+  },
+  {
+    "skill": "yii",
+    "priority": 0.35
+  },
+  {
+    "skill": "yii2",
+    "priority": 0.35
+  }
+],
+  "product analyst": [
+  {
+    "skill": "sql",
+    "priority": 0.95
+  },
+  {
+    "skill": "python",
+    "priority": 0.9
+  },
+  {
+    "skill": "bigquery",
+    "priority": 0.85
+  },
+  {
+    "skill": "excel",
+    "priority": 0.85
+  },
+  {
+    "skill": "jira",
+    "priority": 0.75
+  },
+  {
+    "skill": "pandas",
+    "priority": 0.7
+  },
+  {
+    "skill": "aws",
+    "priority": 0.65
+  },
+  {
+    "skill": "tableau",
+    "priority": 0.6
+  },
+  {
+    "skill": "looker",
+    "priority": 0.55
+  },
+  {
+    "skill": "power bi",
+    "priority": 0.5
+  },
+  {
+    "skill": "snowflake",
+    "priority": 0.45
+  },
+  {
+    "skill": "product management",
+    "priority": 0.3
+  },
+  {
+    "skill": "ab testing",
+    "priority": 0.5
+  },
+  {
+    "skill": "data visualization",
+    "priority": 0.5
+  },
+  {
+    "skill": "kpi metrics",
+    "priority": 0.4
+  },
+  {
+    "skill": "powerpoint",
+    "priority": 0.4
+  }
+],
+  "python developer": [
+  {
+    "skill": "python",
+    "priority": 0.95
+  },
+  {
+    "skill": "django",
+    "priority": 0.85
+  },
+  {
+    "skill": "flask",
+    "priority": 0.7
+  },
+  {
+    "skill": "sql",
+    "priority": 0.85
+  },
+  {
+    "skill": "postgresql",
+    "priority": 0.8
+  },
+  {
+    "skill": "mysql",
+    "priority": 0.8
+  },
+  {
+    "skill": "nosql",
+    "priority": 0.7
+  },
+  {
+    "skill": "mongodb",
+    "priority": 0.6
+  },
+  {
+    "skill": "docker",
+    "priority": 0.6
+  },
+  {
+    "skill": "git",
+    "priority": 0.7
+  },
+  {
+    "skill": "linux",
+    "priority": 0.6
+  },
+  {
+    "skill": "aws",
+    "priority": 0.7
+  },
+  {
+    "skill": "gcp",
+    "priority": 0.6
+  },
+  {
+    "skill": "kubernetes",
+    "priority": 0.4
+  },
+  {
+    "skill": "airflow",
+    "priority": 0.5
+  },
+  {
+    "skill": "pandas",
+    "priority": 0.5
+  },
+  {
+    "skill": "numpy",
+    "priority": 0.5
+  },
+  {
+    "skill": "databricks",
+    "priority": 0.3
+  },
+  {
+    "skill": "pyspark",
+    "priority": 0.3
+  },
+  {
+    "skill": "spark",
+    "priority": 0.3
+  },
+  {
+    "skill": "scala",
+    "priority": 0.25
+  },
+  {
+    "skill": "r",
+    "priority": 0.25
+  },
+  {
+    "skill": "redshift",
+    "priority": 0.25
+  },
+  {
+    "skill": "snowflake",
+    "priority": 0.25
+  },
+  {
+    "skill": "tableau",
+    "priority": 0.25
+  }
+],
+  "qa engineer": [
+  {
+    "skill": "api",
+    "priority": 0.9
+  },
+  {
+    "skill": "jira",
+    "priority": 0.85
+  },
+  {
+    "skill": "python",
+    "priority": 0.8
+  },
+  {
+    "skill": "selenium",
+    "priority": 0.75
+  },
+  {
+    "skill": "sql",
+    "priority": 0.75
+  },
+  {
+    "skill": "javascript",
+    "priority": 0.7
+  },
+  {
+    "skill": "git",
+    "priority": 0.7
+  },
+  {
+    "skill": "docker",
+    "priority": 0.6
+  },
+  {
+    "skill": "jenkins",
+    "priority": 0.5
+  },
+  {
+    "skill": "linux",
+    "priority": 0.5
+  },
+  {
+    "skill": "test case",
+    "priority": 0.6
+  },
+  {
+    "skill": "functional testing",
+    "priority": 0.6
+  },
+  {
+    "skill": "regression testing",
+    "priority": 0.6
+  },
+  {
+    "skill": "ui testing",
+    "priority": 0.5
+  },
+  {
+    "skill": "postman",
+    "priority": 0.5
+  },
+  {
+    "skill": "manual testing",
+    "priority": 0.6
+  },
+  {
+    "skill": "performance testing",
+    "priority": 0.3
+  }
+],
+  "research analyst": [
+  {
+    "skill": "excel",
+    "priority": 0.95
+  },
+  {
+    "skill": "powerpoint",
+    "priority": 0.9
+  },
+  {
+    "skill": "python",
+    "priority": 0.85
+  },
+  {
+    "skill": "sql",
+    "priority": 0.8
+  },
+  {
+    "skill": "r",
+    "priority": 0.7
+  },
+  {
+    "skill": "tableau",
+    "priority": 0.6
+  },
+  {
+    "skill": "power bi",
+    "priority": 0.55
+  },
+  {
+    "skill": "git",
+    "priority": 0.5
+  },
+  {
+    "skill": "sas",
+    "priority": 0.4
+  },
+  {
+    "skill": "spss",
+    "priority": 0.35
+  },
+  {
+    "skill": "pandas",
+    "priority": 0.33
+  },
+  {
+    "skill": "matlab",
+    "priority": 0.3
+  },
+  {
+    "skill": "aws",
+    "priority": 0.25
+  },
+  {
+    "skill": "tensorflow",
+    "priority": 0.25
+  },
+  {
+    "skill": "pytorch",
+    "priority": 0.25
+  },
+  {
+    "skill": "spark",
+    "priority": 0.25
+  },
+  {
+    "skill": "outlook",
+    "priority": 0.25
+  },
+  {
+    "skill": "word",
+    "priority": 0.25
+  }
+],
+  "senior data analyst": [
+  {
+    "skill": "aws",
+    "priority": 0.9
+  },
+  {
+    "skill": "azure",
+    "priority": 0.85
+  },
+  {
+    "skill": "databricks",
+    "priority": 0.6
+  },
+  {
+    "skill": "excel",
+    "priority": 0.9
+  },
+  {
+    "skill": "flow",
+    "priority": 0.7
+  },
+  {
+    "skill": "gcp",
+    "priority": 0.7
+  },
+  {
+    "skill": "git",
+    "priority": 0.6
+  },
+  {
+    "skill": "go",
+    "priority": 0.4
+  },
+  {
+    "skill": "java",
+    "priority": 0.6
+  },
+  {
+    "skill": "looker",
+    "priority": 0.5
+  },
+  {
+    "skill": "oracle",
+    "priority": 0.4
+  },
+  {
+    "skill": "power bi",
+    "priority": 0.8
+  },
+  {
+    "skill": "powerpoint",
+    "priority": 0.6
+  },
+  {
+    "skill": "python",
+    "priority": 0.9
+  },
+  {
+    "skill": "r",
+    "priority": 0.25
+  },
+  {
+    "skill": "redshift",
+    "priority": 0.4
+  },
+  {
+    "skill": "sas",
+    "priority": 0.25
+  },
+  {
+    "skill": "scala",
+    "priority": 0.3
+  },
+  {
+    "skill": "snowflake",
+    "priority": 0.5
+  },
+  {
+    "skill": "spark",
+    "priority": 0.3
+  },
+  {
+    "skill": "sql",
+    "priority": 0.85
+  },
+  {
+    "skill": "sql server",
+    "priority": 0.7
+  },
+  {
+    "skill": "tableau",
+    "priority": 0.7
+  }
+],
+  "senior data engineer": [
+  {
+    "skill": "airflow",
+    "priority": 0.95
+  },
+  {
+    "skill": "aws",
+    "priority": 0.9
+  },
+  {
+    "skill": "azure",
+    "priority": 0.85
+  },
+  {
+    "skill": "bigquery",
+    "priority": 0.8
+  },
+  {
+    "skill": "databricks",
+    "priority": 0.75
+  },
+  {
+    "skill": "docker",
+    "priority": 0.5
+  },
+  {
+    "skill": "gcp",
+    "priority": 0.75
+  },
+  {
+    "skill": "git",
+    "priority": 0.7
+  },
+  {
+    "skill": "hadoop",
+    "priority": 0.4
+  },
+  {
+    "skill": "java",
+    "priority": 0.75
+  },
+  {
+    "skill": "kafka",
+    "priority": 0.5
+  },
+  {
+    "skill": "kubernetes",
+    "priority": 0.5
+  },
+  {
+    "skill": "mongodb",
+    "priority": 0.6
+  },
+  {
+    "skill": "nosql",
+    "priority": 0.8
+  },
+  {
+    "skill": "oracle",
+    "priority": 0.4
+  },
+  {
+    "skill": "power bi",
+    "priority": 0.4
+  },
+  {
+    "skill": "pyspark",
+    "priority": 0.4
+  },
+  {
+    "skill": "python",
+    "priority": 0.9
+  },
+  {
+    "skill": "redshift",
+    "priority": 0.5
+  },
+  {
+    "skill": "scala",
+    "priority": 0.5
+  },
+  {
+    "skill": "snowflake",
+    "priority": 0.5
+  },
+  {
+    "skill": "spark",
+    "priority": 0.5
+  },
+  {
+    "skill": "sql",
+    "priority": 0.85
+  },
+  {
+    "skill": "sql server",
+    "priority": 0.7
+  },
+  {
+    "skill": "tableau",
+    "priority": 0.5
+  },
+  {
+    "skill": "terraform",
+    "priority": 0.4
+  }
+],
+  "senior data scientist": [
+  {
+    "skill": "aws",
+    "priority": 0.9
+  },
+  {
+    "skill": "azure",
+    "priority": 0.85
+  },
+  {
+    "skill": "databricks",
+    "priority": 0.75
+  },
+  {
+    "skill": "docker",
+    "priority": 0.75
+  },
+  {
+    "skill": "excel",
+    "priority": 0.7
+  },
+  {
+    "skill": "gcp",
+    "priority": 0.7
+  },
+  {
+    "skill": "git",
+    "priority": 0.6
+  },
+  {
+    "skill": "hadoop",
+    "priority": 0.3
+  },
+  {
+    "skill": "java",
+    "priority": 0.65
+  },
+  {
+    "skill": "keras",
+    "priority": 0.4
+  },
+  {
+    "skill": "numpy",
+    "priority": 0.5
+  },
+  {
+    "skill": "pandas",
+    "priority": 0.5
+  },
+  {
+    "skill": "power bi",
+    "priority": 0.4
+  },
+  {
+    "skill": "pyspark",
+    "priority": 0.4
+  },
+  {
+    "skill": "python",
+    "priority": 0.9
+  },
+  {
+    "skill": "pytorch",
+    "priority": 0.4
+  },
+  {
+    "skill": "r",
+    "priority": 0.3
+  },
+  {
+    "skill": "sas",
+    "priority": 0.25
+  },
+  {
+    "skill": "scala",
+    "priority": 0.4
+  },
+  {
+    "skill": "scikit learn",
+    "priority": 0.4
+  },
+  {
+    "skill": "spark",
+    "priority": 0.4
+  },
+  {
+    "skill": "sql",
+    "priority": 0.85
+  },
+  {
+    "skill": "tableau",
+    "priority": 0.4
+  },
+  {
+    "skill": "tensorflow",
+    "priority": 0.4
+  }
+],
+  "software developer": [
+  {
+    "skill": "javascript",
+    "priority": 0.95
+  },
+  {
+    "skill": "typescript",
+    "priority": 0.85
+  },
+  {
+    "skill": "java",
+    "priority": 0.85
+  },
+  {
+    "skill": "python",
+    "priority": 0.8
+  },
+  {
+    "skill": "c#",
+    "priority": 0.8
+  },
+  {
+    "skill": "aws",
+    "priority": 0.75
+  },
+  {
+    "skill": "azure",
+    "priority": 0.7
+  },
+  {
+    "skill": "git",
+    "priority": 0.7
+  },
+  {
+    "skill": "github",
+    "priority": 0.7
+  },
+  {
+    "skill": "docker",
+    "priority": 0.5
+  },
+  {
+    "skill": "linux",
+    "priority": 0.6
+  },
+  {
+    "skill": "mysql",
+    "priority": 0.7
+  },
+  {
+    "skill": "postgresql",
+    "priority": 0.7
+  },
+  {
+    "skill": "sql",
+    "priority": 0.7
+  },
+  {
+    "skill": "html",
+    "priority": 0.5
+  },
+  {
+    "skill": "css",
+    "priority": 0.4
+  },
+  {
+    "skill": "react",
+    "priority": 0.5
+  },
+  {
+    "skill": "angular",
+    "priority": 0.6
+  },
+  {
+    "skill": "go",
+    "priority": 0.5
+  },
+  {
+    "skill": "c++",
+    "priority": 0.45
+  },
+  {
+    "skill": "scala",
+    "priority": 0.35
+  },
+  {
+    "skill": "ruby",
+    "priority": 0.3
+  },
+  {
+    "skill": "spring",
+    "priority": 0.4
+  },
+  {
+    "skill": "kubernetes",
+    "priority": 0.35
+  },
+  {
+    "skill": "terraform",
+    "priority": 0.3
+  }
+],
+ "technical support": [
+  {
+    "skill": "jira",
+    "priority": 0.85
+  },
+  {
+    "skill": "helpdesk",
+    "priority": 0.9
+  },
+  {
+    "skill": "windows",
+    "priority": 0.8
+  },
+  {
+    "skill": "linux",
+    "priority": 0.7
+  },
+  {
+    "skill": "tcp ip",
+    "priority": 0.75
+  },
+  {
+    "skill": "cisco",
+    "priority": 0.7
+  },
+  {
+    "skill": "настройка пк",
+    "priority": 0.8
+  },
+  {
+    "skill": "настройка по",
+    "priority": 0.75
+  },
+  {
+    "skill": "настройка сетевых подключений",
+    "priority": 0.75
+  },
+  {
+    "skill": "ремонт пк",
+    "priority": 0.6
+  },
+  {
+    "skill": "docker",
+    "priority": 0.25
+  },
+  {
+    "skill": "git",
+    "priority": 0.3
+  },
+  {
+    "skill": "python",
+    "priority": 0.4
+  },
+  {
+    "skill": "sql",
+    "priority": 0.35
+  },
+  {
+    "skill": "клиентоориентированность",
+    "priority": 0.7
+  },
+  {
+    "skill": "деловая коммуникация",
+    "priority": 0.55
+  },
+  {
+    "skill": "английский язык",
+    "priority": 0.6
+  }
+],
+  "technical writer": [
+  {
+    "skill": "excel",
+    "priority": 0.9
+  },
+  {
+    "skill": "word",
+    "priority": 0.9
+  },
+  {
+    "skill": "powerpoint",
+    "priority": 0.85
+  },
+  {
+    "skill": "markdown",
+    "priority": 0.7
+  },
+  {
+    "skill": "confluence",
+    "priority": 0.7
+  },
+  {
+    "skill": "git",
+    "priority": 0.6
+  },
+  {
+    "skill": "sharepoint",
+    "priority": 0.6
+  },
+  {
+    "skill": "sql",
+    "priority": 0.5
+  },
+  {
+    "skill": "api documentation",
+    "priority": 0.5
+  },
+  {
+    "skill": "flow",
+    "priority": 0.6
+  },
+  {
+    "skill": "html",
+    "priority": 0.4
+  },
+  {
+    "skill": "vba",
+    "priority": 0.3
+  }
+],
+  "web developer": [
+  {
+    "skill": "javascript",
+    "priority": 0.95
+  },
+  {
+    "skill": "typescript",
+    "priority": 0.85
+  },
+  {
+    "skill": "html",
+    "priority": 0.85
+  },
+  {
+    "skill": "css",
+    "priority": 0.85
+  },
+  {
+    "skill": "react",
+    "priority": 0.7
+  },
+  {
+    "skill": "vue.js",
+    "priority": 0.6
+  },
+  {
+    "skill": "angularjs",
+    "priority": 0.6
+  },
+  {
+    "skill": "node.js",
+    "priority": 0.6
+  },
+  {
+    "skill": "git",
+    "priority": 0.7
+  },
+  {
+    "skill": "rest",
+    "priority": 0.6
+  },
+  {
+    "skill": "webpack",
+    "priority": 0.5
+  },
+  {
+    "skill": "sql",
+    "priority": 0.6
+  },
+  {
+    "skill": "mysql",
+    "priority": 0.6
+  },
+  {
+    "skill": "docker",
+    "priority": 0.4
+  },
+  {
+    "skill": "linux",
+    "priority": 0.5
+  },
+  {
+    "skill": "ajax",
+    "priority": 0.45
+  },
+  {
+    "skill": "css",
+    "priority": 0.4
+  },
+  {
+    "skill": "html",
+    "priority": 0.4
+  },
+  {
+    "skill": "redux",
+    "priority": 0.4
+  },
+  {
+    "skill": "bootstrap",
+    "priority": 0.35
+  },
+  {
+    "skill": "jquery",
+    "priority": 0.3
+  },
+  {
+    "skill": "php",
+    "priority": 0.25
+  }
+],
+  "cybersecurity specialist": [
+    {"skill": "cybersecurity", "priority": 1.0},
+    {"skill": "cloud security", "priority": 0.9},
+    {"skill": "linux", "priority": 0.85},
+    {"skill": "powershell", "priority": 0.8},
+    {"skill": "network configuration", "priority": 0.8},
+    {"skill": "tcp ip", "priority": 0.75},
+    {"skill": "firewall management", "priority": 0.7},
+    {"skill": "penetration testing", "priority": 0.7},
+    {"skill": "vulnerability assessment", "priority": 0.7},
+    {"skill": "incident response", "priority": 0.65},
+    {"skill": "encryption", "priority": 0.65},
+    {"skill": "siem tools", "priority": 0.6},
+    {"skill": "ansible", "priority": 0.55},
+    {"skill": "oauth", "priority": 0.55},
+    {"skill": "python", "priority": 0.5},
+    {"skill": "logging", "priority": 0.5},
+    {"skill": "bash", "priority": 0.5},
+    {"skill": "security audit", "priority": 0.5},
+    {"skill": "database security", "priority": 0.45},
+    {"skill": "cloud architecture", "priority": 0.45}
+  ],
+
+  "system administrator": [
+    {"skill": "windows", "priority": 1.0},
+    {"skill": "linux", "priority": 0.95},
+    {"skill": "powershell", "priority": 0.9},
+    {"skill": "bash", "priority": 0.85},
+    {"skill": "network configuration", "priority": 0.85},
+    {"skill": "tcp ip", "priority": 0.8},
+    {"skill": "helpdesk", "priority": 0.75},
+    {"skill": "jenkins", "priority": 0.7},
+    {"skill": "ansible", "priority": 0.7},
+    {"skill": "docker", "priority": 0.65},
+    {"skill": "vmware", "priority": 0.6},
+    {"skill": "system monitoring", "priority": 0.6},
+    {"skill": "user management", "priority": 0.6},
+    {"skill": "backup and recovery", "priority": 0.55},
+    {"skill": "cloud storage", "priority": 0.55},
+    {"skill": "sql server", "priority": 0.5},
+    {"skill": "sql", "priority": 0.58},
+    {"skill": "logging", "priority": 0.5},
+    {"skill": "performance tuning", "priority": 0.45},
+    {"skill": "database security", "priority": 0.4}
+  ],
+
+  "ui designer": [
+    {"skill": "figma", "priority": 1.0},
+    {"skill": "css", "priority": 0.9},
+    {"skill": "scss", "priority": 0.85},
+    {"skill": "responsive design", "priority": 0.85},
+    {"skill": "html", "priority": 0.8},
+    {"skill": "product thinking", "priority": 0.75},
+    {"skill": "user research", "priority": 0.7},
+    {"skill": "interaction design", "priority": 0.7},
+    {"skill": "wireframing", "priority": 0.65},
+    {"skill": "prototyping", "priority": 0.65},
+    {"skill": "branding basics", "priority": 0.6},
+    {"skill": "typography", "priority": 0.6},
+    {"skill": "color theory", "priority": 0.6},
+    {"skill": "usability testing", "priority": 0.55},
+    {"skill": "illustrator", "priority": 0.5},
+    {"skill": "photoshop", "priority": 0.5},
+    {"skill": "animation basics", "priority": 0.45},
+    {"skill": "accessibility", "priority": 0.45}
+  ],
+
+  "ux designer": [
+    {"skill": "figma", "priority": 1.0},
+    {"skill": "user research", "priority": 0.95},
+    {"skill": "usability testing", "priority": 0.9},
+    {"skill": "wireframing", "priority": 0.85},
+    {"skill": "prototyping", "priority": 0.85},
+    {"skill": "information architecture", "priority": 0.8},
+    {"skill": "product thinking", "priority": 0.75},
+    {"skill": "interaction design", "priority": 0.7},
+    {"skill": "persona creation", "priority": 0.7},
+    {"skill": "analytics tools", "priority": 0.65},
+    {"skill": "accessibility", "priority": 0.65},
+    {"skill": "design thinking", "priority": 0.6},
+    {"skill": "qualitative research", "priority": 0.6},
+    {"skill": "quantitative research", "priority": 0.55},
+    {"skill": "jira", "priority": 0.5},
+    {"skill": "confluence", "priority": 0.45}
+  ],
+
+  "game developer": [
+    {"skill": "c++", "priority": 0.9},
+    {"skill": "unity", "priority": 0.9},
+    {"skill": "unreal engine", "priority": 0.9},
+    {"skill": "oop", "priority": 0.85},
+    {"skill": "3d modeling basics", "priority": 0.75},
+    {"skill": "shader programming", "priority": 0.7},
+    {"skill": "graphics programming", "priority": 0.7},
+    {"skill": "game physics", "priority": 0.65},
+    {"skill": "network programming", "priority": 0.6},
+    {"skill": "c#", "priority": 0.9},
+    {"skill": "git", "priority": 0.75},
+    {"skill": "debugging", "priority": 0.55},
+    {"skill": "performance optimization", "priority": 0.5},
+    {"skill": "multithreading", "priority": 0.5},
+    {"skill": "ui design", "priority": 0.45},
+    {"skill": "physics engines", "priority": 0.45},
+    {"skill": "scripting", "priority": 0.45}
+  ],
+
+  "unity developer": [
+    {"skill": "unity", "priority": 1.0},
+    {"skill": "c#", "priority": 0.9},
+    {"skill": "oop", "priority": 0.85},
+    {"skill": "shader programming", "priority": 0.75},
+    {"skill": "graphics programming", "priority": 0.7},
+    {"skill": "debugging", "priority": 0.7},
+    {"skill": "git", "priority": 0.65},
+    {"skill": "performance optimization", "priority": 0.6},
+    {"skill": "multithreading", "priority": 0.6},
+    {"skill": "scripting", "priority": 0.55},
+    {"skill": "ui design", "priority": 0.5},
+    {"skill": "physics engines", "priority": 0.5},
+    {"skill": "network programming", "priority": 0.45},
+    {"skill": "animation basics", "priority": 0.45}
+  ],
+
+  "unreal engine developer": [
+    {"skill": "unreal engine", "priority": 1.0},
+    {"skill": "c++", "priority": 0.9},
+    {"skill": "blueprints", "priority": 0.85},
+    {"skill": "oop", "priority": 0.8},
+    {"skill": "shader programming", "priority": 0.75},
+    {"skill": "graphics programming", "priority": 0.7},
+    {"skill": "debugging", "priority": 0.7},
+    {"skill": "performance optimization", "priority": 0.65},
+    {"skill": "multithreading", "priority": 0.6},
+    {"skill": "network programming", "priority": 0.55},
+    {"skill": "scripting", "priority": 0.5},
+    {"skill": "ui design", "priority": 0.45},
+    {"skill": "physics engines", "priority": 0.45},
+    {"skill": "git", "priority": 0.45},
+    {"skill": "animation basics", "priority": 0.4}
+  ]
+
+}

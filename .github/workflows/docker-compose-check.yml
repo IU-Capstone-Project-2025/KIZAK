@@ -17,14 +17,28 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup test environment
+        run: |
+          # Create .env from example if doesn't exist
+          if [ ! -f .env ]; then
+            cp .env.example .env
+            # Override any sensitive values with test defaults
+            sed -i 's/DB_USER=.*/DB_USER=testuser/' .env
+            sed -i 's/DB_PASSWORD=.*/DB_PASSWORD=testpass/' .env
+            sed -i 's/DB_NAME=.*/DB_NAME=testdb/' .env
+          fi
+          cat .env  # For debugging (remove in production)
+
       - name: Build and run services
         run: docker compose up --build -d
 
       - name: Wait for services to become healthy
         run: |
-          sleep 10
-          curl --fail http://localhost:8000 || (docker compose logs && exit 1)
-          curl --fail http://localhost:80 || (docker compose logs && exit 1)
+          sleep 30
+          curl --fail http://localhost:8000/docs \
+          || (docker compose logs && exit 1)
+          curl --fail http://localhost:3000 \
+          || (docker compose logs && exit 1)
 
       - name: Stop containers
         if: always()

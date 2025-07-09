@@ -21,7 +21,7 @@ COPY pyproject.toml ./
 RUN poetry install --no-root --no-interaction --no-ansi
 
 COPY . .
-
+    
 EXPOSE 8000
 
-CMD ["flask", "--app", "run.py", "run", "--host", "0.0.0.0", "--port", "8000", "--debug"]
+CMD ["sh", "-c", "uvicorn app:app --host ${API_HOST:-0.0.0.0} --port ${API_PORT:-8000} --reload"]

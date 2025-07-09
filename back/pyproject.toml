@@ -1,17 +1,26 @@
-[project]
+[tool.poetry]
 name = "kizak"
 version = "0.0.1"
-description = "KIZAK project"
-authors = [
-    {name = "Your Name",email = "you@example.com"}
-]
-requires-python = ">=3.12,<4.0"
-dependencies = [
-    "flask (>=3.1.1,<4.0.0)",
-    "flask-cors (>=6.0.1,<7.0.0)",
-    "flask-restful (>=0.3.10,<1.0.0)"
-]
+description = "KIZAK API MVP"
+authors = ["Your Name <you@example.com>"]
 
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.115.13"
+uvicorn = "^0.34.3"
+dotenv = "^0.9.9"
+asyncpg = "^0.30.0"
+pytest = "^8.0.0"
+pytest-asyncio = "^0.21.0"
+faker = "^23.0.0"
+httpx = "^0.24.0"
+pytest-cov = "^5.0.0"
+bcrypt = "^4.1.2"
+pyjwt = "^2.8.0"
+passlib = {extras = ["bcrypt"], version = "^1.7.4"}
+python-multipart = "^0.0.7"
+sentence-transformers = "^5.0.0"
+qdrant-client = "^1.14.3"
 
 [build-system]
 requires = ["poetry-core"]
@@ -19,3 +28,4 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.black]
 line-length = 79
+

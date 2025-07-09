@@ -132,3 +132,7 @@ venv.bak/
 
 # Database
 db/pg_data
+
+.idea
+/ml/multi-platform-online-courses-dataset/
+ml/qdrant

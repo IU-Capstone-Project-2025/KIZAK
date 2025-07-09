@@ -73,20 +73,20 @@ KIZAK is an AI-powered learning assistant designed to guide users through their 
 - 🟢 Choose tech stack
 
 ### 🧪 Week 2 – Prototyping
-- 🟡 Gather and refine functional/non-functional requirements
-- 🟡 Create UI/UX design prototype
-- 🟡 Build basic frontend structure
-- 🟡 Set up backend architecture and API contracts
+- 🟢 Gather and refine functional/non-functional requirements
+- 🟢 Create UI/UX design prototype
+- 🟢 Build basic frontend structure
+- 🟢 Set up backend architecture and API contracts
 
 ### ⚙️ Week 3 – MVP v0
-- 🔴 Implement core features (onboarding, roadmap engine)
-- 🔴 Design and build initial database schema
-- 🔴 Prepare working MVP demo
+- 🟢 Implement core features (onboarding, roadmap engine)
+- 🟢 Design and build initial database schema
+- 🟢 Prepare working MVP demo
 
 ### 🧪 Week 4 – Testing & Deployment
-- 🔴 Implement CI/CD pipeline
-- 🔴 Add unit and integration tests
-- 🔴 Deploy MVP to test/staging environment
+- 🟡 Implement CI/CD pipeline
+- 🟡 Add unit and integration tests
+- 🟡 Deploy MVP to test/staging environment
 
 ### 🎨 Week 5 – Polishing
 - 🔴 Gather feedback from initial users/stakeholders
@@ -106,11 +106,45 @@ KIZAK is an AI-powered learning assistant designed to guide users through their 
 
 ## ⚡ Usage
 
+### Requirements
+
+**To run this project make sure that your docker-compose version is 2.24.0 or higher**
+```
+docker-compose -v
+# Docker Compose version v2.24.0-desktop.1
+```
+
+
+### Deploy
+
 First, clone the project:
 
 ```bash
 git clone https://github.com/IU-Capstone-Project-2025/KIZAK
 cd KIZAK
+```
+
+Now set up _.env_ file:
+
+```bash
+# Database configuration
+DB_HOST=db
+DB_PORT=5432
+DB_USER=user
+DB_PASSWORD=password
+DB_NAME=db
+
+# CORS configuration
+CORS_ORIGINS=http://localhost
+
+# API configuration
+API_HOST=backend
+API_PORT=8000
+
+# Frontend configuration
+FRONTEND_HOST=frontend
+FRONTEND_PORT=3000
+FRONTEND_HOST_PORT=3000
 ```
 
 Then build and run the project using Docker Compose:
@@ -119,7 +153,7 @@ Then build and run the project using Docker Compose:
 docker-compose up --build
 ```
 
-Visit [localhost](http://localhost) to access KIZAK.
+Visit [localhost:8000/docs](http://localhost:8000/docs) to access KIZAK API docs or [localhost:80](http://localhost) to see front part
 
 ## 🐞 Open Issues and Contribution
 
