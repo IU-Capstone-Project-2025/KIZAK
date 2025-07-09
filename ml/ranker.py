@@ -1,6 +1,7 @@
 from typing import List, Dict
 from sklearn.metrics import ndcg_score
 import re
+import random
 
 import logging
 
@@ -11,27 +12,120 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 class CourseRanker:
-    '''
-    priorities_by_role = skill_priorities = {
-        "fullstack developer": [
-        {
-          "skill": "angular",
-          "priority": 0.95
+    STRATEGIES = {
+        "basic": {
+            # basic balanced rankin, no penalties
+            "weights": {"coverage": 0.45, "priority": 0.45, "rating": 0.1},
+            "filter_low_quality": False,  # allow low tarred courses
+            "diversity_penalty": 0.0,  # allow intersection of skill coverages among courses
+            "known_skills_penalty": 0.0,  # allow courses with known skills
+            "position_bias_shuffle": False,  # do not shuffly similar scored courses
+            "max_top_similar_courses": None,  # allow similar in skills set courses
         },
-        {
-          "skill": "aws",
-          "priority": 0.9
+
+        "skill_gain_focus": {
+            # More weight to coverage, do filtration and penalties for known skills
+            "weights": {"coverage": 0.7, "priority": 0.2, "rating": 0.1},
+            "filter_low_quality": True,  # throw out bad starred courses
+            "diversity_penalty": 0.3,  # moderate penalty for intersection of skills btw courses
+            "known_skills_penalty": 0.2,  # moderate penalty for teaching already known skills
+            "position_bias_shuffle": True,  # shuffle similar scorred
+            "max_top_similar_courses": None,
         },
-        {
-          "skill": "azure",
-          "priority": 0.85
+
+        "diversity_focus": {
+            # Give priority to skills variance, large penalty for similarity, small for known skills
+            "weights": {"coverage": 0.4, "priority": 0.3, "rating": 0.3},
+            "filter_low_quality": True,
+            "diversity_penalty": 0.5,  # big penalty for skills set intersection
+            "known_skills_penalty": 0.1,  # small penalty for known skills
+            "position_bias_shuffle": True,
+            "max_top_similar_courses": 5,  # max # similar in skills sets courses
         },
-        ...
-    rating_max = max course rank(5 stars)
-    '''
+
+        "position_bias_control": {
+            # Control concentration of good courses by shuffling and small penalties
+            "weights": {"coverage": 0.5, "priority": 0.4, "rating": 0.1},
+            "filter_low_quality": False,
+            "diversity_penalty_weight": 0.2,
+            "known_skills_penalty_weight": 0.1,
+            "position_bias_shuffle": True,
+            "max_top_similar_courses": 3,  # max # similar in skills sets courses
+        }
+    #     todo: add strategies to re-rank based on feedback (if needed)
+    }
+
     def __init__(self, priorities_by_role: Dict[str, Dict[str, int]], rating_max: float = 5.0):
         self.priorities_by_role = priorities_by_role
         self.rating_max = rating_max
+
+        # diversity, skill gain and positional bias from last ranking
+        self.last_metrics = {}
+
+        # to change dynamically
+        self.skill_gain_threshold = 6.0
+        self.diversity_threshold = 2.5
+        self.position_bias_threshold = 4.0
+
+    def get_metrics(self):
+        return self.last_metrics
+
+    def _filter_low_quality_courses(self, courses: List[Dict]) -> List[Dict]:
+        """throw out courses without any skills or with bad rating"""
+        return [
+            c for c in courses
+            if c.get("skills") and (c.get("rating", 0) or 0) >= 3
+        ]
+
+    def _limit_similar_courses(self, ranked: List[Dict], max_similar: int) -> List[Dict]:
+        """
+        reduce number of courses with similar skills sets to max_similar.
+        similarity defines as nof intersected skills >= 50% smaller set
+        """
+        limited = []
+        skill_sets = []
+
+        def is_similar(skills1, skills2):
+            set1, set2 = set(skills1), set(skills2)
+            intersection = len(set1.intersection(set2))
+            threshold = min(len(set1), len(set2)) * 0.5
+            return intersection >= threshold
+
+        for item in ranked:
+            skills = item["covered_skills"]
+            similar_count = sum(is_similar(skills, s) for s in skill_sets)
+            if similar_count < max_similar:
+                limited.append(item)
+                skill_sets.append(skills)
+            # esle - skip course
+
+        return limited
+
+    def _shuffle_similar_scores(self, ranked: List[Dict], epsilon: float = 0.01) -> List[Dict]:
+        """
+        shuffle courses with similar scores (diff <= epsilon), to reduce position bias.
+        """
+        if not ranked:
+            return ranked
+
+        shuffled = []
+        buffer = [ranked[0]]
+
+        for i in range(1, len(ranked)):
+            prev_score = buffer[-1]["ranking_score"]
+            curr_score = ranked[i]["ranking_score"]
+
+            if abs(curr_score - prev_score) <= epsilon:
+                buffer.append(ranked[i])
+            else:
+                random.shuffle(buffer)
+                shuffled.extend(buffer)
+                buffer = [ranked[i]]
+
+        random.shuffle(buffer)
+        shuffled.extend(buffer)
+
+        return shuffled
 
     def normalize_skill(self, skill: str) -> str:
         skill = skill.lower()
@@ -46,20 +140,29 @@ class CourseRanker:
             words.update(splited)
         return words
 
-    def rank_courses(self, courses: List[Dict], # from cosine similarity search
+    def rank_courses(self,
+                     courses: List[Dict], # from cosine similarity search
                      skill_gap: List[str], #from skillgap
+                     known_skills: List[str],
                      target_role: str, # from user onboarding info
-                     weights: Dict[str, float] = None) -> List[Dict]: # alpha beta for ranking
+                     weights: Dict[str, float] = None, # alpha beta for ranking
+                     strategy_name: str = "basic" # to recalculate if offline metrics are bad
+                     ) -> List[Dict]:
+        #identify startegy
+        strategy = self.STRATEGIES.get(strategy_name, self.STRATEGIES["basic"])
+
+        # choose weights of strategy
         if weights is None:
-            weights = {
-                "coverage": 0.45,
-                "priority": 0.45,
-                "rating": 0.1
-            }
-        # get priorities only for needed role
+            weights = strategy["weights"]
+
+        # get priorities from job-skills mapping
         priorities = self.priorities_by_role.get(target_role, {})
+
+        # known_skills = set(known_skills)
+
         ranked = []
         for course in courses:
+            # temporarily return kostyl normalizing
             raw_course_skills = course.get("skills", [])
             if isinstance(raw_course_skills, str):
                 try:
@@ -70,14 +173,9 @@ class CourseRanker:
 
             course_skills = self.get_skill_words(raw_course_skills)
 
-            # logger.info(
-            #     f"Course ID: {course.get('id')}, "
-            #     f"skills type: {type(course_skills)}, "
-            #     f"value: {course_skills}")
+            # course_skills = course.get("skills", [])
 
-            # normalized_gap = set(self.normalize_skill(s) for s in skill_gap)
-            covered_skills = course_skills.intersection(skill_gap)
-
+            covered_skills = set(course_skills).intersection(set(skill_gap))
 
             # how many skills are covered by this course, the more the >>
             coverage_score = len(covered_skills) / len(skill_gap) if skill_gap else 0
@@ -86,11 +184,9 @@ class CourseRanker:
             priority_score_sum = sum(priorities.get(skill, 0.0) for skill in covered_skills)
             mean_priority_score = priority_score_sum / len(covered_skills) if covered_skills else 0
 
-            rating = course.get("rating", 0) or 0 #course stars
+            raw_rating = course.get("rating", None)
+            rating = raw_rating if raw_rating is not None else 0.3 * self.rating_max
             rating_score = rating / self.rating_max
-
-            # # bcs everybody love halyava :)
-            # price_score = 1 if course.get("price", 0) == 0 else 0
 
             score = (
                     weights["coverage"] * coverage_score +
@@ -98,33 +194,192 @@ class CourseRanker:
                     weights["rating"] * rating_score
             )
 
+            # now penalties :(
+
+            # diversity penalty — for intersection with already picked courses
+            if strategy["diversity_penalty"] > 0 and ranked:
+                overlap = 0
+                for prev in ranked:
+                    overlap += len(set(prev["covered_skills"]).intersection(covered_skills))
+                overlap /= len(ranked)
+                score -= strategy["diversity_penalty"] * overlap
+
+            # known skills penalty — for using skills that user know
+            if strategy["known_skills_penalty"] > 0:
+                known_overlap = len(set(known_skills).intersection(covered_skills))
+                score -= strategy["known_skills_penalty"] * known_overlap
+
             ranked.append({
                 "course": course,
                 "ranking_score": round(score, 4),
                 "covered_skills": list(covered_skills)
             })
-        # dict course - how cool it is
-        return sorted(ranked, key=lambda x: x["ranking_score"], reverse=True)
 
-    def evaluate_ranking(self, ranked_courses: List[Dict],
-                         skill_gap: List[str],
+        # sort by score
+        ranked = sorted(ranked, key=lambda x: x["ranking_score"], reverse=True)
+
+        max_sim = strategy.get("max_top_similar_courses")
+        if max_sim is not None:
+            ranked = self._limit_similar_courses(ranked, max_sim)
+
+        if strategy.get("position_bias_shuffle"):
+            ranked = self._shuffle_similar_scores(ranked)
+
+        return ranked
+
+
+    def evaluate_ranking(self,
+                         ranked_courses: List[Dict], #init ranking
                          target_role: str,
                          k: int = 10 # top-k
-                         ) -> Dict[
-        str, float]:
+                         ) -> Dict[str, float]:
         priorities = self.priorities_by_role.get(target_role, {})
 
-        predicted_relevances = []
+        # Skill Gain: priorities of covered skills in top-k courses
+        top_k = ranked_courses[:k]
+        skill_gain = sum(
+            priorities.get(skill, 0.0)
+            for item in top_k
+            for skill in item["covered_skills"]
+        )
 
-        for item in ranked_courses[:k]:
-            covered_skills = item["covered_skills"]
-            rel = sum(1 / priorities.get(skill, 5) for skill in covered_skills)
-            predicted_relevances.append(rel)
+        # Diversity: entropy(variety) of skills in top-k
+        from collections import Counter
+        all_skills = [s for item in top_k for s in item["covered_skills"]]
+        skill_counts = Counter(all_skills)
+        total = sum(skill_counts.values())
+        diversity_score = 0.0
+        if total > 0:
+            diversity_score = -sum(
+                (count / total) * np.log2(count / total)
+                for count in skill_counts.values()
+            )
 
-        ideal_relevances = sorted(predicted_relevances, reverse=True)
+        # Position bias: how necessary skills are concentrated in the upper positions
+        position_bias = sum(
+            priorities.get(skill, 0.0) / np.log2(idx + 2)
+            for idx, item in enumerate(top_k)
+            for skill in item["covered_skills"]
+        )
 
-        if not any(predicted_relevances):
-            return {"NDCG@k": 0.0}
+        return {
+            "skill_gain": round(skill_gain, 4),
+            "diversity_score": round(diversity_score, 4),
+            "position_bias": round(position_bias, 4)
+        }
 
-        ndcg = ndcg_score([ideal_relevances], [predicted_relevances])
-        return {"NDCG@k": round(ndcg, 4)}
+    def check_skill_gain(self, metrics: Dict[str, float]) -> bool:
+        # todo: threshold of skill gain
+        return metrics.get("skill_gain", 0) >= self.skill_gain_threshold
+
+    def check_diversity(self, metrics: Dict[str, float]) -> bool:
+        # todo: entropy threshold
+        return metrics.get("diversity_score", 0) >= self.diversity_threshold
+
+    def check_position_bias(self, metrics: Dict[str, float]) -> bool:
+        # todo: threshold of pos bias
+        # position_bias — the << the better (too concentrated sjills on the top is not cool)
+        return metrics.get("position_bias", 0) <= self.position_bias_threshold
+
+    def rank_with_fallback(self,
+                           courses: List[Dict],
+                           skill_gap: List[str],
+                           known_skills: List[str],
+                           target_role: str,
+                           max_attempts: int = 5 #attenpt to improve 3 times
+                           ) -> List[Dict]:
+        """Cyclic ranks with different strategies until offline metrics are better"""
+
+        tried_strategies = set()
+        strategy = "basic"  # start with basic one
+
+        for attempt in range(max_attempts):
+            if strategy in tried_strategies:
+                # if tried current strategy - choose different
+                strategy = "basic"
+
+            tried_strategies.add(strategy)
+
+            params = self.STRATEGIES[strategy]
+            logger.info(f"Ranking attempt {attempt + 1} with strategy '{strategy}'")
+
+            ranked = self.rank_courses(
+                courses,
+                skill_gap,
+                known_skills,
+                target_role,
+                weights=params["weights"],
+                strategy_name=strategy
+            )
+
+            metrics = self.evaluate_ranking(ranked, target_role)
+            self.last_metrics = metrics
+            logger.info(f"Evaluation metrics: {metrics}")
+
+            skill_gain_ok = self.check_skill_gain(metrics)
+            diversity_ok = self.check_diversity(metrics)
+            position_bias_ok = self.check_position_bias(metrics)
+
+            logger.info(
+                f"Skill gain OK: {skill_gain_ok}, Diversity OK: {diversity_ok}, Position bias OK: {position_bias_ok}")
+
+            if skill_gain_ok and diversity_ok and position_bias_ok:
+                return ranked
+
+            # choose next strategy
+            if not skill_gain_ok and "skill_gain_focus" not in tried_strategies:
+                strategy = "skill_gain_focus"
+            elif not diversity_ok and "diversity_focus" not in tried_strategies:
+                strategy = "diversity_focus"
+            elif not position_bias_ok and "position_bias_control" not in tried_strategies:
+                strategy = "position_bias_control"
+            else:
+                # all tried, return last (hopefully best)
+                break
+
+        return ranked
+
+    def update_ranking(self,
+                       ranked_courses: List[Dict],
+                       feedback_type: str,  # - "too_easy"
+                                            # - "wrong_skills"
+                                            # - "too_hard"
+                                            # - "bad_author"
+                                            # - "unavailable"
+                       feedback_data: None # course id or mb something else
+                       ) -> List[Dict]:
+        """
+        Re-ranking based on user feedback (human metric)
+        """
+        updated_courses = ranked_courses.copy()
+
+        if feedback_type == "too_easy":
+            # todo: update known skills and re-rank with new skill gap
+            logger.info(f"Feedback type is 'too_easy'")
+        elif feedback_type == "wrong_skills":
+            # throw out this course and similar ones
+            logger.info('Feedback type is "wrong_skills"')
+            course_id = feedback_data.get("course_id")
+            updated_courses = [c for c in updated_courses if c["course"].get("id") != course_id]
+            # TODO: implement logic of deleting similar courses
+        elif feedback_type == "too_hard":
+            # make course further in roadmap
+            logger.info('Feedback type is "too_hard"')
+            course_id = feedback_data.get("course_id")
+            for i, c in enumerate(updated_courses):
+                if c["course"].get("id") == course_id and i < len(updated_courses) - 1:
+                    updated_courses[i], updated_courses[i + 1] = updated_courses[i + 1], updated_courses[i]
+                    break
+        elif feedback_type == "bad_author":
+            # throw out courses with that author
+            logger.info('Feedback type is "bad_author"')
+            author = feedback_data.get("author")
+            updated_courses = [c for c in updated_courses if c["course"].get("author") != author]
+        elif feedback_type == "unavailable":
+            # TODO: implement alg to delete course from db
+            logger.info('Feedback type is "unavailable"')
+            course_id = feedback_data.get("course_id")
+            updated_courses = [c for c in updated_courses if c["course"].get("id") != course_id]
+        else:
+            logger.info('Unknown feedback type')
+        return updated_courses
