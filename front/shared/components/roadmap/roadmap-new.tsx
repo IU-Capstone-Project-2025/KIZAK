@@ -10,43 +10,10 @@ import {
 } from "../../hooks/useRoadmapLayout";
 import Link from "next/link";
 import { CustomSelect } from "./select";
+import { fetchRoadmapData } from "@/shared/utils/roadmapConverter";
+import { RawLink } from "@/shared/types/types";
 
-export const rawNodes: RawNode[] = [
-  {
-    node_id: "node-1",
-    title: "Introduction",
-    summary: "Basics and learning goals",
-  },
-  {
-    node_id: "node-2",
-    title: "HTML",
-    summary: "Page markup and content structure",
-  },
-  {
-    node_id: "node-3",
-    title: "CSS",
-    summary: "Styling and positioning",
-  },
-  {
-    node_id: "node-4",
-    title: "JavaScript",
-    summary: "Fundamentals of logic and interaction",
-  },
-  {
-    node_id: "node-5",
-    title: "React",
-    summary: "Modern approach to UI",
-  },
-];
-
-export const rawLinks = [
-  { from_node: "node-1", to_node: "node-2" },
-  { from_node: "node-2", to_node: "node-3" },
-  { from_node: "node-3", to_node: "node-4" },
-  { from_node: "node-4", to_node: "node-5" },
-];
-
-export const WORLD_SIZE = 5000;
+export const WORLD_SIZE = 6000;
 const SPACING = 30;
 const dotRadius = 1;
 const dotColor = "#ccc";
@@ -57,16 +24,15 @@ interface Props {
 }
 
 export const RoadmapNew: React.FC<Props> = ({ userId, initialNodeId }) => {
-  const initialProgress: Record<string, Progress> = {
-    "node-1": "Done",
-    "node-2": "Done",
-    "node-3": "In progress",
-    "node-4": "In progress",
-    "node-5": "Not started",
-  };
-  const [progressMap, setProgressMap] =
-    useState<Record<string, Progress>>(initialProgress);
+  const [rawNodes, setRawNodes] = useState<RawNode[]>([]);
+  const [rawLinks, setRawLinks] = useState<RawLink[]>([]);
+  const [initialProgress, setInitialProgress] = useState<
+    Record<string, Progress>
+  >({});
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
+  const [progressMap, setProgressMap] = useState<Record<string, Progress>>({});
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [isDragging, setDragging] = useState(false);
   const [selectedNode, setSelectedNode] = useState<string | null>(
@@ -77,10 +43,28 @@ export const RoadmapNew: React.FC<Props> = ({ userId, initialNodeId }) => {
     rawNodes,
     rawLinks
   );
-
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const lastPos = useRef({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const data = await fetchRoadmapData(userId);
+        setRawNodes(data.rawNodes);
+        setRawLinks(data.rawLinks);
+        setInitialProgress(data.initialProgress);
+        setProgressMap(data.initialProgress);
+      } catch (err) {
+        setError("Failed to load roadmap data");
+        console.error("Error loading roadmap data:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadData();
+  }, [userId]);
 
   const drawDots = () => {
     const canvas = canvasRef.current;

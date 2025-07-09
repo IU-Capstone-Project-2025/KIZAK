@@ -17,6 +17,17 @@ export default function OnBoarding() {
     goal_vacancy: "",
   };
 
+  async function hashPassword(password: string): Promise<string> {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
+    return hashHex;
+  }
+
   const [userData, setUserData] = useState<OnboardingData>(defaultUserData);
   const [step, setStep] = useState<number>(0);
   const [displayedStep, setDisplayedStep] = useState<number>(0);
@@ -58,12 +69,15 @@ export default function OnBoarding() {
       }, 300);
     } else {
       try {
+        const hashedPassword = await hashPassword(userData.password);
+        const payload = { ...userData, password: hashedPassword };
+
         const response = await fetch("http://localhost:8000/users/", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(userData),
+          body: JSON.stringify(payload),
         });
 
         if (!response.ok) {
@@ -85,7 +99,7 @@ export default function OnBoarding() {
           localStorage.removeItem("onboardingUserData");
           localStorage.removeItem("onboardingStep");
         }
-        handleClick(`/main/${userId}`, 300);
+        handleClick(`/main/${userId}`, 0);
       } catch (error) {
         console.error("Ошибка при завершении онбординга:", error);
       }

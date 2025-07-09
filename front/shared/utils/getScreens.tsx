@@ -1,3 +1,4 @@
+import React from "react";
 import { OnboardingData } from "../types/types";
 import {
   SliderLevel,
@@ -96,6 +97,10 @@ export const getScreens = (
       onNext={goToNextStep}
       onBack={goToPreviousStep}
     />,
-    ...generateSkillLevelScreens(),
+    ...generateSkillLevelScreens().map((screen, index, arr) =>
+      React.cloneElement(screen, {
+        isLastStep: index === arr.length - 1,
+      })
+    ),
   ];
 };
