@@ -25,12 +25,10 @@ class NodeBase(BaseModel):
         description="Unique identifier of the associated resource",
         examples=["123e4567-e89b-12d3-a456-426614174000"]
     )
-    progress: int = Field(
+    progress: str = Field(
         ...,
         description="Progress status of the node, e.g., percentage or step number",
-        examples=[0, 50, 100],
-        ge=0,
-        le=100
+        examples=['Not started', 'In progress', 'Done']
     )
 
 
@@ -73,12 +71,10 @@ class NodeUpdate(BaseModel):
         description="(Optional) New resource ID to associate with this node",
         examples=["123e4567-e89b-12d3-a456-426614174002"]
     )
-    progress: Optional[int] = Field(
-        None,
-        description="(Optional) Updated progress status (0-100)",
-        examples=[10, 75, 100],
-        ge=0,
-        le=100
+    progress: Optional[str] = Field(
+        ...,
+        description="Progress status of the node, e.g., percentage or step number",
+        examples=['Not started', 'In progress', 'Done']
     )
 
 
@@ -150,7 +146,7 @@ class RoadmapInfo(BaseModel):
                 "title": "Introduction to Python",
                 "summary": "Basics of Python syntax",
                 "resource_id": "123e4567-e89b-12d3-a456-426614174000",
-                "progress": 0
+                "progress": "Done"
             }
         ]]
     )

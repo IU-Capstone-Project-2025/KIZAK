@@ -1,5 +1,3 @@
-![pylint]()
-
 <div align="center">
 
 # KIZAK Capstone Project
@@ -108,7 +106,16 @@ KIZAK is an AI-powered learning assistant designed to guide users through their 
 
 ## ⚡ Usage
 
-### Backend + Batabase
+### Requirements
+
+**To run this project make sure that your docker-compose version is 2.24.0 or higher**
+```
+docker-compose -v
+# Docker Compose version v2.24.0-desktop.1
+```
+
+
+### Deploy
 
 First, clone the project:
 

@@ -94,18 +94,6 @@ class ResourceResponse(ResourceBase):
         description="Unique identifier for the resource",
         examples=["123e4567-e89b-12d3-a456-426614174000"]
     )
-    summary_vector: Optional[List[float]] = Field(
-        None,
-        description="""Vector representation of the resource summary,
-        used for semantic search or ML models""",
-        examples=[[0.12, 0.48, -0.22]]
-    )
-    skills_covered_vector: Optional[List[List[float]]] = Field(
-        None,
-        description="""List of vector representations
-        for each skill in 'skills_covered'""",
-        examples=[[[0.23, -0.45], [0.1, 0.9]]]
-    )
 
 
 class ResourceCreate(ResourceBase):
