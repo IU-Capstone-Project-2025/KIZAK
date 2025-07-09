@@ -36,7 +36,6 @@ export const Tags: React.FC<TagsProps> = ({
 
   const isValid = skills.length > 0;
 
-  // Fetch skills from backend
   useEffect(() => {
     const fetchSkills = async () => {
       try {
@@ -51,12 +50,13 @@ export const Tags: React.FC<TagsProps> = ({
     fetchSkills();
   }, []);
 
-  // Initialize with existing skills
   useEffect(() => {
-    setSkills(userData.skills.filter((s) => s.is_goal === isGoal));
+    const uniqueSkills = userData.skills.filter((s, idx, arr) =>
+      arr.findIndex(u => u.skill === s.skill && u.is_goal === s.is_goal) === idx && s.is_goal === isGoal
+    );
+    setSkills(uniqueSkills);
   }, [userData, isGoal]);
 
-  // Check for overlap
   useEffect(() => {
     const allSkills = isGoal
       ? userData.skills.filter((s) => !s.is_goal).map((s) => s.skill)
@@ -168,9 +168,9 @@ export const Tags: React.FC<TagsProps> = ({
         </div>
 
         <div className="min-h-8 max-w-full flex flex-wrap justify-center gap-2">
-          {skills.map((skill) => (
+          {[...new Map(skills.map(s => [s.skill + s.is_goal, s])).values()].map((skill) => (
             <button
-              key={skill.skill}
+              key={skill.skill + String(skill.is_goal)}
               type="button"
               onClick={() => handleRemoveSkill(skill.skill)}
               className="flex items-center border border-ui-border rounded px-3 py-1 shadow-sm transition-all duration-200 hover:bg-bg-subtle text-sm"
