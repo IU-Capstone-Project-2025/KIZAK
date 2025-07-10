@@ -1,7 +1,7 @@
 "use client";
-import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import { TransitionLink } from "@/shared/components/transition/transition-link";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -62,9 +62,13 @@ export default function Login() {
         </form>
 
         <div className="flex justify-between text-xs text-ui-muted w-full mt-4">
-          <Link href="/sign-up" className="hover:underline">
+          <TransitionLink
+            delay={300}
+            href="/onboarding"
+            className="hover:underline"
+          >
             or Sign up
-          </Link>
+          </TransitionLink>
           <a href="#" className="hover:underline">
             Forgot your password?
           </a>

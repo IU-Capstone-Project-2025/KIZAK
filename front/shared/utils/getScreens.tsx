@@ -1,3 +1,4 @@
+import React from "react";
 import { OnboardingData } from "../types/types";
 import {
   SliderLevel,
@@ -13,21 +14,6 @@ export const getScreens = (
   goToNextStep: () => void,
   goToPreviousStep: () => void
 ) => {
-  const availableSkills = [
-    "javascript",
-    "typescript",
-    "react",
-    "vue",
-    "angular",
-    "nodejs",
-    "python",
-    "java",
-    "php",
-    "ruby",
-    "go",
-    "rust",
-  ];
-
   const generateSkillLevelScreens = () => {
     return userData.skills
       .filter((s) => s.is_goal === false)
@@ -71,7 +57,6 @@ export const getScreens = (
     />,
     <Tags
       key="skills"
-      tags={availableSkills}
       title="Tell us about your skills"
       placeholder="Enter your skills..."
       singleChoice={false}
@@ -93,7 +78,6 @@ export const getScreens = (
     />,
     <Tags
       key="goal_skills"
-      tags={availableSkills}
       title="Which goal skills are you aiming to achieve?"
       placeholder="Enter your skills..."
       singleChoice={false}
@@ -113,6 +97,10 @@ export const getScreens = (
       onNext={goToNextStep}
       onBack={goToPreviousStep}
     />,
-    ...generateSkillLevelScreens(),
+    ...generateSkillLevelScreens().map((screen, index, arr) =>
+      React.cloneElement(screen, {
+        isLastStep: index === arr.length - 1,
+      })
+    ),
   ];
 };
