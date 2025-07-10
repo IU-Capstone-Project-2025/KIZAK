@@ -3,7 +3,7 @@ import React from "react";
 import Image from "next/image";
 import { SidebarButton } from "./sidebar-button";
 import { Bolt, House, LogOut, Map, MessageCircle } from "lucide-react";
-import userProfile from "../../../public/userProfile.jpg";
+const userProfile = "/userProfile.jpg";
 import { TransitionLink } from "../transition/transition-link";
 import { useParams } from "next/navigation";
 
@@ -32,9 +32,9 @@ export const Sidebar: React.FC<Props> = ({ className = "" }) => {
           <SidebarButton href={`/main/${user_id}`}>
             <House width={32} height={33} strokeWidth={1.8} />
           </SidebarButton>
-          <SidebarButton href={`/main/${user_id}`}>
+          {/* <SidebarButton href={`/main/${user_id}`}>
             <MessageCircle width={32} height={32} strokeWidth={1.8} />
-          </SidebarButton>
+          </SidebarButton> */}
           <SidebarButton href={`/roadmap/${user_id}`} delay={2000}>
             <Map width={32} height={30} strokeWidth={1.8} />
           </SidebarButton>

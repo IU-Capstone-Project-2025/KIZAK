@@ -48,7 +48,7 @@ export const UserProfileMain: React.FC<Props> = ({
           </div>
         </div>
         <div className="flex w-full h-fit mt-12 flex-col">
-          <div className="text-center w-full text-xl">Skill tags</div>
+          <div className="text-center w-full mt-8 text-xl">Skill tags</div>
           <div className="h-full w-full flex flex-wrap justify-center gap-2 mt-4">
             {tags.map((tag) => (
               <div

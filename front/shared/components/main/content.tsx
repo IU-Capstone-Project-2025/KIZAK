@@ -78,7 +78,7 @@ export const MainContent: React.FC<Props> = ({ className = "", userId }) => {
       <TransitionLink delay={2000} href={`/roadmap/${userId}`}>
         <MainRoadmap />
       </TransitionLink>
-      <div className="flex-1 flex flex-wrap gap-4">
+      <div className="flex-1 flex flex-wrap gap-4 h-[45%]">
         <MainProgress
           progress={profile.progress}
           className="flex-1 min-w-[300px]"
