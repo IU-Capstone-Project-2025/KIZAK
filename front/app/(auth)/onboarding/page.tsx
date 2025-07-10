@@ -4,7 +4,7 @@ import Image from "next/image";
 import { ProgressDots } from "@/shared/components/onboarding";
 import { getScreens } from "@/shared/utils/getScreens";
 import { usePageTransition } from "@/shared/components/transition/transition-provider";
-import { OnboardingData } from "@/shared/types/types";
+import { API_BASE_URL, OnboardingData } from "@/shared/types/types";
 
 export default function OnBoarding() {
   const defaultUserData: OnboardingData = {
@@ -72,7 +72,7 @@ export default function OnBoarding() {
         const hashedPassword = await hashPassword(userData.password);
         const payload = { ...userData, password: hashedPassword };
 
-        const response = await fetch("http://localhost:8000/users/", {
+        const response = await fetch(`${API_BASE_URL}/users/`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
