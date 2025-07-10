@@ -45,19 +45,6 @@ async def retrieve_resource(res_id: UUID) -> ResourceResponse:
         if not row:
             logger.error(f"Resource {res_id} not found")
             raise HTTPException(status_code=404, detail="Resource not found")
-        
-        history_row = await conn.fetchrow(
-            """
-                INSERT INTO roadmap_history (
-                    roadmap_id,
-                    node_id,
-                    title
-                ) VALUES ($1, $2, $3)
-            """,
-            row['roadmap_id'],
-            row['node_id'],
-            row['title']
-        )
 
         logger.info(f"Retrieved resource {res_id}")
 
