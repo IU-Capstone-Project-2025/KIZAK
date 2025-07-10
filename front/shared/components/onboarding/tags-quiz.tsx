@@ -1,8 +1,7 @@
 "use client";
-import { OnboardingData, UserSkill } from "@/shared/types/types";
+import { API_BASE_URL, OnboardingData, UserSkill } from "@/shared/types/types";
 import { ArrowLeft } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { Portal } from "../Portal";
 
 interface TagsProps {
   title: string;
@@ -31,15 +30,13 @@ export const Tags: React.FC<TagsProps> = ({
   const [filteredSkills, setFilteredSkills] = useState<string[]>([]);
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
-  const inputRef = React.useRef<HTMLInputElement>(null);
-  const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({});
 
   const isValid = skills.length > 0;
 
   useEffect(() => {
     const fetchSkills = async () => {
       try {
-        const response = await fetch("http://localhost:8000/skills_list/");
+        const response = await fetch(`${API_BASE_URL}/skills_list/`);
         const data: string[] = await response.json();
         setAllTags(data);
       } catch (err) {
@@ -51,10 +48,7 @@ export const Tags: React.FC<TagsProps> = ({
   }, []);
 
   useEffect(() => {
-    const uniqueSkills = userData.skills.filter((s, idx, arr) =>
-      arr.findIndex(u => u.skill === s.skill && u.is_goal === s.is_goal) === idx && s.is_goal === isGoal
-    );
-    setSkills(uniqueSkills);
+    setSkills(userData.skills.filter((s) => s.is_goal === isGoal));
   }, [userData, isGoal]);
 
   useEffect(() => {
@@ -87,19 +81,6 @@ export const Tags: React.FC<TagsProps> = ({
       );
       setFilteredSkills(filt);
       setShowDropdown(true);
-      // Calculate dropdown position
-      setTimeout(() => {
-        if (inputRef.current) {
-          const rect = inputRef.current.getBoundingClientRect();
-          setDropdownStyle({
-            position: "absolute",
-            top: rect.bottom + window.scrollY,
-            left: rect.left + window.scrollX,
-            width: rect.width,
-            zIndex: 9999,
-          });
-        }
-      }, 0);
     } else {
       setFilteredSkills([]);
       setShowDropdown(false);
@@ -131,9 +112,8 @@ export const Tags: React.FC<TagsProps> = ({
       <h2 className="text-center text-lg font-medium text-ui-dark">{title}</h2>
 
       <div className="space-y-4 w-full flex flex-col items-center">
-        <div className="relative w-full z-50">
+        <div className="relative w-full">
           <input
-            ref={inputRef}
             type="text"
             value={text}
             placeholder={placeholder}
@@ -141,36 +121,31 @@ export const Tags: React.FC<TagsProps> = ({
             onChange={handleChangeInput}
           />
 
-          {showDropdown && filteredSkills.length > 0 && (
-            <Portal>
-              <ul
-                style={dropdownStyle}
-                className={`py-1 bg-white border border-ui-border rounded-lg mt-2 transition-all duration-200 overflow-y-auto max-h-100 ${
-                  showDropdown && filteredSkills.length > 0
-                    ? "opacity-100 scale-100 visible"
-                    : "opacity-0 scale-95 invisible"
-                } origin-top`}
-              >
-                {filteredSkills.map((skill) => (
-                  <li key={skill} className="w-full">
-                    <button
-                      type="button"
-                      onClick={() => handleChooseTag(skill)}
-                      className="w-full text-left px-4 py-2 hover:bg-bg-subtle text-ui-dark transition"
-                    >
-                      {skill}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </Portal>
-          )}
+          <ul
+            className={`absolute z-10 w-full py-1 bg-white border border-ui-border rounded-lg mt-2 transition-all duration-200 overflow-y-auto max-h-100 ${
+              showDropdown && filteredSkills.length > 0
+                ? "opacity-100 scale-100 visible"
+                : "opacity-0 scale-95 invisible"
+            } origin-top`}
+          >
+            {filteredSkills.map((skill) => (
+              <li key={skill} className="w-full">
+                <button
+                  type="button"
+                  onClick={() => handleChooseTag(skill)}
+                  className="w-full text-left px-4 py-2 hover:bg-bg-subtle text-ui-dark transition"
+                >
+                  {skill}
+                </button>
+              </li>
+            ))}
+          </ul>
         </div>
 
         <div className="min-h-8 max-w-full flex flex-wrap justify-center gap-2">
-          {[...new Map(skills.map(s => [s.skill + s.is_goal, s])).values()].map((skill) => (
+          {skills.map((skill) => (
             <button
-              key={skill.skill + String(skill.is_goal)}
+              key={skill.skill}
               type="button"
               onClick={() => handleRemoveSkill(skill.skill)}
               className="flex items-center border border-ui-border rounded px-3 py-1 shadow-sm transition-all duration-200 hover:bg-bg-subtle text-sm"

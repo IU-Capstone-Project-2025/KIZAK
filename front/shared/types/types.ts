@@ -1,4 +1,4 @@
-export const API_URL = `https://${process.env.API_HOST}:${process.env.API_PORT}`;
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export type SkillLevels = "Beginner" | "Intermediate" | "Advanced";
 

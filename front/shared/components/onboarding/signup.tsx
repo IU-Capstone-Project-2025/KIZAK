@@ -1,5 +1,5 @@
 "use client";
-import { API_URL, OnboardingData } from "@/shared/types/types";
+import { API_BASE_URL, OnboardingData } from "@/shared/types/types";
 import React, { useState, useEffect, useRef } from "react";
 import { TransitionLink } from "../transition/transition-link";
 
@@ -21,7 +21,7 @@ export const SignUp: React.FC<Props> = ({ setData, userData, onNext }) => {
   async function checkLoginExists(login: string) {
     setCheckingLogin(true);
     try {
-      const res = await fetch(`${API_URL}/check_login/${login}`);
+      const res = await fetch(`${API_BASE_URL}/check_login/${login}`);
       const data = await res.json();
       console.log(data);
       if (data.exists) {
