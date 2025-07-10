@@ -8,9 +8,9 @@ interface Props {
 export const MainRoadmap: React.FC<Props> = ({ className = "" }) => {
   return (
     <section
-      className={`flex flex-col w-full min-h-100 h-100 rounded-xl group border shadow-sm border-ui-border ${className}`}
+      className={`flex flex-col w-full rounded-xl group border shadow-sm border-ui-border ${className}`}
     >
-      <h2 className="text-ui-dark text-start text-lg w-full pl-3 py-1 border-b border-ui-border">
+      <h2 className="text-ui-dark text-start text-lg w-full pl-3 py-0 border-b border-ui-border">
         Roadmap
       </h2>
       <div className="flex-1 w-full dots relative">
