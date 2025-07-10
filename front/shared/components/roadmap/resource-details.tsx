@@ -145,9 +145,15 @@ export const ResourceDetails: React.FC<Props> = ({
         </svg>
       </button>
 
-      <h3 className="text-3xl font-extrabold mb-4 text-brand-primary">
+      <div className="text-3xl font-extrabold mb-4 flex-center gap-x-3 text-brand-primary">
         {resource.title}
-      </h3>
+        <button
+          onClick={() => setShowDislikeModal(true)}
+          className="w-8 h-8 flex-center text-red-500 hover:text-red-700 transition"
+        >
+          <ThumbsDown size={24} />
+        </button>
+      </div>
       <p className="mb-4 text-lg leading-relaxed">{resource.summary}</p>
 
       <label htmlFor="progress-select" className="block font-semibold mb-2">
