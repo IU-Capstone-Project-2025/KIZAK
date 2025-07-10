@@ -11,7 +11,7 @@ import {
 import Link from "next/link";
 import { CustomSelect } from "./select";
 import { fetchRoadmapData } from "@/shared/utils/roadmapConverter";
-import { RawLink } from "@/shared/types/types";
+import { API_BASE_URL, RawLink } from "@/shared/types/types";
 import { ResourceDetails } from "./resource-details";
 
 export const WORLD_SIZE = 5000;
@@ -199,7 +199,7 @@ export const RoadmapNew: React.FC<Props> = ({ userId, initialNodeId }) => {
     setProgressMap((prev) => ({ ...prev, [nodeId]: newProgress }));
 
     try {
-      await fetch("http://localhost:8000/node/", {
+      await fetch(`${API_BASE_URL}/node/`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

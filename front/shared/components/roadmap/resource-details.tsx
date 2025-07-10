@@ -5,6 +5,7 @@ import { CustomSelect } from "./select";
 import { Progress } from "./node";
 import { ThumbsDown, ThumbsUp, X } from "lucide-react";
 import { DislikeReasonModal } from "./DislikeReasonModal";
+import { API_BASE_URL } from "@/shared/types/types";
 
 type ResourceResponse = {
   resource_type: string;
@@ -50,7 +51,7 @@ export const ResourceDetails: React.FC<Props> = ({
 
   const handleDislikeReason = async (reason: string) => {
     try {
-      await fetch("http://localhost:8000/feedback", {
+      await fetch(`${API_BASE_URL}/feedback`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -71,9 +72,7 @@ export const ResourceDetails: React.FC<Props> = ({
   useEffect(() => {
     const fetchResource = async () => {
       try {
-        const res = await fetch(
-          `http://localhost:8000/resources/${resourceId}`
-        );
+        const res = await fetch(`${API_BASE_URL}/resources/${resourceId}`);
         if (!res.ok) throw new Error("Failed to fetch resource");
         const data = await res.json();
         setResource(data);
