@@ -37,6 +37,7 @@ export async function fetchRoadmapData(userId: string): Promise<{
   rawNodes: RawNode[];
   rawLinks: RawLink[];
   initialProgress: Record<string, Progress>;
+  roadmapId: string;
 }> {
   try {
     const response = await fetch(
@@ -71,7 +72,12 @@ export async function fetchRoadmapData(userId: string): Promise<{
       }
     });
 
-    return { rawNodes, rawLinks, initialProgress };
+    return {
+      rawNodes,
+      rawLinks,
+      initialProgress,
+      roadmapId: roadmapInfo.roadmap_id,
+    };
   } catch (error) {
     console.error("Error fetching roadmap data:", error);
     throw error;

@@ -12,8 +12,9 @@ import Link from "next/link";
 import { CustomSelect } from "./select";
 import { fetchRoadmapData } from "@/shared/utils/roadmapConverter";
 import { RawLink } from "@/shared/types/types";
+import { ResourceDetails } from "./resource-details";
 
-export const WORLD_SIZE = 6000;
+export const WORLD_SIZE = 5000;
 const SPACING = 30;
 const dotRadius = 1;
 const dotColor = "#ccc";
@@ -38,6 +39,7 @@ export const RoadmapNew: React.FC<Props> = ({ userId, initialNodeId }) => {
   const [selectedNode, setSelectedNode] = useState<string | null>(
     initialNodeId || null
   );
+  const [roadmapId, setRoadmapId] = useState<string>("");
 
   const { nodes, measuring, measureElements } = useRoadmapLayout(
     rawNodes,
@@ -46,6 +48,10 @@ export const RoadmapNew: React.FC<Props> = ({ userId, initialNodeId }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const lastPos = useRef({ x: 0, y: 0 });
+  const [prevOffsetBeforeSelection, setPrevOffsetBeforeSelection] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
 
   useEffect(() => {
     const loadData = async () => {
@@ -55,6 +61,7 @@ export const RoadmapNew: React.FC<Props> = ({ userId, initialNodeId }) => {
         setRawLinks(data.rawLinks);
         setInitialProgress(data.initialProgress);
         setProgressMap(data.initialProgress);
+        setRoadmapId(data.roadmapId);
       } catch (err) {
         setError("Failed to load roadmap data");
         console.error("Error loading roadmap data:", err);
@@ -85,7 +92,7 @@ export const RoadmapNew: React.FC<Props> = ({ userId, initialNodeId }) => {
   const checkLimit = (pos: { x: number; y: number }) => {
     const container = containerRef.current;
     if (!container) return pos;
-    const halfWidth = container.clientWidth / 2;
+    const halfWidth = container.clientWidth;
     return {
       x: Math.min(0, Math.max(pos.x, halfWidth - WORLD_SIZE)),
       y: Math.min(0, Math.max(pos.y, container.clientHeight - WORLD_SIZE)),
@@ -133,6 +140,7 @@ export const RoadmapNew: React.FC<Props> = ({ userId, initialNodeId }) => {
   };
 
   const handleOnNodeClick = (nodeId: string) => {
+    setPrevOffsetBeforeSelection(offset);
     setSelectedNode(nodeId);
 
     window.history.pushState(null, "", `/roadmap/${userId}/${nodeId}`);
@@ -153,6 +161,10 @@ export const RoadmapNew: React.FC<Props> = ({ userId, initialNodeId }) => {
   const handleClose = () => {
     setSelectedNode(null);
     window.history.pushState(null, "", `/roadmap/${userId}`);
+    if (prevOffsetBeforeSelection) {
+      animateTo(prevOffsetBeforeSelection.x, prevOffsetBeforeSelection.y);
+      setPrevOffsetBeforeSelection(null);
+    }
   };
 
   const drawLinks = () => {
@@ -180,8 +192,27 @@ export const RoadmapNew: React.FC<Props> = ({ userId, initialNodeId }) => {
     });
   };
 
-  const handleProgressChange = (nodeId: string, newProgress: Progress) => {
+  const handleProgressChange = async (
+    nodeId: string,
+    newProgress: Progress
+  ) => {
     setProgressMap((prev) => ({ ...prev, [nodeId]: newProgress }));
+
+    try {
+      await fetch("http://localhost:8000/node/", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          node_id: nodeId,
+          progress: newProgress,
+        }),
+      });
+      console.log("Progress updated");
+    } catch (err) {
+      console.error("Failed to update progress", err);
+    }
   };
 
   const selectedNodeData: PositionedNode | null = selectedNode
@@ -289,128 +320,29 @@ export const RoadmapNew: React.FC<Props> = ({ userId, initialNodeId }) => {
 
       <div
         className={`
-          absolute top-0 right-0 h-full w-1/2 bg-none p-6 overflow-auto z-10
-          transition-all duration-300
-          ${
-            selectedNode
-              ? "opacity-100 visible pointer-events-auto"
-              : "opacity-0 invisible pointer-events-none"
-          }
-        `}
+    absolute top-0 right-0 h-full w-1/2 bg-none p-6 overflow-auto z-10
+    transition-all duration-300
+    ${
+      selectedNode
+        ? "opacity-100 visible pointer-events-auto"
+        : "opacity-0 invisible pointer-events-none"
+    }
+  `}
       >
         <div className="w-full h-full">
-          <div
-            className="relative flex flex-col h-full p-6 rounded-md shadow-md overflow-auto
-               bg-bg-main text-ui-dark border border-ui-border"
-          >
-            <button
-              onClick={handleClose}
-              aria-label="Close"
-              className="absolute top-4 right-4 w-8 h-8 flex-center rounded-full
-                 text-ui-muted hover:text-ui-dark
-                 cursor-pointer
-                 transition-colors duration-200 ease-in-out"
-              title="Закрыть"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-5 h-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-
-            {selectedNodeData && (
-              <>
-                <h3 className="text-3xl font-extrabold mb-4 text-brand-primary">
-                  {selectedNodeData.title}
-                </h3>
-                <p className="mb-4 text-lg leading-relaxed">
-                  {selectedNodeData.summary}
-                </p>
-
-                <label
-                  htmlFor="progress-select"
-                  className="block font-semibold mb-2"
-                >
-                  Прогресс
-                </label>
-                <CustomSelect
-                  className="mb-4"
-                  options={["Not started", "In progress", "Done"]}
-                  value={selectedNodeProgress}
-                  onChange={(val) =>
-                    handleProgressChange(selectedNodeData.id, val)
-                  }
-                />
-
-                <Link
-                  href="https://stepik.org/course/98974/promo?search=7287873917"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mb-6 w-fit text-brand-primary underline hover:text-yellow-400 transition"
-                >
-                  Перейти к курсу
-                </Link>
-
-                <div className="grid grid-cols-2 gap-x-12 gap-y-4 text-ui-dark text-sm font-semibold">
-                  <div className="flex-between">
-                    <span className="text-ui-muted">Уровень:</span>
-                    <span>Beginner</span>
-                  </div>
-                  <div className="flex-between">
-                    <span className="text-ui-muted">Цена:</span>
-                    <span>Бесплатно</span>
-                  </div>
-                  <div className="flex-between">
-                    <span className="text-ui-muted">Язык:</span>
-                    <span>Russian</span>
-                  </div>
-                  <div className="flex-between">
-                    <span className="text-ui-muted">Длительность:</span>
-                    <span>10 часов</span>
-                  </div>
-                  <div className="flex-between">
-                    <span className="text-ui-muted">Платформа:</span>
-                    <span>KIZAK</span>
-                  </div>
-                  <div className="flex-between">
-                    <span className="text-ui-muted">Рейтинг:</span>
-                    <span>0</span>
-                  </div>
-                  <div className="flex-between">
-                    <span className="text-ui-muted">Дата публикации:</span>
-                    <span>2015-05-01</span>
-                  </div>
-                  <div className="flex-between">
-                    <span className="text-ui-muted">Сертификат:</span>
-                    <span className="text-status-success">Доступен</span>
-                  </div>
-                  <div className="col-span-2 mt-4">
-                    <span className="text-ui-muted font-semibold mb-2">
-                      Изучаемые навыки:
-                    </span>
-                    <div className="mt-1 flex flex-wrap gap-2">
-                      <span className="px-2 py-1 rounded shadow-sm font-medium border border-ui-border text-ui-dark">
-                        Python
-                      </span>
-                      <span className="px-2 py-1 rounded shadow-sm font-medium border border-ui-border text-ui-dark">
-                        OOP
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </>
-            )}
-          </div>
+          {selectedNode && (
+            <ResourceDetails
+              resourceId={selectedNode}
+              onClose={handleClose}
+              progress={selectedNodeProgress}
+              onProgressChange={(val) =>
+                handleProgressChange(selectedNode, val as Progress)
+              }
+              node_id={selectedNode}
+              roadmap_id={roadmapId}
+              user_id={userId}
+            />
+          )}
         </div>
       </div>
     </div>

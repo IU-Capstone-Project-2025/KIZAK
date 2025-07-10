@@ -8,6 +8,7 @@ import { MainTasks } from "./tasks";
 import { MainCat } from "./cat";
 import { TransitionLink } from "../transition/transition-link";
 import { UserProfileMain } from "./user-profile-main";
+import { Progress } from "@/shared/types/types";
 
 interface UserSkill {
   skill: string;
@@ -30,8 +31,14 @@ interface ProfileResponse {
   user: UserData;
   roadmap_id: string;
   progress: number;
-  history: string[];
+  history: HistoryItem[];
 }
+
+export type HistoryItem = {
+  node_id: string;
+  title: string;
+  progress: Progress;
+};
 
 interface Props {
   className?: string;
@@ -87,7 +94,11 @@ export const MainContent: React.FC<Props> = ({ className = "", userId }) => {
           tags={profile.user.skills.map((s) => s.skill)}
         />
         <div className="flex-1 flex flex-col gap-y-3 min-w-[300px]">
-          <MainTasks className="flex-1" />
+          <MainTasks
+            histotyItems={profile.history}
+            className="flex-1"
+            userId={userId}
+          />
           <MainCat className="flex-1" />
         </div>
       </div>
