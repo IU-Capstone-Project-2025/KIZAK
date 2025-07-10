@@ -50,7 +50,7 @@ async def authenticate_user(login: str, password: str):
     return user
 
 
-@router.post('/login', response_model=Token, tags=["User"],
+@router.post('/login', tags=["User"],
              status_code=status.HTTP_200_OK)
 async def log_in(
         form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
