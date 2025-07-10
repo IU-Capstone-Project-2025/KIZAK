@@ -29,20 +29,17 @@ export default function Login() {
     try {
       const hashedPassword = await hashPassword(password);
 
-      const formData = {
-        grant_type: "password",
-        username: login,
-        password: hashedPassword,
-      };
-
-      console.log(formData);
+      const formData = new URLSearchParams();
+      formData.append("grant_type", "password");
+      formData.append("username", login);
+      formData.append("password", hashedPassword);
 
       const res = await fetch(`${API_BASE_URL}/login`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/x-www-form-urlencoded",
         },
-        body: JSON.stringify(formData),
+        body: formData.toString(),
       });
 
       if (!res.ok) {
@@ -60,7 +57,6 @@ export default function Login() {
 
       const data = await res.json();
       const userId = data.user_id;
-
       handleClick(`/main/${userId}`, 0);
     } catch (error) {
       console.error("Ошибка при входе:", error);
