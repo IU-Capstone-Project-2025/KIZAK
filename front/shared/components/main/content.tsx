@@ -48,6 +48,8 @@ export const MainContent: React.FC<Props> = ({ className = "", userId }) => {
   const [profile, setProfile] = useState<ProfileResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isTallScreen, setIsTallScreen] = useState(false);
+
 
   useEffect(() => {
     async function fetchProfile() {
