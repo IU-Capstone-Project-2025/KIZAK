@@ -1,3 +1,5 @@
+export const API_URL = `https://${process.env.API_HOST}:${process.env.API_PORT}`;
+
 export type SkillLevels = "Beginner" | "Intermediate" | "Advanced";
 
 export interface ChosenSkill {

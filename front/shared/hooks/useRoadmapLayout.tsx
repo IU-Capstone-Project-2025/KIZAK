@@ -7,6 +7,7 @@ export type RawNode = {
   node_id: string;
   title: string;
   summary: string;
+  resource_id: string;
 };
 
 type RawLink = {

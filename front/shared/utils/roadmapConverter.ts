@@ -2,6 +2,7 @@ type RawNode = {
   node_id: string;
   title: string;
   summary: string;
+  resource_id: string;
 };
 
 type RawLink = {
@@ -53,6 +54,7 @@ export async function fetchRoadmapData(userId: string): Promise<{
       node_id: node.node_id,
       title: node.title,
       summary: node.summary,
+      resource_id: node.resource_id,
     }));
 
     const rawLinks: RawLink[] = roadmapInfo.links.map((link) => ({

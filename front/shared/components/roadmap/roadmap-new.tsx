@@ -219,6 +219,12 @@ export const RoadmapNew: React.FC<Props> = ({ userId, initialNodeId }) => {
     ? nodes.find((n) => n.id === selectedNode) ?? null
     : null;
 
+  const selectedRawNode = selectedNode
+    ? rawNodes.find((n) => n.node_id === selectedNode) ?? null
+    : null;
+
+  const selectedResourceId = selectedRawNode?.resource_id ?? null;
+
   const selectedNodeProgress: Progress = selectedNode
     ? progressMap[selectedNode]
     : "Not started";
@@ -332,7 +338,7 @@ export const RoadmapNew: React.FC<Props> = ({ userId, initialNodeId }) => {
         <div className="w-full h-full">
           {selectedNode && (
             <ResourceDetails
-              resourceId={selectedNode}
+              resourceId={selectedResourceId ?? ""}
               onClose={handleClose}
               progress={selectedNodeProgress}
               onProgressChange={(val) =>
