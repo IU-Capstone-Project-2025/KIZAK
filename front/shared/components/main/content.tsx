@@ -8,7 +8,7 @@ import { MainTasks } from "./tasks";
 import { MainCat } from "./cat";
 import { TransitionLink } from "../transition/transition-link";
 import { UserProfileMain } from "./user-profile-main";
-import { Progress } from "@/shared/types/types";
+import { API_BASE_URL, Progress } from "@/shared/types/types";
 
 interface UserSkill {
   skill: string;
@@ -54,9 +54,7 @@ export const MainContent: React.FC<Props> = ({ className = "", userId }) => {
     async function fetchProfile() {
       try {
         setLoading(true);
-        const res = await fetch(
-          `http://localhost:8000/users/profile/${userId}/`
-        );
+        const res = await fetch(`${API_BASE_URL}/users/profile/${userId}/`);
         if (!res.ok)
           throw new Error(`Failed to fetch profile: ${res.statusText}`);
         const data: ProfileResponse = await res.json();

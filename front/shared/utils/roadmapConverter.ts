@@ -1,3 +1,5 @@
+import { API_BASE_URL } from "../types/types";
+
 type RawNode = {
   node_id: string;
   title: string;
@@ -42,7 +44,7 @@ export async function fetchRoadmapData(userId: string): Promise<{
 }> {
   try {
     const response = await fetch(
-      `http://localhost:8000/roadmap_by_user_id/${userId}`
+      `${API_BASE_URL}/roadmap_by_user_id/${userId}`
     );
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
