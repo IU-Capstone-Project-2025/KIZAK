@@ -80,6 +80,8 @@ export default function OnBoarding() {
           body: JSON.stringify(payload),
         });
 
+        console.log(payload);
+
         if (!response.ok) {
           let errorText = "Ошибка при создании пользователя";
           try {
