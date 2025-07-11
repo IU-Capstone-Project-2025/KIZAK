@@ -1,0 +1,130 @@
+[
+  {
+    "title": "Python Data Structures",
+    "url": "https://www.classcentral.com/course/python-data-4174",
+    "rating": "4.89339",
+    "num_reviews": "17578",
+    "language": null,
+    "duration": "18 hours",
+    "syllabus": [
+      {
+        "title": "Chapter Six: Strings",
+        "details": null
+      },
+      {
+        "title": "Unit: Installing and Using Python",
+        "details": null
+      },
+      {
+        "title": "Chapter Seven: Files",
+        "details": null
+      },
+      {
+        "title": "Chapter Eight: Lists",
+        "details": null
+      },
+      {
+        "title": "Chapter Nine: Dictionaries",
+        "details": null
+      },
+      {
+        "title": "Chapter Ten: Tuples",
+        "details": null
+      },
+      {
+        "title": "Graduation",
+        "details": null
+      }
+    ]
+  },
+  {
+    "title": "Programming for Everybody (Getting Started with Python)",
+    "url": "https://www.classcentral.com/course/python-4319",
+    "rating": "4.86376",
+    "num_reviews": "46829",
+    "language": null,
+    "duration": "4 hours",
+    "syllabus": [
+      {
+        "title": "Chapter One - Why we Program?",
+        "details": null
+      },
+      {
+        "title": "Installing Python",
+        "details": null
+      },
+      {
+        "title": "Chapter One: Why We Program (continued)",
+        "details": null
+      },
+      {
+        "title": "Chapter Two: Variables and Expressions",
+        "details": null
+      },
+      {
+        "title": "Chapter Three: Conditional Code",
+        "details": null
+      },
+      {
+        "title": "Chapter Four: Functions",
+        "details": null
+      },
+      {
+        "title": "Chapter Five: Loops and Iteration",
+        "details": null
+      }
+    ]
+  },
+  {
+    "title": "Introduction to Computer Science and Programming Using Python.",
+    "url": "https://www.classcentral.com/course/computer-science-massachusetts-institute-of-techn-1341",
+    "rating": "4.48855",
+    "num_reviews": "131",
+    "language": null,
+    "duration": "2 months",
+    "syllabus": null
+  },
+  {
+    "title": "Using Databases with Python",
+    "url": "https://www.classcentral.com/course/python-databases-4272",
+    "rating": null,
+    "num_reviews": null,
+    "language": null,
+    "duration": null,
+    "syllabus": null
+  },
+  {
+    "title": "Using Python to Access Web Data",
+    "url": "https://www.classcentral.com/course/python-network-data-4343",
+    "rating": "4.6775",
+    "num_reviews": "6000",
+    "language": null,
+    "duration": "10 weeks",
+    "syllabus": [
+      {
+        "title": "Getting Started",
+        "details": null
+      },
+      {
+        "title": "Regular Expressions (Chapter 11)",
+        "details": null
+      },
+      {
+        "title": "Networks and Sockets (Chapter 12)",
+        "details": null
+      },
+      {
+        "title": "Programs that Surf the Web (Chapter 12)",
+        "details": null
+      },
+      {
+        "title": "Web Services and XML (Chapter 13)",
+        "details": null
+      },
+      {
+        "title": "JSON and the REST Architecture (Chapter 13)",
+        "details": null
+      }
+    ]
+  }
+]
