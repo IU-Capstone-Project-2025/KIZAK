@@ -25,6 +25,8 @@ search_engine = CourseVectorSearch()
 ranker = CourseRanker(PRIORITIES_BY_ROLE)
 analyzer = SkillGapAnalyzer(ROLE_TO_SKILLS)   
 
+ranks = dict()
+
 app = FastAPI()
 
 @app.get("/user_skills/")
@@ -36,6 +38,8 @@ async def generate_roadmap(data: RoadmapData) -> RoadmapResponse:
     missing_skills = analyzer.compute_gap(data.user_skills, data.user_role)['missing_skills']
     best_courses = search_engine.get_courses(data.user_role, data.user_query, data.user_skills)
     ranked_courses = ranker.rank_courses(best_courses, missing_skills, data.user_skills, data.user_role)
+
+    ranks[data.user_id] = ranked_courses
 
     nodes = []
     for idx, course_entry in enumerate(ranked_courses[:10]):
@@ -62,7 +66,8 @@ async def generate_roadmap(data: RoadmapData) -> RoadmapResponse:
 
 @app.post("/update_roadmap/")
 async def update_roadmap(data: RoadmapUpdateData) -> RoadmapResponse:
-    ranked_courses = ranker.update_ranking()
+    ranked_courses = ranker.update_ranking(ranks[data.user_id], data.reason)
+    ranks[data.user_id] = ranked_courses
     nodes = []
     for idx, course_entry in enumerate(ranked_courses[:10]):
         details = course_entry["course"]["details"]

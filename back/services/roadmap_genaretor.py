@@ -1,7 +1,7 @@
 from typing import List
 from uuid import UUID
 
-from db.roadmap import create_roadmap, create_node, create_link
+from db.roadmap import create_roadmap, create_node, create_link, remove_roadmap
 from db.db_connector import db
 
 from models.roadmap import RoadmapInfo, RoadmapCreate
@@ -20,6 +20,7 @@ async def generate_roadmap(
 ) -> RoadmapInfo:
     try:
         data = {
+            "user_id": user_id,
             "user_role": user_role,
             "user_skills": [skill.skill for skill in user_skills],
             "user_query": user_query
@@ -84,11 +85,29 @@ async def update_roadmap(
     roadmap_id: UUID
 ) -> RoadmapInfo:
     try:
-        data = {}
+        feedback_row = await db.fetchrow(
+            """
+                SELECT
+                    user_id,
+                    node_id,
+                    reason
+                WHERE
+                    user_id = $1
+            """,
+            user_id
+        )
+
+        data = {
+            "user_id": user_id,
+            "reason": feedback_row["reason"]
+        }
+
         response = requests.post("http://ml:8001/update_roadmap/", json=data)
         response.raise_for_status()
         roadmap_info = response.json()
         
+        await remove_roadmap(roadmap_id)
+
         roadmap = await create_roadmap(
             RoadmapCreate(user_id=user_id)
         )
