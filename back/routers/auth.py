@@ -84,3 +84,5 @@ async def signup(
     logger.info(f"Created user {user.user_id}")
     response.headers["Location"] = f"/users/{user.user_id}"
     return user
+
+
