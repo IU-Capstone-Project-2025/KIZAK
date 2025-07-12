@@ -1,11 +1,6 @@
 import uvicorn
 from db.db_connector import db
 
-from services.vector_search import CourseVectorSearch
-from services.ranker import CourseRanker
-from services.skipGapAnalyzer import SkillGapAnalyzer
-from utils.conf import USER_SKILLS, ROLE_TO_SKILLS, PRIORITIES_BY_ROLE
-
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
