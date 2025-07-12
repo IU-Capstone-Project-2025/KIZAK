@@ -97,7 +97,7 @@ export const MainContent: React.FC<Props> = ({ className = "", userId }) => {
             className="flex-1"
             userId={userId}
           />
-          <MainCat className="flex-1" />
+          
         </div>
       </div>
     </div>

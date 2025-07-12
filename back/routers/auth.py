@@ -84,3 +84,23 @@ async def signup(
     logger.info(f"Created user {user.user_id}")
     response.headers["Location"] = f"/users/{user.user_id}"
     return user
+
+
+
+
+@router.post('/reset-password', tags=["User"], status_code=status.HTTP_200_OK)
+async def reset_password(payload: UserPassword):
+    """Reset user password by login (no email/token, insecure for production)."""
+    user = await retrieve_user_by_login(payload.login)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    from db.user import update_user
+    from models.user import UserUpdate
+    from utils.security import get_password_hash
+    user_update = UserUpdate(user_id=user.user_id, password=get_password_hash(payload.password))
+    await update_user(user_update)
+    logger.info(f"Password reset for user {payload.login}")
+    return {"message": "Password reset successful"}
+
+
+
