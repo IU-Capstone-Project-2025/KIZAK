@@ -6,7 +6,12 @@ import { getScreens } from "@/shared/utils/getScreens";
 import { usePageTransition } from "@/shared/components/transition/transition-provider";
 import { API_BASE_URL, OnboardingData } from "@/shared/types/types";
 
-export default function OnBoarding() {
+interface OnBoardingProps {
+  isEditing?: boolean;
+  userId?: string;
+}
+
+export function OnBoardingEdit({ isEditing = false, userId }: OnBoardingProps) {
   const defaultUserData: OnboardingData = {
     login: "",
     password: "",
@@ -17,23 +22,37 @@ export default function OnBoarding() {
     goal_vacancy: "",
   };
 
-  async function hashPassword(password: string): Promise<string> {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(password);
-    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    const hashHex = hashArray
-      .map((b) => b.toString(16).padStart(2, "0"))
-      .join("");
-    return hashHex;
-  }
-
   const [userData, setUserData] = useState<OnboardingData>(defaultUserData);
+  const [skillOrder, setSkillOrder] = useState<string[] | null>(null);
+  const [loading, setLoading] = useState<boolean>(isEditing);
   const [step, setStep] = useState<number>(0);
   const [displayedStep, setDisplayedStep] = useState<number>(0);
   const [animating, setAnimating] = useState<boolean>(false);
   const { handleClick } = usePageTransition();
-  const [skillOrder, setSkillOrder] = useState<string[] | null>(null);
+
+  useEffect(() => {
+    if (isEditing && userId) {
+      fetch(`${API_BASE_URL}/users/${userId}/`)
+        .then((res) => res.json())
+        .then((data) => {
+          const loadedData: OnboardingData = {
+            login: data.login,
+            password: "",
+            background: data.background || "",
+            education: data.education || "",
+            skills: data.skills || [],
+            goals: data.goals || "",
+            goal_vacancy: data.goal_vacancy || "",
+          };
+          setUserData(loadedData);
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.error("Failed to load user profile", err);
+          setLoading(false);
+        });
+    }
+  }, [isEditing, userId]);
 
   useEffect(() => {
     const currentSkills = userData.skills
@@ -59,29 +78,46 @@ export default function OnBoarding() {
   }, [userData.skills]);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    if (!isEditing && typeof window !== "undefined") {
       const savedUserData = localStorage.getItem("onboardingUserData");
-      if (savedUserData) setUserData(JSON.parse(savedUserData));
-
       const savedStep = localStorage.getItem("onboardingStep");
+
+      if (savedUserData) {
+        const parsed = JSON.parse(savedUserData);
+        setUserData(parsed);
+
+        const order = parsed.skills
+          .filter((s: any) => !s.is_goal)
+          .map((s: any) => s.skill);
+        setSkillOrder(order);
+      }
+
       if (savedStep) {
         setStep(Number(savedStep));
         setDisplayedStep(Number(savedStep));
       }
     }
-  }, []);
+  }, [isEditing]);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    if (!isEditing && typeof window !== "undefined") {
       localStorage.setItem("onboardingUserData", JSON.stringify(userData));
     }
-  }, [userData]);
+  }, [userData, isEditing]);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    if (!isEditing && typeof window !== "undefined") {
       localStorage.setItem("onboardingStep", String(step));
     }
-  }, [step]);
+  }, [step, isEditing]);
+
+  async function hashPassword(password: string): Promise<string> {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+  }
 
   const goToNextStep = async () => {
     if (step < screens.length - 1) {
@@ -93,6 +129,30 @@ export default function OnBoarding() {
       }, 300);
     } else {
       try {
+        if (isEditing && userId) {
+          const updatedUserData = {
+            ...userData,
+            user_id: userId,
+            password: undefined,
+          };
+
+          const response = await fetch(`${API_BASE_URL}/users/`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(updatedUserData),
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.detail || "Failed to update profile");
+          }
+
+          handleClick(`/main/${userId}`, 0);
+          return;
+        }
+
         const hashedPassword = await hashPassword(userData.password);
         const payload = { ...userData, password: hashedPassword };
 
@@ -118,12 +178,13 @@ export default function OnBoarding() {
         }
 
         const data = await response.json();
-        const userId = data.user_id;
+
         if (typeof window !== "undefined") {
           localStorage.removeItem("onboardingUserData");
           localStorage.removeItem("onboardingStep");
         }
-        handleClick(`/main/${userId}`, 0);
+
+        handleClick(`/main/${data.user_id}`, 0);
       } catch (error) {
         console.error("Ошибка при завершении онбординга:", error);
       }
@@ -141,14 +202,22 @@ export default function OnBoarding() {
     }
   };
 
+  if (loading || !skillOrder) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p>Загрузка данных...</p>
+      </div>
+    );
+  }
+
   const screens = getScreens(
     userData,
     setUserData,
     goToNextStep,
     goToPreviousStep,
-    false,
-    "",
-    skillOrder || []
+    isEditing,
+    userId!,
+    skillOrder
   );
 
   return (
@@ -175,7 +244,6 @@ export default function OnBoarding() {
         <section className={animating ? "fade-slide-out" : "fade-slide-in"}>
           {screens[displayedStep]}
         </section>
-
         <ProgressDots totalSteps={screens.length} currentStep={step} />
       </div>
     </div>

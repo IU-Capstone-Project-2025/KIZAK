@@ -73,25 +73,25 @@ export const MainContent: React.FC<Props> = ({ className = "", userId }) => {
   if (!profile) return <div>No profile data</div>;
 
   return (
-    <div className={`h-full flex flex-col gap-y-4 ${className}`}>
-      <MainTop />
+    <div className={`h-full flex flex-col gap-y-4 flex-1 ${className}`}>
+      <MainTop user_name={profile.user.login} />
       <TransitionLink delay={2000} href={`/roadmap/${userId}`}>
         <MainRoadmap />
       </TransitionLink>
-      <div className="flex-1 flex flex-wrap gap-4 h-[45%]">
+      <div className="flex-1 flex flex-wrap gap-4">
         <MainProgress
           progress={profile.progress}
-          className="flex-1 min-w-[300px]"
+          className="basis-[300px] grow"
           userId={userId}
         />
         <UserProfileMain
           userName={profile.user.login}
           userImage="/userProfile.jpg"
-          className="flex-1 min-w-[300px]"
+          className="basis-[300px] grow"
           userGoal={profile.user.goals}
           tags={profile.user.skills.map((s) => s.skill)}
         />
-        <div className="flex-1 flex flex-col gap-y-3 min-w-[300px]">
+        <div className="flex flex-col gap-y-3 basis-[300px] grow">
           <MainTasks
             histotyItems={profile.history}
             className="flex-1"
