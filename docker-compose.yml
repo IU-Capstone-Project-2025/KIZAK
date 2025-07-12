@@ -20,6 +20,29 @@ services:
         required: True
       - path: ./.env
         required: false
+  ml:
+    build:
+      context: ./ml
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./ml:/app
+      - ./ml/models/huggingface:/root/.cache/huggingface
+    environment:
+      - PYTHONUNBUFFERED=1
+      - HF_HOME=/models
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      backend:
+        condition: service_started
+    env_file:
+      - path: ./.env.example
+        required: True
+      - path: ./.env
+        required: false
   frontend:
     build:
       context: ./front
