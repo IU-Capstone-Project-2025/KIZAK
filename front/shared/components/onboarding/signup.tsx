@@ -23,7 +23,6 @@ export const SignUp: React.FC<Props> = ({ setData, userData, onNext }) => {
     try {
       const res = await fetch(`${API_BASE_URL}/check_login/${login}`);
       const data = await res.json();
-      console.log(data);
       if (data.exists) {
         setLoginError("Login already exists");
       } else {
@@ -126,9 +125,7 @@ export const SignUp: React.FC<Props> = ({ setData, userData, onNext }) => {
           disabled={!isValid}
           onClick={handleAcceptData}
           className={`h-[50px] w-100 py-2 text-white font-semibold rounded-md transition-all duration-300 ${
-            isValid
-              ? "bg-brand-primary"
-              : "bg-brand-primary/50 cursor-not-allowed"
+            isValid ? "bg-brand-primary" : "bg-ui-muted/90 cursor-not-allowed"
           }`}
         >
           {checkingLogin ? "Checking..." : "Continue"}

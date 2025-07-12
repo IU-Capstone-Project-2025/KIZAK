@@ -66,7 +66,13 @@ export const Tags: React.FC<TagsProps> = ({
   function handleAcceptData() {
     if (error) return;
     if (isValid) {
-      setData({ ...userData, skills: [...userData.skills, ...skills] });
+      setData((prev) => {
+        const filtered = prev.skills.filter((s) => s.is_goal !== isGoal);
+        return {
+          ...prev,
+          skills: [...filtered, ...skills],
+        };
+      });
       onNext();
     }
   }
@@ -88,16 +94,18 @@ export const Tags: React.FC<TagsProps> = ({
   };
 
   const handleChooseTag = (tag: string) => {
-    if (singleChoice) {
-      setSkills([{ skill: tag, is_goal: isGoal, skill_level: "Beginner" }]);
-    } else {
-      if (!skills.some((s) => s.skill === tag)) {
-        setSkills((prev) => [
-          ...prev,
-          { skill: tag, is_goal: isGoal, skill_level: "Beginner" },
-        ]);
-      }
+    const conflictingTags = userData.skills
+      .filter((s) => s.is_goal !== isGoal)
+      .map((s) => s.skill);
+
+    if (skills.some((s) => s.skill === tag) || conflictingTags.includes(tag)) {
+      return;
     }
+
+    setSkills((prev) => [
+      ...prev,
+      { skill: tag, is_goal: isGoal, skill_level: "Beginner" },
+    ]);
 
     setText("");
     setShowDropdown(false);
@@ -128,17 +136,31 @@ export const Tags: React.FC<TagsProps> = ({
                 : "opacity-0 scale-95 invisible"
             } origin-top`}
           >
-            {filteredSkills.map((skill) => (
-              <li key={skill} className="w-full">
-                <button
-                  type="button"
-                  onClick={() => handleChooseTag(skill)}
-                  className="w-full text-left px-4 py-2 hover:bg-bg-subtle text-ui-dark transition"
-                >
-                  {skill}
-                </button>
-              </li>
-            ))}
+            {filteredSkills.map((skill) => {
+              const isAlreadyChosen =
+                skills.some((s) => s.skill === skill) ||
+                userData.skills.some(
+                  (s) => s.skill === skill && s.is_goal !== isGoal
+                );
+
+              return (
+                <li key={skill} className="w-full">
+                  <button
+                    type="button"
+                    onClick={() => handleChooseTag(skill)}
+                    disabled={isAlreadyChosen}
+                    className={`w-full text-left px-4 py-2 transition ${
+                      isAlreadyChosen
+                        ? "text-ui-muted cursor-not-allowed"
+                        : "hover:bg-bg-subtle text-ui-dark"
+                    }`}
+                  >
+                    {skill}
+                    {isAlreadyChosen && " (already selected)"}
+                  </button>
+                </li>
+              );
+            })}
           </ul>
         </div>
 
@@ -171,7 +193,7 @@ export const Tags: React.FC<TagsProps> = ({
             className={`h-[50px] w-50 py-2 text-white font-semibold rounded-md transition-all duration-300 ${
               isValid && !error
                 ? "bg-brand-primary"
-                : "bg-brand-primary/50 cursor-not-allowed"
+                : "bg-ui-muted/90 cursor-not-allowed"
             }`}
           >
             Continue
