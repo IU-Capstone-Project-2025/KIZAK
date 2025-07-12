@@ -62,4 +62,25 @@ async def generate_roadmap(data: RoadmapData) -> RoadmapResponse:
 
 @app.post("/update_roadmap/")
 async def update_roadmap(data: RoadmapUpdateData) -> RoadmapResponse:
-    pass
+    ranked_courses = ranker.update_ranking()
+    nodes = []
+    for idx, course_entry in enumerate(ranked_courses[:10]):
+        details = course_entry["course"]["details"]
+        node = {
+            "node_id": idx,
+            "resource_id": details["id"]
+        }
+        nodes.append(node)
+
+    links = []
+    for i in range(len(nodes) - 1):
+        link = {
+            "from_node": nodes[i]['node_id'],
+            "to_node": nodes[i + 1]['node_id']
+        }
+        links.append(link)
+
+    return RoadmapResponse(
+        nodes=nodes,
+        links=links
+    )

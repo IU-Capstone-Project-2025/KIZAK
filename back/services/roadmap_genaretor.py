@@ -78,3 +78,64 @@ async def generate_roadmap(
     except requests.exceptions.RequestException as e:
         print(f"Error calling ML service: {e}")
         return None
+
+async def update_roadmap(
+    user_id: UUID,
+    roadmap_id: UUID
+) -> RoadmapInfo:
+    try:
+        data = {}
+        response = requests.post("http://ml:8001/update_roadmap/", json=data)
+        response.raise_for_status()
+        roadmap_info = response.json()
+        
+        roadmap = await create_roadmap(
+            RoadmapCreate(user_id=user_id)
+        )
+        
+        nodes = []
+        for course in roadmap_info["nodes"]:
+            resource_details = await db.fetchrow(
+                """
+                SELECT
+                    resource_id,
+                    title,
+                    summary
+                FROM
+                    resource
+                WHERE
+                    resource_id = $1
+            """,
+                course["resource_id"],
+            )
+            node = await create_node(
+                NodeCreate(
+                    roadmap_id=roadmap.roadmap_id,
+                    title=resource_details["title"],
+                    summary=resource_details["summary"],
+                    resource_id=resource_details["resource_id"],
+                    progress="Not started"
+                )
+            )
+            nodes.append(node)
+
+        links = []
+        for i in range(len(nodes) - 1):
+            link = await create_link(
+                LinkCreate(
+                    roadmap_id=roadmap.roadmap_id,
+                    from_node=nodes[i].node_id,
+                    to_node=nodes[i + 1].node_id
+                )
+            )
+            links.append(link)
+
+        return RoadmapInfo(
+            roadmap_id=roadmap.roadmap_id,
+            nodes=nodes,
+            links=links
+        )
+    except requests.exceptions.RequestException as e:
+        print(f"Error calling ML service: {e}")
+        return None
+
