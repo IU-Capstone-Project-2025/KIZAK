@@ -57,7 +57,7 @@ export const DislikeReasonModal: React.FC<Props> = ({
                 onSelect(r.value);
                 onClose();
               }}
-              className="w-full text-left px-4 py-2 rounded-md border border-gray-200 hover:bg-gray-100 transition"
+              className="w-full text-left text-ui-dark text-md font-normal px-4 py-2 rounded-md border border-gray-200 hover:bg-gray-100 transition"
             >
               {r.label}
             </button>

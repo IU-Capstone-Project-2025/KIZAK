@@ -147,7 +147,7 @@ export const ResourceDetails: React.FC<Props> = ({
       <p className="mb-4 text-lg leading-relaxed">{resource.summary}</p>
 
       <label htmlFor="progress-select" className="block font-semibold mb-2">
-        Прогресс
+        Progress
       </label>
       <CustomSelect
         className="mb-4"
@@ -162,42 +162,42 @@ export const ResourceDetails: React.FC<Props> = ({
         rel="noopener noreferrer"
         className="mb-6 w-fit text-brand-primary underline hover:text-yellow-400 transition"
       >
-        Перейти к курсу
+        Course link
       </a>
 
       <div className="grid grid-cols-2 gap-x-12 gap-y-4 text-ui-dark text-sm font-semibold">
         <div className="flex-between">
-          <span className="text-ui-muted">Уровень:</span>
+          <span className="text-ui-muted">Level:</span>
           <span>{resource.level}</span>
         </div>
         <div className="flex-between">
-          <span className="text-ui-muted">Цена:</span>
+          <span className="text-ui-muted">Price:</span>
           <span>
             {resource.price === 0 ? "Бесплатно" : `${resource.price} ₽`}
           </span>
         </div>
         <div className="flex-between">
-          <span className="text-ui-muted">Язык:</span>
+          <span className="text-ui-muted">Language:</span>
           <span>{resource.language}</span>
         </div>
         <div className="flex-between">
-          <span className="text-ui-muted">Длительность:</span>
+          <span className="text-ui-muted">Duration:</span>
           <span>{resource.duration_hours} ч.</span>
         </div>
         <div className="flex-between">
-          <span className="text-ui-muted">Платформа:</span>
+          <span className="text-ui-muted">Platform:</span>
           <span>{resource.platform}</span>
         </div>
         <div className="flex-between">
-          <span className="text-ui-muted">Рейтинг:</span>
+          <span className="text-ui-muted">Rating:</span>
           <span>{resource.rating}</span>
         </div>
         <div className="flex-between">
-          <span className="text-ui-muted">Дата публикации:</span>
+          <span className="text-ui-muted">Publication date:</span>
           <span>{resource.published_date}</span>
         </div>
         <div className="flex-between">
-          <span className="text-ui-muted">Сертификат:</span>
+          <span className="text-ui-muted">Certificate:</span>
           <span
             className={
               resource.certificate_available ? "text-status-success" : ""
@@ -208,7 +208,7 @@ export const ResourceDetails: React.FC<Props> = ({
         </div>
         <div className="col-span-2 mt-4">
           <span className="text-ui-muted font-semibold mb-2">
-            Изучаемые навыки:
+            Skills Learned:
           </span>
           <div className="mt-1 flex flex-wrap gap-2">
             {resource.skills_covered.map((skill) => (
