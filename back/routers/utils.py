@@ -1,14 +1,15 @@
 from fastapi.routing import APIRouter
-from utils.conf import USER_SKILLS
 from db.user import retrieve_user_by_login
 from fastapi.exceptions import HTTPException
+
+import requests
 
 router = APIRouter()
 
 
 @router.get("/skills_list/")
-async def get_skills_list() -> set[str]:
-    return USER_SKILLS
+async def get_skills_list():
+    return requests.get("http://ml:8001/user_skills/").json()
 
 
 @router.get("/check_login/{login}")
