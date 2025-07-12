@@ -51,6 +51,7 @@ else:
 gap_analyzer = SkillGapAnalyzer(role_to_skills)
 gap_result = gap_analyzer.compute_gap(user_skills, user_role)
 missing_skills = gap_result["missing_skills"]
+known_skills = gap_result["matched_skills"]
 print(f"\nSkill gap for '{user_role}': {missing_skills}")
 
 start_time = time.time()
@@ -75,8 +76,8 @@ logger.info('Time of query to vector db searching')
 logger.info(f"{execution_time*1000:.4f} ms")
 
 # vector search results
-print("\ntop-5 courses from vector search (before ranking):")
-for i, res in enumerate(search_results[:5]):
+print("\ntop-15 courses from vector search (before ranking):")
+for i, res in enumerate(search_results[:15]):
     details = res['details']
     print(f"{i+1}. {details['title']} (Score: {res['weighted_score']:.4f})")
     print(f"   Skills: {details.get('original_point', {}).get('skills', [])}")
@@ -95,10 +96,10 @@ for res in search_results:
 ranker = CourseRanker(priorities_by_role)
 
 # ranking courses
-ranked_courses = ranker.rank_courses(courses, missing_skills, user_role)
+ranked_courses = ranker.rank_with_fallback(courses, missing_skills, known_skills, user_role)
 
 # quality of ranking
-metrics = ranker.evaluate_ranking(ranked_courses, missing_skills, user_role)
+metrics = ranker.get_metrics()
 
 print("\nRecommended courses:")
 for i, course in enumerate(ranked_courses[:5]):
@@ -107,6 +108,9 @@ for i, course in enumerate(ranked_courses[:5]):
     print(f"   Rating: {course['course'].get('rating')}")
     print("---")
 
-print("Ranking quality metric:", metrics)
+
+print("Ranking quality metric:")
+for i, metric in enumerate(metrics):
+    print(f"{metric}: {metrics[metric]}")
 
 

@@ -4,7 +4,7 @@ import Image from "next/image";
 import { ProgressDots } from "@/shared/components/onboarding";
 import { getScreens } from "@/shared/utils/getScreens";
 import { usePageTransition } from "@/shared/components/transition/transition-provider";
-import { OnboardingData } from "@/shared/types/types";
+import { API_BASE_URL, OnboardingData } from "@/shared/types/types";
 
 export default function OnBoarding() {
   const defaultUserData: OnboardingData = {
@@ -16,6 +16,17 @@ export default function OnBoarding() {
     goals: "",
     goal_vacancy: "",
   };
+
+  async function hashPassword(password: string): Promise<string> {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
+    return hashHex;
+  }
 
   const [userData, setUserData] = useState<OnboardingData>(defaultUserData);
   const [step, setStep] = useState<number>(0);
@@ -58,13 +69,18 @@ export default function OnBoarding() {
       }, 300);
     } else {
       try {
-        const response = await fetch("http://localhost:8000/users/", {
+        const hashedPassword = await hashPassword(userData.password);
+        const payload = { ...userData, password: hashedPassword };
+
+        const response = await fetch(`${API_BASE_URL}/users/`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(userData),
+          body: JSON.stringify(payload),
         });
+
+        console.log(payload);
 
         if (!response.ok) {
           let errorText = "Ошибка при создании пользователя";

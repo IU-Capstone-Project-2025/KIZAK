@@ -1,3 +1,5 @@
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+
 export type SkillLevels = "Beginner" | "Intermediate" | "Advanced";
 
 export interface ChosenSkill {
@@ -19,4 +21,16 @@ export interface OnboardingData {
   goals: string;
   goal_vacancy: string;
   skills: UserSkill[];
+}
+export type Progress = "Done" | "In progress" | "Not started";
+
+export interface RawNode {
+  node_id: string;
+  title: string;
+  summary: string;
+}
+
+export interface RawLink {
+  from_node: string;
+  to_node: string;
 }

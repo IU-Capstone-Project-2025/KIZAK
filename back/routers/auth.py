@@ -50,11 +50,11 @@ async def authenticate_user(login: str, password: str):
     return user
 
 
-@router.post('/login', response_model=Token, tags=["User"],
+@router.post('/login', tags=["User"],
              status_code=status.HTTP_200_OK)
 async def log_in(
         form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
-) -> Token:
+):
     user = await authenticate_user(form_data.username, form_data.password)
     if not user:
         raise HTTPException(
@@ -66,7 +66,10 @@ async def log_in(
     access_token = create_access_token(
         data={"sub": user.login}, expires_delta=access_token_expires
     )
-    return Token(access_token=access_token, token_type="bearer")
+    return {
+        "token": Token(access_token=access_token, token_type="bearer"),
+        "user_id": user.user_id
+    }
 
 
 @router.post('/signup', response_model=UserResponse, tags=["User"],
