@@ -100,20 +100,6 @@ export const ResourceDetails: React.FC<Props> = ({
         >
           <X size={20} />
         </button>
-        <div className="p-6 flex-center gap-x-4">
-          <div className="text-red-600">{error}</div>
-          <button
-            onClick={() => setShowDislikeModal(true)}
-            className="w-8 h-8 flex-center text-red-500 hover:text-red-700 transition"
-          >
-            <ThumbsDown size={24} />
-          </button>
-        </div>
-        <DislikeReasonModal
-          open={showDislikeModal}
-          onClose={() => setShowDislikeModal(false)}
-          onSelect={handleDislikeReason}
-        />
       </div>
     );
 
@@ -152,6 +138,11 @@ export const ResourceDetails: React.FC<Props> = ({
         >
           <ThumbsDown size={24} />
         </button>
+        <DislikeReasonModal
+          open={showDislikeModal}
+          onClose={() => setShowDislikeModal(false)}
+          onSelect={handleDislikeReason}
+        />
       </div>
       <p className="mb-4 text-lg leading-relaxed">{resource.summary}</p>
 

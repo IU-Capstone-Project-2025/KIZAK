@@ -3,9 +3,9 @@ import { X } from "lucide-react";
 
 const reasons = [
   { value: "too_easy", label: "Слишком лёгкий / ничего нового" },
-  { value: "not_relevant", label: "Навыки не соответствуют моей цели" },
+  { value: "wrong_skills", label: "Навыки не соответствуют моей цели" },
   { value: "too_hard", label: "Слишком сложный" },
-  { value: "bad_instructor", label: "Не нравится преподаватель" },
+  { value: "bad_author", label: "Не нравится преподаватель" },
   { value: "unavailable", label: "Курс недоступен или устарел" },
 ];
 
