@@ -15,6 +15,10 @@ from passlib.context import CryptContext
 
 import os
 
+from itsdangerous import URLSafeTimedSerializer, SignatureExpired
+
+from utils.logger import logger
+
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = os.getenv("ALGORITHM")
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
@@ -59,3 +63,25 @@ async def get_current_active_user(
     if not current_user.is_active:
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
+
+
+serializer = URLSafeTimedSerializer(
+    secret_key=SECRET_KEY,
+    salt="email-configuration"
+)
+
+
+def create_url_safe_token(data: dict):
+    token = serializer.dumps(data)
+
+    return token
+
+
+def decode_url_safe_token(token: str):
+    try:
+        token_data = serializer.loads(token)
+
+        return token_data
+
+    except Exception as e:
+        logger.error(str(e))

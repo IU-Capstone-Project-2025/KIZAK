@@ -3,12 +3,14 @@ from datetime import timedelta, datetime, timezone
 
 import jwt
 from fastapi import APIRouter, HTTPException, status, Body, Response
+from fastapi.responses import JSONResponse
 from typing import Dict, Optional
 
-from models.user import UserResponse, LoginRequest, UserPassword, UserCreate
+from models.user import UserResponse, LoginRequest, UserPassword, UserCreate, \
+    UserUpdate
 from models import user as user_model
 from utils.logger import logger
-from db.user import create_user, retrieve_user_by_login
+from db.user import create_user, retrieve_user_by_login, update_user
 
 from fastapi.security import OAuth2PasswordRequestForm
 from typing_extensions import Annotated
@@ -17,9 +19,18 @@ from uuid import UUID
 from fastapi import Response, status, Depends
 from fastapi.routing import APIRouter
 from models.token import Token
-from utils.security import oauth2_scheme, get_password_hash, verify_password
+from utils.security import oauth2_scheme, get_password_hash, verify_password, \
+    create_url_safe_token, decode_url_safe_token
+
+from models.auth import PasswordResetRequestModel, PasswordResetConfirmModel
 
 import os
+
+from config import Config
+
+from mail.mail import mail, create_message
+
+from db.user import retrieve_user_by_email
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = os.getenv("ALGORITHM")
@@ -50,7 +61,7 @@ async def authenticate_user(login: str, password: str):
     return user
 
 
-@router.post('/login', tags=["User"],
+@router.post('/login/', tags=["User"],
              status_code=status.HTTP_200_OK)
 async def log_in(
         form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
@@ -72,7 +83,7 @@ async def log_in(
     }
 
 
-@router.post('/signup', response_model=UserResponse, tags=["User"],
+@router.post('/signup/', response_model=UserResponse, tags=["User"],
              status_code=status.HTTP_201_CREATED)
 async def signup(
         payload: UserCreate,
@@ -83,4 +94,102 @@ async def signup(
     user = await create_user(payload)
     logger.info(f"Created user {user.user_id}")
     response.headers["Location"] = f"/users/{user.user_id}"
+
+    token = create_url_safe_token({"mail": payload.mail})
+
+    link = f"http://{Config.DOMAIN}/verify/{token}"
+
+    html_message = f"""
+    <h1>Verify your Email</h1>
+    <p>Please click this <a href="{link}">link</a> to verify your email</p>
+    """
+
+    message = create_message(
+        recipients=[payload.mail],
+        subject="Verify your Email",
+        body=html_message
+    )
+
+    await mail.send_message(message)
+
     return user
+
+
+@router.get("/verify/{token}", tags=["User"])
+async def verify_user_account(token: str):
+    token_data = decode_url_safe_token(token)
+    user_email = token_data.get('mail')
+    if user_email:
+        user = await retrieve_user_by_email(user_email)
+
+        logger.info(f"user_info: {user}")
+
+        updated_user = UserUpdate(
+            user_id=user.user_id,
+            is_verified=True
+        )
+
+        await update_user(updated_user)
+
+        return JSONResponse(content={
+            "message": "Account verified successfully"
+        }, status_code=status.HTTP_200_OK)
+
+    return JSONResponse(content={
+        "message": "Error occurred during verification"
+    }, status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@router.post("/password-reset-request", tags=["User"])
+async def password_reset_request(mail_data: PasswordResetRequestModel):
+    token = create_url_safe_token({"mail": mail_data.mail})
+
+    link = f"http://{Config.DOMAIN}/password-reset-confirm/{token}"
+
+    html_message = f"""
+        <h1>Reset Your Password</h1>
+        <p>Please click this <a href="{link}">link</a> to Reset Your Password</p>
+        """
+
+    message = create_message(
+        recipients=[mail_data.mail],
+        subject="Reset your Password",
+        body=html_message
+    )
+
+    await mail.send_message(message)
+
+    return JSONResponse(content={
+        "message": "Password reset request sent to email",
+    }, status_code=status.HTTP_200_OK)
+
+
+@router.post("/password-reset-confirm/{token}", tags=["User"])
+async def reset_account_password(token: str,
+                                 passwords: PasswordResetConfirmModel):
+    if passwords.new_password != passwords.confirm_new_password:
+        raise HTTPException(detail = "Passwords do not match",
+                            status_code=status.HTTP_400_BAD_REQUEST)
+
+    token_data = decode_url_safe_token(token)
+
+    user_email = token_data.get('mail')
+    if user_email:
+        user = await retrieve_user_by_email(user_email)
+
+        logger.info(f"user_info: {user}")
+
+        updated_user = UserUpdate(
+            user_id=user.user_id,
+            password=get_password_hash(passwords.new_password)
+        )
+
+        await update_user(updated_user)
+
+        return JSONResponse(content={
+            "message": "Password reset successfully"
+        }, status_code=status.HTTP_200_OK)
+
+    return JSONResponse(content={
+        "message": "Error occurred during password reset"
+    }, status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)

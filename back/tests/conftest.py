@@ -43,6 +43,7 @@ async def async_client(setup_db):
 def generate_fake_user_data():
     faker = Faker()
     return {
+        "mail": faker.email(),
         "login": faker.email(),
         "password": faker.password(),
         "background": faker.sentence(),
