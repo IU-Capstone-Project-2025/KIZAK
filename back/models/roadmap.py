@@ -162,3 +162,15 @@ class RoadmapInfo(BaseModel):
             }
         ]]
     )
+
+class RoadmapFeedback(BaseModel):
+    user_id: UUID = Field(
+        ...,
+        description="Unique identifier of the user to update",
+        examples=["123e4567-e89b-12d3-a456-426614174000"]
+    )
+    roadmap_id: UUID = Field(
+        ...,
+        description="Unique identifier of the roadmap",
+        examples=["123e4567-e89b-12d3-a456-426614174005"]
+    )

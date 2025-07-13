@@ -2,6 +2,8 @@ from uuid import UUID
 from utils.logger import logger
 from fastapi import Response, status
 
+from services.roadmap_genaretor import update_roadmap
+
 from db.roadmap import (
     create_link,
     create_node,
@@ -26,6 +28,7 @@ from models.roadmap import (
     RoadmapCreate,
     RoadmapResponse,
     RoadmapInfo,
+    RoadmapFeedback
 )
 
 router = APIRouter()
@@ -83,6 +86,18 @@ async def post_roadmap(
     response.headers["Location"] = f"/roadmap/{roadmap.roadmap_id}"
     return roadmap
 
+@router.post(
+    "/update_roadmap/",
+    response_model=RoadmapResponse,
+    description="Create new roadmap",
+    status_code=status.HTTP_201_CREATED
+)
+async def update_roadmap_feedback(
+    data: RoadmapFeedback
+):
+    roadmap = await update_roadmap(data)
+    logger.info(f"Updatedd roadmap {roadmap.roadmap_id}")
+    return roadmap
 
 @router.delete(
     "/roadmap/{roadmap_id}",

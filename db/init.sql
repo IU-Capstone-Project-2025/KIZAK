@@ -72,8 +72,7 @@ CREATE TABLE roadmap_history (
     progress VARCHAR(50)
 );
 CREATE TABLE roadmap_feedback (
-    roadmap_id UUID REFERENCES User_Roadmap(roadmap_id) ON DELETE CASCADE,
-    resource_id UUID REFERENCES resource(resource_id) ON DELETE CASCADE,
-    is_liked BOOLEAN,
-    reason TEXT
+    user_id UUID REFERENCES users(user_id) ON DELETE CASCADE,
+    node_id UUID REFERENCES Roadmap_Node(node_id) ON DELETE CASCADE,
+    reason VARCHAR(50)
 );
