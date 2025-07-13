@@ -13,6 +13,7 @@ import {
 const userProfile = "/userProfile.jpg";
 import { TransitionLink } from "../transition/transition-link";
 import { useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 interface Props {
   className?: string;
@@ -20,6 +21,13 @@ interface Props {
 
 export const Sidebar: React.FC<Props> = ({ className = "" }) => {
   const { user_id } = useParams() as { user_id?: string };
+  const router = useRouter();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    router.push("/log-in");
+  };
+
   return (
     <aside className={`h-full min-w-[90px] w-[90px] ${className}`}>
       <div className="h-full bg-ui-dark rounded-xl flex flex-col justify-between py-7">
@@ -59,8 +67,11 @@ export const Sidebar: React.FC<Props> = ({ className = "" }) => {
           <SidebarButton href={`/onboarding/edit/${user_id}`} delay={100}>
             <RefreshCw width={30} height={32} strokeWidth={1.8} />
           </SidebarButton>
-
-          <SidebarButton href={`/`} delay={100}>
+          <SidebarButton>
+            <Bolt width={30} height={32} strokeWidth={1.8} />
+          </SidebarButton>
+          {/* Кнопка выхода */}
+          <SidebarButton onClick={handleLogout}>
             <LogOut width={30} height={30} strokeWidth={1.8} />
           </SidebarButton>
         </div>
