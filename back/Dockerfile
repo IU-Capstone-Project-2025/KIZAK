@@ -17,10 +17,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app
 
+COPY . .
+
 COPY pyproject.toml ./
 RUN poetry install --no-root --no-interaction --no-ansi
 
-COPY . .
     
 EXPOSE 8000
 
