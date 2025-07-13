@@ -16,10 +16,8 @@ export const Sidebar: React.FC<Props> = ({ className = "" }) => {
   const { user_id } = useParams() as { user_id?: string };
   const router = useRouter();
 
-  // Logout handler
   const handleLogout = () => {
     localStorage.removeItem("token");
-    // Если используете cookies, добавьте очистку здесь
     router.push("/log-in");
   };
 
