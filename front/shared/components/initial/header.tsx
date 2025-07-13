@@ -11,15 +11,13 @@ export const Header = () => {
       </div>
       <p className="uppercase text-3xl font-bold w-80 flex-center">kizak</p>
       <div className="flex items-center justify-end gap-x-5 text-lg w-80">
-        <TransitionLink className="font-light" href={"/onboarding"}>
+        <TransitionLink
+          className="bg-brand-primary/60 py-2 px-3 rounded-md transition-all duration-300 hover:bg-brand-primary"
+          href={"/onboarding"}
+          delay={100}
+        >
           Sign up
         </TransitionLink>
-        <Link
-          className="bg-brand-primary/80 py-2 px-3 rounded-md transition-all duration-300 hover:bg-brand-primary"
-          href={"/onboarding"}
-        >
-          Open app
-        </Link>
       </div>
     </header>
   );

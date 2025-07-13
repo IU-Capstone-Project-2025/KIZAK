@@ -3,9 +3,9 @@ import { X } from "lucide-react";
 
 const reasons = [
   { value: "too_easy", label: "Слишком лёгкий / ничего нового" },
-  { value: "not_relevant", label: "Навыки не соответствуют моей цели" },
+  { value: "wrong_skills", label: "Навыки не соответствуют моей цели" },
   { value: "too_hard", label: "Слишком сложный" },
-  { value: "bad_instructor", label: "Не нравится преподаватель" },
+  { value: "bad_author", label: "Не нравится преподаватель" },
   { value: "unavailable", label: "Курс недоступен или устарел" },
 ];
 
@@ -57,7 +57,7 @@ export const DislikeReasonModal: React.FC<Props> = ({
                 onSelect(r.value);
                 onClose();
               }}
-              className="w-full text-left px-4 py-2 rounded-md border border-gray-200 hover:bg-gray-100 transition"
+              className="w-full text-left text-ui-dark text-lg font-normal px-4 py-2 rounded-md border border-gray-200 hover:bg-gray-100 transition"
             >
               {r.label}
             </button>

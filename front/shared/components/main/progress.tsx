@@ -15,7 +15,7 @@ export const MainProgress: React.FC<Props> = ({
 }) => {
   return (
     <div
-      className={`flex flex-col rounded-xl border shadow-sm border-ui-border ${className}`}
+      className={`flex flex-col rounded-xl border shadow-sm border-ui-border overflow-hidden min-h-0 ${className}`}
     >
       <h2 className="text-ui-dark text-md w-full pl-3 py-2 border-b border-ui-border">
         Progress

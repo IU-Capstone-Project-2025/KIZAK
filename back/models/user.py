@@ -91,7 +91,22 @@ class UserBase(BaseModel):
         ]
     )
 
-    is_active: bool = Field(default=False)
+    is_active: bool = Field(
+        default=False,
+        description="Indicates whether the user's account is currently active",
+        examples=[True, False]
+    )
+
+    is_verified: bool = Field(
+        default=False,
+        description="Indicates whether the user's email or account has been verified",
+        examples=[True, False]
+    )
+
+    mail: str = Field(
+        description="Mail address of the user",
+        examples=["johndoe@gmail.com"]
+    )
 
 
 class UserCreate(UserBase):
@@ -171,6 +186,24 @@ class UserUpdate(BaseModel):
                 }
             ]
         ]
+    )
+
+    is_active: Optional[bool] = Field(
+        None,
+        description="Indicates whether the user's account is currently active",
+        examples=[True, False]
+    )
+
+    is_verified: Optional[bool] = Field(
+        None,
+        description="Indicates whether the user's email or account has been verified",
+        examples=[True, False]
+    )
+
+    mail: Optional[str] = Field(
+        None,
+        description="Mail address of the user",
+        examples=["johndoe@gmail.com"]
     )
 
 

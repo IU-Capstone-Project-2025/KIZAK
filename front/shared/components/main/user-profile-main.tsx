@@ -18,7 +18,7 @@ export const UserProfileMain: React.FC<Props> = ({
 }) => {
   return (
     <div
-      className={`rounded-xl flex flex-col shadow-sm border border-ui-border ${className}`}
+      className={`rounded-xl flex flex-col shadow-sm border border-ui-border overflow-hidden min-h-0 ${className}`}
     >
       <h2 className="text-ui-dark text-md w-full pl-3 py-2 border-b border-ui-border">
         User profile

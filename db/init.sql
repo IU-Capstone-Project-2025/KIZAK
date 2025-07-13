@@ -2,13 +2,15 @@
 CREATE TABLE users (
     user_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     login VARCHAR(50) UNIQUE NOT NULL,
+    mail VARCHAR(50) UNIQUE NOT NULL,
     password VARCHAR(100) NOT NULL,
     creation_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     background TEXT,
     education TEXT,
     goals TEXT,
     goal_vacancy VARCHAR(100),
-    isActive BOOLEAN
+    is_active BOOLEAN DEFAULT FALSE,
+    is_verified BOOLEAN DEFAULT FALSE
 );
 -- User skills
 CREATE TABLE user_skills (
@@ -72,8 +74,7 @@ CREATE TABLE roadmap_history (
     progress VARCHAR(50)
 );
 CREATE TABLE roadmap_feedback (
-    roadmap_id UUID REFERENCES User_Roadmap(roadmap_id) ON DELETE CASCADE,
-    resource_id UUID REFERENCES resource(resource_id) ON DELETE CASCADE,
-    is_liked BOOLEAN,
-    reason TEXT
+    user_id UUID REFERENCES users(user_id) ON DELETE CASCADE,
+    node_id UUID REFERENCES Roadmap_Node(node_id) ON DELETE CASCADE,
+    reason VARCHAR(50)
 );
