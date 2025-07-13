@@ -11,6 +11,7 @@ from routers.user import router as UserRouter
 from routers.auth import router as AuthRouter
 from routers.utils import router as UtilsRouter
 from routers.feedback import router as FeedbackRouter
+from routers.mail import router as MailRouter
 
 import dotenv
 import os
@@ -49,6 +50,7 @@ app.include_router(ResourceRouter, tags=["Resource"])
 app.include_router(AuthRouter, tags=["Auth"])
 app.include_router(UtilsRouter, tags=["Utils"])
 app.include_router(FeedbackRouter, tags=["Feedback"])
+app.include_router(MailRouter, tags=["Mail"])
 
 
 if __name__ == "__main__":

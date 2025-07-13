@@ -2,13 +2,15 @@
 CREATE TABLE users (
     user_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     login VARCHAR(50) UNIQUE NOT NULL,
+    mail VARCHAR(50) UNIQUE NOT NULL,
     password VARCHAR(100) NOT NULL,
     creation_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     background TEXT,
     education TEXT,
     goals TEXT,
     goal_vacancy VARCHAR(100),
-    isActive BOOLEAN
+    is_active BOOLEAN DEFAULT FALSE,
+    is_verified BOOLEAN DEFAULT FALSE
 );
 -- User skills
 CREATE TABLE user_skills (
