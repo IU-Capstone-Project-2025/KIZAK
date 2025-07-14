@@ -113,7 +113,7 @@ KIZAK is an AI-powered learning assistant designed to guide users through their 
 docker-compose -v
 # Docker Compose version v2.24.0-desktop.1
 ```
-
+**Note that your locally deployed database will not have any data**
 
 ### Deploy
 

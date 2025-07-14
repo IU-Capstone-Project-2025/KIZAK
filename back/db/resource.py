@@ -45,6 +45,7 @@ async def retrieve_resource(res_id: UUID, roadmap:UUID) -> ResourceResponse:
         if not row:
             logger.error(f"Resource {res_id} not found")
             raise HTTPException(status_code=404, detail="Resource not found")
+<<<<<<< HEAD
 
         progress = await conn.fetchrow(
             """
@@ -74,6 +75,8 @@ async def retrieve_resource(res_id: UUID, roadmap:UUID) -> ResourceResponse:
             row['title'],
             progress['progress']
         )
+=======
+>>>>>>> origin/main
 
         logger.info(f"Retrieved resource {res_id}")
 

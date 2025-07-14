@@ -1,3 +1,4 @@
+import React from "react";
 import { OnboardingData } from "../types/types";
 import {
   SliderLevel,
@@ -11,44 +12,26 @@ export const getScreens = (
   userData: OnboardingData,
   setUserData: React.Dispatch<React.SetStateAction<OnboardingData>>,
   goToNextStep: () => void,
-  goToPreviousStep: () => void
+  goToPreviousStep: () => void,
+  isEditing: boolean = false,
+  userId: string = "",
+  skillOrder: string[]
 ) => {
-  const availableSkills = [
-    "javascript",
-    "typescript",
-    "react",
-    "vue",
-    "angular",
-    "nodejs",
-    "python",
-    "java",
-    "php",
-    "ruby",
-    "go",
-    "rust",
-  ];
+  const screens = [];
 
-  const generateSkillLevelScreens = () => {
-    return userData.skills
-      .filter((s) => s.is_goal === false)
-      .map((skill) => (
-        <SliderLevel
-          key={`skill_level_${skill.skill}`}
-          tag={skill.skill}
-          setData={setUserData}
-          onNext={goToNextStep}
-          onBack={goToPreviousStep}
-        />
-      ));
-  };
-  return [
-    <SignUp
-      key="signup"
-      setData={setUserData}
-      onNext={goToNextStep}
-      onBack={goToPreviousStep}
-      userData={userData}
-    />,
+  if (!isEditing) {
+    screens.push(
+      <SignUp
+        key="signup"
+        setData={setUserData}
+        onNext={goToNextStep}
+        onBack={goToPreviousStep}
+        userData={userData}
+      />
+    );
+  }
+
+  screens.push(
     <SingleString
       key="education"
       title="What is your highest level of education completed?"
@@ -58,20 +41,21 @@ export const getScreens = (
       userData={userData}
       onNext={goToNextStep}
       onBack={goToPreviousStep}
+      isEditing={isEditing}
+      userId={isEditing ? userId : ""}
     />,
     <BigString
       key="background"
       title="Tell us about your background"
       placeholder="Enter your background..."
+      fieldKey="background"
       setData={setUserData}
       userData={userData}
       onNext={goToNextStep}
       onBack={goToPreviousStep}
-      fieldKey={"background"}
     />,
     <Tags
       key="skills"
-      tags={availableSkills}
       title="Tell us about your skills"
       placeholder="Enter your skills..."
       singleChoice={false}
@@ -93,7 +77,6 @@ export const getScreens = (
     />,
     <Tags
       key="goal_skills"
-      tags={availableSkills}
       title="Which goal skills are you aiming to achieve?"
       placeholder="Enter your skills..."
       singleChoice={false}
@@ -112,7 +95,36 @@ export const getScreens = (
       userData={userData}
       onNext={goToNextStep}
       onBack={goToPreviousStep}
-    />,
-    ...generateSkillLevelScreens(),
+    />
+  );
+
+  const generateSkillLevelScreens = () => {
+    return skillOrder.map((skillName, index) => {
+      const skillData = userData.skills.find(
+        (s) => s.skill === skillName && !s.is_goal
+      );
+
+      return (
+        <SliderLevel
+          key={`skill_level_${skillName}`}
+          tag={skillName}
+          skillLevel={skillData?.skill_level}
+          userData={userData}
+          setData={setUserData}
+          onNext={goToNextStep}
+          onBack={goToPreviousStep}
+          isLastStep={index === skillOrder.length - 1}
+        />
+      );
+    });
+  };
+
+  return [
+    ...screens,
+    ...generateSkillLevelScreens().map((screen, index, arr) =>
+      React.cloneElement(screen, {
+        isLastStep: index === arr.length - 1,
+      })
+    ),
   ];
 };

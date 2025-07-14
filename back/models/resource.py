@@ -56,8 +56,8 @@ class ResourceBase(BaseModel):
         description="Language of resource",
         examples=["Russian", "English"]
     )
-    duration_hours: int = Field(
-        ...,
+    duration_hours: Optional[int] = Field(
+        None,
         description="Time, needed to finish the resource",
         examples=[10, 1]
     )
@@ -71,8 +71,8 @@ class ResourceBase(BaseModel):
         description="Rating of the resource",
         examples=[0, 5, 3.5]
     )
-    published_date: date = Field(
-        ...,
+    published_date: Optional[date] = Field(
+        None,
         description="Date of resource creation",
         examples=["2015-05-01"]
     )

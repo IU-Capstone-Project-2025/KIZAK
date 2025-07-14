@@ -4,7 +4,7 @@ import Image from "next/image";
 import { ProgressDots } from "@/shared/components/onboarding";
 import { getScreens } from "@/shared/utils/getScreens";
 import { usePageTransition } from "@/shared/components/transition/transition-provider";
-import { OnboardingData } from "@/shared/types/types";
+import { API_BASE_URL, OnboardingData } from "@/shared/types/types";
 
 export default function OnBoarding() {
   const defaultUserData: OnboardingData = {
@@ -17,11 +17,46 @@ export default function OnBoarding() {
     goal_vacancy: "",
   };
 
+  async function hashPassword(password: string): Promise<string> {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
+    return hashHex;
+  }
+
   const [userData, setUserData] = useState<OnboardingData>(defaultUserData);
   const [step, setStep] = useState<number>(0);
   const [displayedStep, setDisplayedStep] = useState<number>(0);
   const [animating, setAnimating] = useState<boolean>(false);
   const { handleClick } = usePageTransition();
+  const [skillOrder, setSkillOrder] = useState<string[] | null>(null);
+
+  useEffect(() => {
+    const currentSkills = userData.skills
+      .filter((s) => !s.is_goal)
+      .map((s) => s.skill);
+
+    if (!skillOrder) {
+      setSkillOrder(currentSkills);
+      return;
+    }
+
+    const newSkills = currentSkills.filter((s) => !skillOrder.includes(s));
+    if (newSkills.length > 0) {
+      setSkillOrder((prev) => [...(prev || []), ...newSkills]);
+    }
+
+    const removedSkills = skillOrder.filter((s) => !currentSkills.includes(s));
+    if (removedSkills.length > 0) {
+      setSkillOrder((prev) =>
+        (prev || []).filter((s) => currentSkills.includes(s))
+      );
+    }
+  }, [userData.skills]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -58,12 +93,15 @@ export default function OnBoarding() {
       }, 300);
     } else {
       try {
-        const response = await fetch("http://localhost:8000/users/", {
+        const hashedPassword = await hashPassword(userData.password);
+        const payload = { ...userData, password: hashedPassword };
+
+        const response = await fetch(`${API_BASE_URL}/users/`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(userData),
+          body: JSON.stringify(payload),
         });
 
         if (!response.ok) {
@@ -107,7 +145,10 @@ export default function OnBoarding() {
     userData,
     setUserData,
     goToNextStep,
-    goToPreviousStep
+    goToPreviousStep,
+    false,
+    "",
+    skillOrder || []
   );
 
   return (

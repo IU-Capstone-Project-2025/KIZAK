@@ -1,15 +1,33 @@
+"use client";
 import React from "react";
 import Image from "next/image";
 import { SidebarButton } from "./sidebar-button";
-import { Bolt, Folder, House, LogOut, Map, MessageCircle } from "lucide-react";
-import userProfile from "../../../public/userProfile.jpg";
+import {
+  Bolt,
+  House,
+  LogOut,
+  Map,
+  MessageCircle,
+  RefreshCw,
+} from "lucide-react";
+const userProfile = "/userProfile.jpg";
 import { TransitionLink } from "../transition/transition-link";
+import { useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 interface Props {
   className?: string;
 }
 
 export const Sidebar: React.FC<Props> = ({ className = "" }) => {
+  const { user_id } = useParams() as { user_id?: string };
+  const router = useRouter();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    router.push("/log-in");
+  };
+
   return (
     <aside className={`h-full min-w-[90px] w-[90px] ${className}`}>
       <div className="h-full bg-ui-dark rounded-xl flex flex-col justify-between py-7">
@@ -26,18 +44,18 @@ export const Sidebar: React.FC<Props> = ({ className = "" }) => {
           />
         </TransitionLink>
         <div className="flex flex-col justify-between gap-y-2 items-center">
-          <SidebarButton href="/main/123">
+          <SidebarButton href={`/main/${user_id}`}>
             <House width={32} height={33} strokeWidth={1.8} />
           </SidebarButton>
-          <SidebarButton href="/main/123">
+          {/* <SidebarButton href={`/main/${user_id}`}>
             <MessageCircle width={32} height={32} strokeWidth={1.8} />
-          </SidebarButton>
-          <SidebarButton href="/roadmap/123" delay={2000}>
+          </SidebarButton> */}
+          <SidebarButton href={`/roadmap/${user_id}`} delay={2000}>
             <Map width={32} height={30} strokeWidth={1.8} />
           </SidebarButton>
         </div>
         <div className="flex flex-col justify-between gap-y-1 items-center">
-          <SidebarButton isUser={true}>
+          {/* <SidebarButton isUser={true}>
             <Image
               width={55}
               height={55}
@@ -45,11 +63,15 @@ export const Sidebar: React.FC<Props> = ({ className = "" }) => {
               alt={"userProfile"}
               className="rounded-xl"
             />
+          </SidebarButton> */}
+          <SidebarButton href={`/onboarding/edit/${user_id}`} delay={100}>
+            <RefreshCw width={30} height={32} strokeWidth={1.8} />
           </SidebarButton>
           <SidebarButton>
             <Bolt width={30} height={32} strokeWidth={1.8} />
           </SidebarButton>
-          <SidebarButton>
+          {/* Кнопка выхода */}
+          <SidebarButton onClick={handleLogout}>
             <LogOut width={30} height={30} strokeWidth={1.8} />
           </SidebarButton>
         </div>
