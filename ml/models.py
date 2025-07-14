@@ -13,7 +13,7 @@ class RoadmapData(BaseModel):
 class RoadmapUpdateData(BaseModel):
     user_id: UUID
     nodes: List
-    reason: str
+    reason: str #will be updated to dict {node - reason}
 
 
 class RoadmapResponse(BaseModel):

@@ -22,8 +22,8 @@ for role, skills in job_skills_raw.items():
     USER_SKILLS.update(ROLE_TO_SKILLS[role])
 
 search_engine = CourseVectorSearch()
-ranker = CourseRanker(PRIORITIES_BY_ROLE)
-analyzer = SkillGapAnalyzer(ROLE_TO_SKILLS)   
+analyzer = SkillGapAnalyzer(ROLE_TO_SKILLS)
+ranker = CourseRanker(PRIORITIES_BY_ROLE, skill_gap_analyzer=analyzer)
 
 ranks = dict()
 
@@ -68,7 +68,7 @@ async def generate_roadmap(data: RoadmapData) -> RoadmapResponse:
 
 @app.post("/update_roadmap/")
 async def update_roadmap(data: RoadmapUpdateData) -> RoadmapResponse:
-    ranked_courses = ranker.update_ranking(ranks[data.user_id], data.reason)
+    ranked_courses = ranker.update_ranking(ranks[data.user_id], data.reason, data.user_skills, data.user_role)
     ranks[data.user_id] = ranked_courses
     nodes = []
     for idx, course_entry in enumerate(ranked_courses[:10]):
@@ -91,3 +91,8 @@ async def update_roadmap(data: RoadmapUpdateData) -> RoadmapResponse:
         nodes=nodes,
         links=links
     )
+
+# to get courses that marked by user as unavailable
+# @app.get("/buffer_zone/")
+# async def get_buffer_zone():
+#     return ranker.buffer_zone
