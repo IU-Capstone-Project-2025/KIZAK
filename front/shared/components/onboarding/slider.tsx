@@ -10,6 +10,7 @@ interface SliderLevelProps {
   setData: (data: React.SetStateAction<OnboardingData>) => void;
   onBack: () => void;
   isLastStep?: boolean;
+  userData: OnboardingData;
 }
 
 const levels: SkillLevels[] = ["Beginner", "Intermediate", "Advanced"];
@@ -19,12 +20,19 @@ export const SliderLevel: React.FC<SliderLevelProps> = ({
   skillLevel = "Intermediate",
   onNext,
   setData,
+  userData,
   onBack,
   isLastStep = false,
 }) => {
-  const [levelIndex, setLevelIndex] = useState(() =>
-    levels.indexOf(skillLevel)
+  const currentSkill = userData.skills.find(
+    (s) => s.skill === tag && !s.is_goal
   );
+  const [levelIndex, setLevelIndex] = useState(() => {
+    const level = currentSkill ? currentSkill.skill_level : skillLevel;
+    const index = levels.indexOf(level);
+    return index !== -1 ? index : levels.indexOf("Intermediate");
+  });
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const leftPercent = useMemo(

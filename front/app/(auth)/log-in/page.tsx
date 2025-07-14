@@ -5,6 +5,8 @@ import Image from "next/image";
 import { TransitionLink } from "@/shared/components/transition/transition-link";
 import { usePageTransition } from "@/shared/components/transition/transition-provider";
 import { API_BASE_URL } from "@/shared/types/types";
+import Link from "next/link";
+
 
 export default function Login() {
   const [login, setLogin] = useState("");
@@ -120,9 +122,12 @@ export default function Login() {
           >
             or Sign up
           </TransitionLink>
-          <a href="#" className="hover:underline">
+          <Link
+            href="/forgot-password"
+            className="hover:underline"
+          >
             Forgot your password?
-          </a>
+          </Link>
         </div>
       </div>
     </div>

@@ -2,6 +2,7 @@
 import { OnboardingData } from "@/shared/types/types";
 import { ArrowLeft } from "lucide-react";
 import React, { useState } from "react";
+import { usePageTransition } from "../transition/transition-provider";
 
 interface Props {
   title: string;
@@ -11,6 +12,8 @@ interface Props {
   fieldKey: keyof Pick<OnboardingData, "education" | "goal_vacancy" | "goals">;
   onNext: () => void;
   onBack: () => void;
+  isEditing?: boolean;
+  userId?: string;
 }
 
 export const SingleString: React.FC<Props> = ({
@@ -21,10 +24,14 @@ export const SingleString: React.FC<Props> = ({
   fieldKey,
   onNext,
   onBack,
+  isEditing,
+  userId,
 }) => {
   const [text, setText] = useState<string>(
     typeof userData[fieldKey] === "string" ? (userData[fieldKey] as string) : ""
   );
+
+  const { handleClick } = usePageTransition();
 
   const isValid = typeof text === "string" && text.trim() !== "";
 
@@ -49,7 +56,9 @@ export const SingleString: React.FC<Props> = ({
         />
         <div className="flex-between gap-x-1">
           <button
-            onClick={onBack}
+            onClick={() => {
+              isEditing ? handleClick(`/main/${userId}`, 100) : onBack();
+            }}
             className={`h-[50px] flex-center gap-x-2 w-50 py-2 bg-bg-main border border-ui-border shadow-sm hover:bg-bg-subtle text-ui-dark/70 font-semibold rounded-md transition-all duration-300`}
             type="button"
           >
@@ -63,7 +72,7 @@ export const SingleString: React.FC<Props> = ({
             className={`h-[50px] w-50 py-2 text-white font-semibold rounded-md transition-all duration-300 ${
               isValid
                 ? "bg-brand-primary "
-                : "bg-brand-primary/50 cursor-not-allowed"
+                : "bg-ui-muted/90 cursor-not-allowed"
             }`}
           >
             Continue
