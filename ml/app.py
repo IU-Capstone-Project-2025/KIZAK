@@ -8,6 +8,14 @@ from ranker import CourseRanker
 import json
 import dotenv
 
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s"
+)
+logger = logging.getLogger(__name__)
+
 dotenv.load_dotenv()
 
 with open('./job_skill.json', 'r', encoding='utf-8') as f:
@@ -43,12 +51,13 @@ async def generate_roadmap(data: RoadmapData) -> RoadmapResponse:
 
     ranks[data.user_id] = ranked_courses
 
+    logger.info(f"Ranked courses sample: {ranked_courses[:3]}")
+
     nodes = []
     for idx, course_entry in enumerate(ranked_courses[:10]):
-        details = course_entry["course"]["details"]
         node = {
             "node_id": idx,
-            "resource_id": details["id"]
+            "resource_id": course_entry["course"]["id"]
         }
         nodes.append(node)
 
@@ -72,10 +81,9 @@ async def update_roadmap(data: RoadmapUpdateData) -> RoadmapResponse:
     ranks[data.user_id] = ranked_courses
     nodes = []
     for idx, course_entry in enumerate(ranked_courses[:10]):
-        details = course_entry["course"]["details"]
         node = {
             "node_id": idx,
-            "resource_id": details["id"]
+            "resource_id": course_entry["course"]["id"]
         }
         nodes.append(node)
 
