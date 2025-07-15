@@ -1,6 +1,7 @@
 from sentence_transformers import SentenceTransformer
 from qdrant_client import QdrantClient
 from qdrant_client.models import NamedVector, SearchRequest
+from qdrant_client.http.models import QueryRequest, NamedVector
 from collections import defaultdict
 import torch
 import os
@@ -50,12 +51,23 @@ class CourseVectorSearch:
     def search_courses_batch_weighted(self, title_vector, description_vector, skills_vector,
                                       weights={'title': 0.2, 'description': 0.1, 'skills': 0.7}, limit=30):
         logger.info("Searching courses batch weighted")
+        # search_requests = [
+        #     SearchRequest(vector=NamedVector(name="title", vector=title_vector), limit=50, with_payload=True),
+        #     SearchRequest(vector=NamedVector(name="description", vector=description_vector), limit=20, with_payload=True),
+        #     SearchRequest(vector=NamedVector(name="skills", vector=skills_vector), limit=100, with_payload=True)
+        # ]
+        # batch_results = self.client.search_batch(
+        #     collection_name=self.collection_name,
+        #     requests=search_requests
+        # )
+
         search_requests = [
             SearchRequest(vector=NamedVector(name="title", vector=title_vector), limit=50, with_payload=True),
             SearchRequest(vector=NamedVector(name="description", vector=description_vector), limit=20, with_payload=True),
             SearchRequest(vector=NamedVector(name="skills", vector=skills_vector), limit=100, with_payload=True)
         ]
-        batch_results = self.client.search_batch(
+
+        batch_results = self.client.query_batch_points(
             collection_name=self.collection_name,
             requests=search_requests
         )
