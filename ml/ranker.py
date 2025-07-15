@@ -148,6 +148,7 @@ class CourseRanker:
         Converts raw search results to format expected by ranking logic
         while preserving all metadata for re-ranking.
         """
+        # logger.info(f"Input to prepare_courses (sample): {search_results[:1]}")
         courses = []
         for res in search_results:
             original = res["details"]["original_point"]
@@ -160,6 +161,8 @@ class CourseRanker:
                 "author": original.get("author")
             }
             courses.append(course)
+        # logger.info(f"Output from prepare_courses (sample): {courses[:1]}")
+
         return courses
 
     def rank_courses(self,
@@ -194,6 +197,8 @@ class CourseRanker:
                     raw_course_skills = []
 
             course_skills = self.get_skill_words(raw_course_skills)
+
+            # logger.info(f"kostilno-normalized skills: {course_skills}")
 
             # course_skills = course.get("skills", [])
 
