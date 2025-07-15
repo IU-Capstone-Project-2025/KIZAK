@@ -37,7 +37,7 @@ async def get_user_skills() -> set:
 async def generate_roadmap(data: RoadmapData) -> RoadmapResponse:
     missing_skills = analyzer.compute_gap(data.user_skills, data.user_role)['missing_skills']
     # upd to search better
-    best_courses = search_engine.search_courses_batch_weighted(data.user_role, data.user_query, data.user_skills)
+    best_courses = search_engine.get_courses(data.user_role, data.user_query, data.user_skills)
     # upd to improved ranking
     ranked_courses = ranker.rank_with_fallback(best_courses, missing_skills, data.user_skills, data.user_role)
 
