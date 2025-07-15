@@ -2,6 +2,7 @@ from sentence_transformers import SentenceTransformer
 from qdrant_client import QdrantClient
 from qdrant_client.models import NamedVector, SearchRequest
 from qdrant_client.http.models import QueryRequest, NamedVector
+from qdrant_client.models import SearchRequest, NamedVector, Batch, Query
 from collections import defaultdict
 import torch
 import os
@@ -62,9 +63,21 @@ class CourseVectorSearch:
         # )
 
         search_requests = [
-            SearchRequest(vector=NamedVector(name="title", vector=title_vector), limit=50, with_payload=True),
-            SearchRequest(vector=NamedVector(name="description", vector=description_vector), limit=20, with_payload=True),
-            SearchRequest(vector=NamedVector(name="skills", vector=skills_vector), limit=100, with_payload=True)
+            SearchRequest(
+                vector=NamedVector(name="title", vector=title_vector),  # Указываем имя вектора
+                limit=50,
+                with_payload=True
+            ),
+            SearchRequest(
+                vector=NamedVector(name="description", vector=description_vector),
+                limit=20,
+                with_payload=True
+            ),
+            SearchRequest(
+                vector=NamedVector(name="skills", vector=skills_vector),
+                limit=100,
+                with_payload=True
+            )
         ]
 
         batch_results = self.client.query_batch_points(
