@@ -96,3 +96,5 @@ async def update_roadmap(data: RoadmapUpdateData) -> RoadmapResponse:
 # @app.get("/buffer_zone/")
 # async def get_buffer_zone():
 #     return ranker.buffer_zone
+
+# todo: func to update known skills after re-ranking
