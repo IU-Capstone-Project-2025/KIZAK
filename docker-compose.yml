@@ -41,8 +41,8 @@ services:
     env_file:
       - path: ./.env
         required: True
-      - path: ./.env.example
-        required: false
+#      - path: ./.env.example
+#        required: false
   frontend:
     build:
       context: ./front
