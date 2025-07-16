@@ -13,9 +13,12 @@ interface Props {
 export const SignUp: React.FC<Props> = ({ setData, userData, onNext }) => {
   const [login, setLogin] = useState(userData.login);
   const [password, setPassword] = useState(userData.password);
+  const [mail, setMail] = useState(userData.mail || "");
   const [loginError, setLoginError] = useState<string>("");
   const [passwordError, setPasswordError] = useState<string>("");
+  const [mailError, setMailError] = useState<string>("");
   const [checkingLogin, setCheckingLogin] = useState(false);
+  const [mailChecking, setMailChecking] = useState(false);
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
   async function checkLoginExists(login: string) {
@@ -32,6 +35,23 @@ export const SignUp: React.FC<Props> = ({ setData, userData, onNext }) => {
       setLoginError("Error checking login");
     } finally {
       setCheckingLogin(false);
+    }
+  }
+
+  async function checkMailExists(mail: string) {
+    setMailChecking(true);
+    try {
+      const res = await fetch(`${API_BASE_URL}/check_email/${encodeURIComponent(mail)}`);
+      const data = await res.json();
+      if (data.exists) {
+        setMailError("Email already registered");
+      } else {
+        setMailError("");
+      }
+    } catch {
+      setMailError("Error checking email");
+    } finally {
+      setMailChecking(false);
     }
   }
 
@@ -55,10 +75,31 @@ export const SignUp: React.FC<Props> = ({ setData, userData, onNext }) => {
     };
   }, [login]);
 
+  useEffect(() => {
+    if (mail.trim() === "") {
+      setMailError("");
+      setMailChecking(false);
+      return;
+    }
+    if (debounceTimeout.current) {
+      clearTimeout(debounceTimeout.current);
+    }
+    debounceTimeout.current = setTimeout(() => {
+      checkMailExists(mail);
+    }, 300);
+
+    return () => {
+      if (debounceTimeout.current) {
+        clearTimeout(debounceTimeout.current);
+      }
+    };
+  }, [mail]);
+
   function handleAcceptData() {
     let valid = true;
     setLoginError("");
     setPasswordError("");
+    setMailError("");
 
     if (login.trim() === "") {
       setLoginError("Login is required");
@@ -70,11 +111,20 @@ export const SignUp: React.FC<Props> = ({ setData, userData, onNext }) => {
       valid = false;
     }
 
+    if (mail.trim() === "") {
+      setMailError("Email is required");
+      valid = false;
+    } else if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail.trim())) {
+      setMailError("Invalid email format");
+      valid = false;
+    }
+
     if (valid) {
       setData((prev) => ({
         ...prev,
         login: login,
         password: password,
+        mail: mail,
       }));
       onNext();
     }
@@ -83,8 +133,13 @@ export const SignUp: React.FC<Props> = ({ setData, userData, onNext }) => {
   const isValid =
     login.trim() !== "" &&
     password.trim().length >= 6 &&
+    mail.trim() !== "" &&
+    /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail.trim()) &&
     !loginError &&
-    !checkingLogin;
+    !passwordError &&
+    !mailError &&
+    !checkingLogin &&
+    !mailChecking;
 
   return (
     <article className="w-full max-w-sm space-y-6 bg-white rounded">
@@ -120,6 +175,15 @@ export const SignUp: React.FC<Props> = ({ setData, userData, onNext }) => {
           <div className="text-red-500 text-xs">{passwordError}</div>
         )}
 
+        <input
+          type="email"
+          placeholder="Enter your email..."
+          className="h-[50px] placeholder:text-ui-muted w-100 px-4 py-2 border rounded-sm focus:outline-none focus:ring border-ui-border"
+          value={mail}
+          onChange={(e) => setMail(e.target.value)}
+        />
+        {mailError && <div className="text-red-500 text-xs">{mailError}</div>}
+
         <button
           type="submit"
           disabled={!isValid}
@@ -128,7 +192,7 @@ export const SignUp: React.FC<Props> = ({ setData, userData, onNext }) => {
             isValid ? "bg-brand-primary" : "bg-ui-muted/90 cursor-not-allowed"
           }`}
         >
-          {checkingLogin ? "Checking..." : "Continue"}
+          {(checkingLogin || mailChecking) ? "Checking..." : "Continue"}
         </button>
       </div>
 
