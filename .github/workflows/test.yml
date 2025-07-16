@@ -46,6 +46,7 @@ jobs:
       MAIL_PORT: ${{secrets.MAIL_PORT}}
       MAIL_SERVER: ${{secrets.MAIL_SERVER}}
       MAIL_FROM_NAME: ${{secrets.MAIL_FROM_NAME}}
+      DOMAIN: ${{secrets.DOMAIN}}
 
     steps:
       - name: Checkout code
