@@ -2,41 +2,28 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
 import { API_BASE_URL } from "@/shared/types/types";
 
 export default function ForgotPassword() {
   const [login, setLogin] = useState("");
-  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
 
-  async function hashPassword(password: string): Promise<string> {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(password);
-    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
-  }
-
-  const handleReset = async (e: React.FormEvent) => {
+  const handleSendResetLink = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setMessage(null);
     setError(null);
     try {
-      const hashedPassword = await hashPassword(password);
-      const res = await fetch(`${API_BASE_URL}/reset-password`, {
+      const res = await fetch(`${API_BASE_URL}/password-reset-request`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ login, password: hashedPassword }),
+        body: JSON.stringify({ mail: login }),
       });
       if (!res.ok) {
-        let errorText = "Failed to reset password";
+        let errorText = "Failed to send reset link";
         try {
-          // Try to parse as JSON first
           const errorData = await res.clone().json();
           errorText = errorData.detail
             ? errorData.detail
@@ -44,14 +31,11 @@ export default function ForgotPassword() {
         } catch {
           try {
             errorText = await res.text();
-          } catch {
-            // fallback
-          }
+          } catch {}
         }
         throw new Error(errorText);
       }
-      setMessage("Password reset successful! You can now log in.");
-      setTimeout(() => router.push("/log-in"), 2000);
+      setMessage("Check your email for a password reset link.");
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
@@ -69,33 +53,25 @@ export default function ForgotPassword() {
         <h2 className="text-center text-lg font-medium text-ui-dark mb-4">
           Reset your password
         </h2>
-        <form className="space-y-4 flex-center flex-col" onSubmit={handleReset}>
+        <form className="space-y-4 flex-center flex-col" onSubmit={handleSendResetLink}>
           <input
             type="text"
-            placeholder="Enter your login..."
+            placeholder="Enter your email ..."
             className="h-[50px] placeholder:text-ui-muted w-100 px-4 py-2 border rounded-sm focus:outline-none border-ui-border"
             value={login}
             onChange={(e) => setLogin(e.target.value)}
             required
           />
-          <input
-            type="password"
-            placeholder="Enter your new password..."
-            className="h-[50px] placeholder:text-ui-muted w-100 px-4 py-2 border rounded-sm focus:outline-none border-ui-border"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
           <button
             type="submit"
-            disabled={loading || !login || !password}
+            disabled={loading || !login}
             className={`h-[50px] w-100 py-2 text-white font-semibold rounded-md transition-all duration-300 ${
-              login && password && !loading
+              login && !loading
                 ? "bg-brand-primary hover:bg-brand-primary/90"
                 : "bg-brand-primary/80 cursor-not-allowed"
             }`}
           >
-            {loading ? "Resetting..." : "Reset Password"}
+            {loading ? "Sending..." : "Send reset link"}
           </button>
         </form>
         {message && <div className="text-green-600 text-center">{message}</div>}

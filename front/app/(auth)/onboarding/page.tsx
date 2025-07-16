@@ -10,6 +10,7 @@ export default function OnBoarding() {
   const defaultUserData: OnboardingData = {
     login: "",
     password: "",
+    mail: "",
     background: "",
     education: "",
     skills: [],
@@ -34,6 +35,7 @@ export default function OnBoarding() {
   const [animating, setAnimating] = useState<boolean>(false);
   const { handleClick } = usePageTransition();
   const [skillOrder, setSkillOrder] = useState<string[] | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
     const currentSkills = userData.skills
@@ -93,6 +95,7 @@ export default function OnBoarding() {
       }, 300);
     } else {
       try {
+        setErrorMessage(null);
         const hashedPassword = await hashPassword(userData.password);
         const payload = { ...userData, password: hashedPassword };
 
@@ -108,13 +111,18 @@ export default function OnBoarding() {
           let errorText = "Ошибка при создании пользователя";
           try {
             const errorData = await response.json();
-            errorText = errorData.detail
-              ? JSON.stringify(errorData.detail)
-              : JSON.stringify(errorData);
+            if (errorData.detail && typeof errorData.detail === "string" && errorData.detail.includes("Email already registered")) {
+              errorText = "Email already registered";
+            } else {
+              errorText = errorData.detail
+                ? JSON.stringify(errorData.detail)
+                : JSON.stringify(errorData);
+            }
           } catch {
             errorText = await response.text();
           }
-          throw new Error(errorText);
+          setErrorMessage(errorText);
+          return;
         }
 
         const data = await response.json();
@@ -125,6 +133,7 @@ export default function OnBoarding() {
         }
         handleClick(`/main/${userId}`, 0);
       } catch (error) {
+        setErrorMessage("Registration failed. Please try again.");
         console.error("Ошибка при завершении онбординга:", error);
       }
     }
@@ -172,6 +181,9 @@ export default function OnBoarding() {
             </div>
           </div>
         </div>
+        {errorMessage && (
+          <div className="text-red-600 text-center text-sm mb-2">{errorMessage}</div>
+        )}
         <section className={animating ? "fade-slide-out" : "fade-slide-in"}>
           {screens[displayedStep]}
         </section>
