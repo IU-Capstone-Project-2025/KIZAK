@@ -6,7 +6,7 @@ from fastapi import HTTPException
 from models.resource import ResourceCreate, ResourceResponse, ResourceUpdate
 
 
-async def retrieve_resource(res_id: UUID) -> ResourceResponse:
+async def retrieve_resource(res_id: UUID, roadmap:UUID) -> ResourceResponse:
     """Finds resource based on given res_id
 
     Args:
@@ -41,10 +41,40 @@ async def retrieve_resource(res_id: UUID) -> ResourceResponse:
         """,
             res_id,
         )
-        
+
         if not row:
             logger.error(f"Resource {res_id} not found")
             raise HTTPException(status_code=404, detail="Resource not found")
+
+        progress = await conn.fetchrow(
+            """
+                SELECT
+                    progress
+                FROM roadmap_node
+                WHERE resource_id = $1 AND roadmap_id = $2
+            """,
+            res_id,
+            roadmap
+        )
+        if not progress:
+            logger.error(f"Resource {progress} not found")
+            raise HTTPException(status_code=404, detail="Progress not found")
+
+        await conn.execute(
+            """
+                INSERT INTO roadmap_history (
+                    roadmap_id,
+                    node_id,
+                    title, 
+                    progress
+                ) VALUES ($1, $2, $3)
+            """,
+            roadmap,
+            row['node_id'],
+            row['title'],
+            progress['progress']
+        )
+
 
         logger.info(f"Retrieved resource {res_id}")
 
