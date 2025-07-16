@@ -39,18 +39,15 @@ KIZAK is an AI-powered learning assistant designed to guide users through their 
 ## 🚀 Features
 
 - **Onboarding:** Personalized user profile creation with topic selection and skill assessment  
-- **ML Agent:** AI-driven roadmap generation tailored to user goals and skills  
-- **Personal Recommendations:** Daily/weekly curated courses and tasks from platforms like Coursera, Stepik, YouTube  
-- **Resume Generation:** Automatic resume creation highlighting skills and projects  
-- **AI Coach:** Interactive chatbot for Q&A, feedback, and interview simulation  
-- **Integrations:** Connect with LinkedIn, GitHub, and support OAuth authentication  
+- **Personal Recommendations:** Daily/weekly curated courses and tasks from platforms like Coursera, Stepik or EDX
+- **Personal Roadmaps** generated specially for each user
 
 ---
 
 ## 🛠️ **Tech Stack**  
 
 ### **Backend**  
-- **Flask**  🐍  - A **lightweight** Python web framework for building scalable APIs and backend services.
+- **FastAPI**  🐍  - A **lightweight** Python web framework for building scalable APIs and backend services.
 - **PostgreSQL** 🐘 - A **powerful**, open-source relational database with strong extensibility and SQL compliance.
 
 ### **Frontend**  
@@ -60,7 +57,6 @@ KIZAK is an AI-powered learning assistant designed to guide users through their 
 - **Redux** 🔄 - **State management** library for predictable global state in JavaScript apps.
 
 ### **ML / AI**  
-- **LLaMA** 🦙 - Meta’s open-source large language model for **advanced NLP** tasks.
 - **Transformers** 🤗 - Hugging Face’s library for state-of-the-art NLP models
 
 ---
@@ -84,23 +80,23 @@ KIZAK is an AI-powered learning assistant designed to guide users through their 
 - 🟢 Prepare working MVP demo
 
 ### 🧪 Week 4 – Testing & Deployment
-- 🟡 Implement CI/CD pipeline
-- 🟡 Add unit and integration tests
-- 🟡 Deploy MVP to test/staging environment
+- 🟢 Implement CI/CD pipeline
+- 🟢 Add unit and integration tests
+- 🟢 Deploy MVP to test/staging environment
 
 ### 🎨 Week 5 – Polishing
-- 🔴 Gather feedback from initial users/stakeholders
-- 🔴 Refactor codebase and improve UX/UI
-- 🔴 Fix bugs and optimize performance
+- 🟢 Gather feedback from initial users/stakeholders
+- 🟢 Refactor codebase and improve UX/UI
+- 🟢 Fix bugs and optimize performance
 
 ### 🧾 Week 6 – Finalization
-- 🔴 Finalize all project components
-- 🔴 Prepare project documentation
-- 🔴 Build and design presentation materials
+- 🟢 Finalize all project components
+- 🟡 Prepare project documentation
+- 🟡 Build and design presentation materials
 
 ### 🎤 Week 7 – Final Presentation
-- 🔴 Rehearse and deliver final presentation
-- 🔴 Submit final deliverables
+- 🟡 Rehearse and deliver final presentation
+- 🟡 Submit final deliverables
 
 ---
 
@@ -113,7 +109,7 @@ KIZAK is an AI-powered learning assistant designed to guide users through their 
 docker-compose -v
 # Docker Compose version v2.24.0-desktop.1
 ```
-**Note that your locally deployed database will not have any data**
+**Note that your locally deployed database will not have any data. You can run [db_populate](https://github.com/IU-Capstone-Project-2025/KIZAK/blob/main/db/db_populate.py) script that will fill up data with our courses**
 
 ### Deploy
 
@@ -134,6 +130,9 @@ DB_USER=user
 DB_PASSWORD=password
 DB_NAME=db
 
+QD_API_KEY=1234apikey
+QD_URL=url
+
 # CORS configuration
 CORS_ORIGINS=http://localhost
 
@@ -145,6 +144,24 @@ API_PORT=8000
 FRONTEND_HOST=frontend
 FRONTEND_PORT=3000
 FRONTEND_HOST_PORT=3000
+
+SECRET_KEY=ApplicationSecretKey
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=1440
+
+MAIL_USERNAME=kizak.inno
+MAIL_PASSWORD=qhdz uxqj wxuf ubkp
+MAIL_FROM=kizak.inno@gmail.com
+MAIL_PORT=587
+MAIL_SERVER=smtp.gmail.com
+MAIL_FROM_NAME=KIZAK Team
+
+DOMAIN=localhost:8000
+```
+
+Aslo create _.env.local_ in front folder:
+```bash
+NEXT_PUBLIC_API_URL=http://localhost:8000
 ```
 
 Then build and run the project using Docker Compose:
@@ -153,7 +170,7 @@ Then build and run the project using Docker Compose:
 docker-compose up --build
 ```
 
-Visit [localhost:8000/docs](http://localhost:8000/docs) to access KIZAK API docs or [localhost:80](http://localhost) to see front part
+Visit [localhost:8000/docs](http://localhost:8000/docs) to access KIZAK API docs or [localhost:3000](http://localhost:3000) to see front part
 
 ## 🐞 Open Issues and Contribution
 
@@ -173,14 +190,14 @@ We welcome contributions from the community! Here's how to get started:
 2. **Create a new feature branch:**
 
    ```bash
-   git checkout -b feature/your-feature-name
+   git checkout -b feature-your-feature-name
    ```
 
 3. **Make your changes, commit, and push:**
 
    ```bash
    git commit -m "Add: your detailed message here"
-   git push origin feature/your-feature-name
+   git push origin feature-your-feature-name
    ```
 
 4. **Open a pull request** with a clear description and reference any related issues.
