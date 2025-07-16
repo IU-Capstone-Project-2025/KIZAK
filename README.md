@@ -159,7 +159,7 @@ MAIL_FROM_NAME=KIZAK Team
 DOMAIN=localhost:8000
 ```
 
-Aslo create _.env.local_ in front folder:
+Also create _.env.local_ in front folder:
 ```bash
 NEXT_PUBLIC_API_URL=http://localhost:8000
 ```
