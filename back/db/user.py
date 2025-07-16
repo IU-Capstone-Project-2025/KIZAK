@@ -463,16 +463,19 @@ async def retrieve_user_profile(user_id: UUID) -> UserProfileResponse:
     history_rows = await db.fetch(
         """
             SELECT
-                roadmap_id,
-                node_id,
-                last_opened,
-                title,
-                progress
+                rh.roadmap_id,
+                rh.node_id,
+                rh.last_opened,
+                rn.title,
+                rn.progress
             FROM
-                roadmap_history
+                roadmap_history rh
+            JOIN
+                roadmap_node rn ON rh.node_id = rn.node_id
             WHERE
-                roadmap_id = $1
-            ORDER BY last_opened DESC
+                rh.roadmap_id = $1
+            ORDER BY
+                rh.last_opened DESC;
         """,
         roadmap_row['roadmap_id']
     )

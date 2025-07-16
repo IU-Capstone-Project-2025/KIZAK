@@ -20,7 +20,7 @@ async def generate_roadmap(
 ) -> RoadmapInfo:
     try:
         data = {
-            "user_id": user_id,
+            "user_id": str(user_id),
             "user_role": user_role,
             "user_skills": [skill.skill for skill in user_skills],
             "user_query": user_query
