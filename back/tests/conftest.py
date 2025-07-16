@@ -16,7 +16,6 @@ os.environ.setdefault("SECRET_KEY", "test-secret-key")
 os.environ.setdefault("JWT_SECRET_KEY", "test-secret-key")
 os.environ.setdefault("PASSWORD_SALT", "test-salt")
 
-
 class FakeTransaction:
     def __init__(self, conn):
         self.conn = conn
@@ -146,7 +145,7 @@ def generate_fake_node_data():
     return {
         "title": faker.sentence(),
         "summary": faker.sentence(),
-        "progress": random.choice(["Not started", "In progress", "Done"])
+        "progress": faker.random_int(0, 100)
     }
 
 
