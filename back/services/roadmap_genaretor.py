@@ -1,6 +1,8 @@
 from typing import List
 from uuid import UUID
 
+from utils.logger import logger
+
 from db.roadmap import create_roadmap, create_node, create_link, remove_roadmap
 from db.db_connector import db
 
@@ -28,6 +30,8 @@ async def generate_roadmap(
         response = requests.post("http://ml:8001/generate_roadmap/", json=data)
         response.raise_for_status()
         roadmap_info = response.json()
+
+        logger.info(f"ML response: {roadmap_info}")
         
         roadmap = await create_roadmap(
             RoadmapCreate(user_id=user_id)
@@ -35,6 +39,8 @@ async def generate_roadmap(
         
         nodes = []
         for course in roadmap_info["nodes"]:
+            logger.info(f"Looking up resource_id: {course['resource_id']}")
+
             resource_details = await db.fetchrow(
                 """
                 SELECT
