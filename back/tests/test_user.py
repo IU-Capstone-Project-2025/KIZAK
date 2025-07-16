@@ -37,7 +37,7 @@ async def test_post_user_db_fail(async_client, fake_user_data):
         response = await async_client.post("/users/", json=fake_user_data)
         assert response.status_code == 500
 
-"""
+
 @pytest.mark.asyncio
 async def test_get_user(async_client, created_user):
     response = await async_client.get(f"/users/{created_user['user_id']}")
@@ -48,7 +48,7 @@ async def test_get_user(async_client, created_user):
     logger.debug(f"User created: {json_response}")
     logger.debug(f"User got: {json_response}")
     assert actual == expected
-"""
+
 
 
 @pytest.mark.asyncio
