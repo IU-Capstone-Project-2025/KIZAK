@@ -77,7 +77,12 @@ async def generate_roadmap(data: RoadmapData) -> RoadmapResponse:
 
 @app.post("/update_roadmap/")
 async def update_roadmap(data: RoadmapUpdateData) -> RoadmapResponse:
-    ranked_courses = ranker.update_ranking(ranks[data.user_id], data.reason, data.user_skills, data.user_role)
+    ranked_courses = ranker.update_ranking(
+        ranks[data.user_id],
+        data.reasons,
+        data.user_skills,
+        data.user_role
+    )
     ranks[data.user_id] = ranked_courses
     nodes = []
     for idx, course_entry in enumerate(ranked_courses[:10]):

@@ -122,14 +122,14 @@ async def post_roadmap(
 @router.post(
     "/update_roadmap/",
     response_model=RoadmapResponse,
-    description="Create new roadmap",
+    description="Update roadmap based on feedback",
     status_code=status.HTTP_201_CREATED
 )
 async def update_roadmap_feedback(
     data: RoadmapFeedback
 ):
     roadmap = await update_roadmap(data)
-    logger.info(f"Updatedd roadmap {roadmap.roadmap_id}")
+    logger.info(f"Updated roadmap {roadmap.roadmap_id}")
     return roadmap
 
 @router.delete(
