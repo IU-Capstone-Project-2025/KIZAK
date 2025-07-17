@@ -24,9 +24,10 @@ async def create_user(user: UserCreate) -> UserResponse:
                         background,
                         education,
                         goals,
-                        goal_vacancy
+                        goal_vacancy,
+                        mail
                     )
-                    VALUES ($1, $2, $3, $4, $5, $6)
+                    VALUES ($1, $2, $3, $4, $5, $6, $7)
                     RETURNING *
                 """,
                 user.login,
@@ -34,7 +35,8 @@ async def create_user(user: UserCreate) -> UserResponse:
                 user.background,
                 user.education,
                 user.goals,
-                user.goal_vacancy
+                user.goal_vacancy,
+                user.mail
             )
 
             if not user_response:
@@ -84,7 +86,10 @@ async def retrieve_user_by_login(login: str) -> UserResponse:
                     users.background,
                     users.education,
                     users.goals,
-                    users.goal_vacancy
+                    users.goal_vacancy,
+                    users.mail,
+                    users.is_active,
+                    users.is_verified
                 FROM users
                 WHERE users.login = $1
             """,
@@ -113,6 +118,50 @@ async def retrieve_user_by_login(login: str) -> UserResponse:
         raise HTTPException(status_code=500, detail=str(e))
 
 
+async def retrieve_user_by_email(mail: str) -> UserResponse:
+    try:
+        user_response = await db.fetchrow(
+            """
+                SELECT
+                    users.user_id,
+                    users.login,
+                    users.password,
+                    users.creation_date,
+                    users.background,
+                    users.education,
+                    users.goals,
+                    users.goal_vacancy,
+                    users.mail,
+                    users.is_active,
+                    users.is_verified
+                FROM users
+                WHERE users.mail = $1
+            """,
+            mail
+        )
+
+        skills_response = await db.fetch(
+            """
+                SELECT skill, skill_level, is_goal
+                FROM user_skills
+                WHERE user_id = $1
+            """,
+            user_response["user_id"]
+        )
+
+        skills = [UserSkill(**s) for s in skills_response]
+
+        if not user_response:
+            logger.error(f"Failed to retrieve user {mail}")
+            raise HTTPException(
+                status_code=404, detail="Failed to retrieve user"
+            )
+        logger.info(f"User {mail} retrieved successfully")
+        return UserResponse(**user_response, skills=skills)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 async def retrieve_user(user_id: UUID) -> UserResponse:
     try:
         async with db.transaction() as conn:
@@ -126,7 +175,10 @@ async def retrieve_user(user_id: UUID) -> UserResponse:
                         users.background,
                         users.education,
                         users.goals,
-                        users.goal_vacancy
+                        users.goal_vacancy,
+                        users.mail,
+                        users.is_active,
+                        users.is_verified
                     FROM users
                     WHERE users.user_id = $1
                 """,
@@ -218,6 +270,12 @@ async def update_user(user: UserUpdate) -> UserResponse:
                 users_update_fields["goals"] = user.goals
             if user.goal_vacancy is not None:
                 users_update_fields["goal_vacancy"] = user.goal_vacancy
+            if user.mail is not None:
+                users_update_fields["mail"] = user.mail
+            if user.is_verified is not None:
+                users_update_fields["is_verified"] = user.is_verified
+            if user.is_active is not None:
+                users_update_fields["is_active"] = user.is_active
 
             if users_update_fields:
                 await _update("users", users_update_fields, user.user_id, conn)
@@ -241,7 +299,10 @@ async def update_user(user: UserUpdate) -> UserResponse:
                         users.background,
                         users.education,
                         users.goals,
-                        users.goal_vacancy
+                        users.goal_vacancy,
+                        users.mail,
+                        users.is_active,
+                        users.is_verified
                     FROM users
                     WHERE users.user_id = $1
                 """,

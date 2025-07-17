@@ -16,6 +16,7 @@ os.environ.setdefault("SECRET_KEY", "test-secret-key")
 os.environ.setdefault("JWT_SECRET_KEY", "test-secret-key")
 os.environ.setdefault("PASSWORD_SALT", "test-salt")
 
+
 class FakeTransaction:
     def __init__(self, conn):
         self.conn = conn
@@ -43,6 +44,7 @@ async def async_client(setup_db):
 def generate_fake_user_data():
     faker = Faker()
     return {
+        "mail": faker.email(),
         "login": faker.email(),
         "password": faker.password(),
         "background": faker.sentence(),
@@ -144,7 +146,7 @@ def generate_fake_node_data():
     return {
         "title": faker.sentence(),
         "summary": faker.sentence(),
-        "progress": faker.random_int(0, 100)
+        "progress": random.choice(["Not started", "In progress", "Done"])
     }
 
 

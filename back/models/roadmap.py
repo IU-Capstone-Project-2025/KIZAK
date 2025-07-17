@@ -72,7 +72,7 @@ class NodeUpdate(BaseModel):
         examples=["123e4567-e89b-12d3-a456-426614174002"]
     )
     progress: Optional[str] = Field(
-        ...,
+        None,
         description="Progress status of the node, e.g., percentage or step number",
         examples=['Not started', 'In progress', 'Done']
     )
@@ -161,4 +161,16 @@ class RoadmapInfo(BaseModel):
                 "to_node": "123e4567-e89b-12d3-a456-426614174002"
             }
         ]]
+    )
+
+class RoadmapFeedback(BaseModel):
+    user_id: UUID = Field(
+        ...,
+        description="Unique identifier of the user to update",
+        examples=["123e4567-e89b-12d3-a456-426614174000"]
+    )
+    roadmap_id: UUID = Field(
+        ...,
+        description="Unique identifier of the roadmap",
+        examples=["123e4567-e89b-12d3-a456-426614174005"]
     )

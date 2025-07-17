@@ -18,7 +18,7 @@ export const UserProfileMain: React.FC<Props> = ({
 }) => {
   return (
     <div
-      className={`rounded-xl flex flex-col shadow-sm border border-ui-border ${className}`}
+      className={`rounded-xl flex flex-col shadow-sm border border-ui-border overflow-hidden min-h-0 ${className}`}
     >
       <h2 className="text-ui-dark text-md w-full pl-3 py-2 border-b border-ui-border">
         User profile
@@ -29,26 +29,26 @@ export const UserProfileMain: React.FC<Props> = ({
             <Image
               src={userImage}
               alt={userName}
-              width={240}
-              height={240}
-              className="rounded-xl"
+              width={120}
+              height={120}
+              className="rounded-xl object-cover"
             />
           ) : (
-            <div className="rounded-xl bg-brand-primary w-60 h-60" />
+            <div className="rounded-xl bg-brand-primary w-30 h-30" />
           )}
-          <div className="flex flex-col justify-start">
+          <div className="flex flex-col justify-start max-w-xs">
             <p className="font-semibold text-sm mb-2">User name</p>
-            <p className="bg-bg-subtle w-fit text-md px-2 py-1 rounded-md border border-ui-border">
+            <p className="bg-bg-subtle w-fit text-md px-2 py-1 rounded-md border border-ui-border truncate break-words max-w-xs">
               {userName}
             </p>
             <p className="font-semibold text-sm mb-2 mt-4">User goal</p>
-            <p className="bg-bg-subtle text-md px-2 py-1 rounded-md text-center border border-ui-border">
+            <p className="bg-bg-subtle text-md px-2 py-1 rounded-md text-center border border-ui-border break-words max-w-xs whitespace-pre-line">
               {userGoal}
             </p>
           </div>
         </div>
         <div className="flex w-full h-fit mt-12 flex-col">
-          <div className="text-center w-full text-xl">Skill tags</div>
+          <div className="text-center w-full mt-8 text-xl">Skill tags</div>
           <div className="h-full w-full flex flex-wrap justify-center gap-2 mt-4">
             {tags.map((tag) => (
               <div

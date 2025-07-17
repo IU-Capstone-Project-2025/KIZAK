@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { OnboardingData, SkillLevels } from "@/shared/types/types";
 
@@ -9,6 +9,8 @@ interface SliderLevelProps {
   onNext: () => void;
   setData: (data: React.SetStateAction<OnboardingData>) => void;
   onBack: () => void;
+  isLastStep?: boolean;
+  userData: OnboardingData;
 }
 
 const levels: SkillLevels[] = ["Beginner", "Intermediate", "Advanced"];
@@ -18,18 +20,27 @@ export const SliderLevel: React.FC<SliderLevelProps> = ({
   skillLevel = "Intermediate",
   onNext,
   setData,
+  userData,
   onBack,
+  isLastStep = false,
 }) => {
-  const [levelIndex, setLevelIndex] = React.useState(() =>
-    levels.indexOf(skillLevel)
+  const currentSkill = userData.skills.find(
+    (s) => s.skill === tag && !s.is_goal
   );
+  const [levelIndex, setLevelIndex] = useState(() => {
+    const level = currentSkill ? currentSkill.skill_level : skillLevel;
+    const index = levels.indexOf(level);
+    return index !== -1 ? index : levels.indexOf("Intermediate");
+  });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const leftPercent = useMemo(
     () => (levelIndex / (levels.length - 1)) * 100,
     [levelIndex]
   );
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     setData((prev) => {
@@ -42,6 +53,12 @@ export const SliderLevel: React.FC<SliderLevelProps> = ({
         ],
       };
     });
+
+    if (isLastStep) {
+      setIsSubmitting(true);
+    }
+
+    await new Promise((res) => setTimeout(res, 50));
     onNext();
   };
 
@@ -54,6 +71,7 @@ export const SliderLevel: React.FC<SliderLevelProps> = ({
         </span>{" "}
         level?
       </h2>
+
       <div className="relative w-full mt-8">
         <div className="h-[10px] bg-gray-200 rounded-full relative">
           <div
@@ -61,6 +79,7 @@ export const SliderLevel: React.FC<SliderLevelProps> = ({
             style={{ width: `${leftPercent}%` }}
           />
         </div>
+
         <input
           type="range"
           min={0}
@@ -70,12 +89,12 @@ export const SliderLevel: React.FC<SliderLevelProps> = ({
           onChange={(e) => setLevelIndex(parseInt(e.target.value))}
           className="w-full appearance-none bg-transparent absolute top-0 left-0 h-10 cursor-pointer opacity-0 z-10"
         />
+
         <div
           className="absolute top-[5px] -translate-y-1/2 h-4 w-4 rounded-full bg-yellow-500 transition-all duration-300 pointer-events-none"
-          style={{
-            left: `calc(${leftPercent}% - 8px)`,
-          }}
+          style={{ left: `calc(${leftPercent}% - 8px)` }}
         />
+
         <div className="flex justify-between mt-4 text-sm font-medium text-gray-700">
           {levels.map((level, index) => (
             <span
@@ -91,10 +110,11 @@ export const SliderLevel: React.FC<SliderLevelProps> = ({
           ))}
         </div>
       </div>
+
       <div className="flex-between gap-x-1">
         <button
           onClick={onBack}
-          className={`h-[50px] flex-center gap-x-2 w-50 py-2 bg-bg-main border border-ui-border shadow-sm hover:bg-bg-subtle text-ui-dark/70 font-semibold rounded-md transition-all duration-300`}
+          className="h-[50px] flex-center gap-x-2 w-50 py-2 bg-bg-main border border-ui-border shadow-sm hover:bg-bg-subtle text-ui-dark/70 font-semibold rounded-md transition-all duration-300"
           type="button"
         >
           <ArrowLeft size={18} /> Back
@@ -103,9 +123,37 @@ export const SliderLevel: React.FC<SliderLevelProps> = ({
         <button
           type="submit"
           onClick={handleSubmit}
-          className={`h-[50px] w-50 py-2 text-white font-semibold rounded-md transition-all duration-300 bg-brand-primary hover:bg-brand-primary/90`}
+          disabled={isSubmitting}
+          className={`h-[50px] w-50 py-2 text-white font-semibold rounded-md transition-all duration-300 flex items-center justify-center ${
+            isSubmitting
+              ? "bg-brand-primary/70 cursor-not-allowed"
+              : "bg-brand-primary hover:bg-brand-primary/90"
+          }`}
         >
-          Continue
+          {isSubmitting ? (
+            <svg
+              className="animate-spin h-5 w-5 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-20"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              />
+              <path
+                className="opacity-80"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+              />
+            </svg>
+          ) : (
+            "Continue"
+          )}
         </button>
       </div>
     </article>
