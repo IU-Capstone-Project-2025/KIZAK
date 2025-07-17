@@ -1,6 +1,5 @@
 {
     "dataflow": "mlflow",
-    "ci/cd": "ci cd",
     "system testing": "manual testing",
     "data cleansing": "data cleaning",
     "microsoft azure": "azure",
@@ -54,10 +53,8 @@
     "computer security": "security",
     "security systems": "security",
     "network security": "security",
-    "tcp/ip": "tcp ip",
     "restful api": "rest api",
     "amazon dynamodb": "dynamodb",
-    "html and css": "css",
     "data ethics": "data governance",
     "data literacy": "data governance",
     "data integrity": "data governance",
