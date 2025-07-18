@@ -41,7 +41,9 @@ export const SignUp: React.FC<Props> = ({ setData, userData, onNext }) => {
   async function checkMailExists(mail: string) {
     setMailChecking(true);
     try {
-      const res = await fetch(`${API_BASE_URL}/check_email/${encodeURIComponent(mail)}`);
+      const res = await fetch(
+        `${API_BASE_URL}/check_email/${encodeURIComponent(mail)}`
+      );
       const data = await res.json();
       if (data.exists) {
         setMailError("Email already registered");
@@ -149,6 +151,24 @@ export const SignUp: React.FC<Props> = ({ setData, userData, onNext }) => {
 
       <div className="space-y-4 flex-center flex-col">
         <input
+          type="email"
+          placeholder="Enter your email..."
+          className="h-[50px] placeholder:text-ui-muted w-100 px-4 py-2 border rounded-sm focus:outline-none focus:ring border-ui-border"
+          value={mail}
+          onChange={(e) => {
+            const value = e.target.value;
+            setMail(value);
+
+            if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(value)) {
+              setMailError("Invalid email format");
+            } else {
+              setMailError("");
+            }
+          }}
+        />
+
+        {mailError && <div className="text-red-500 text-xs">{mailError}</div>}
+        <input
           type="text"
           placeholder="Enter your login..."
           value={login}
@@ -175,15 +195,6 @@ export const SignUp: React.FC<Props> = ({ setData, userData, onNext }) => {
           <div className="text-red-500 text-xs">{passwordError}</div>
         )}
 
-        <input
-          type="email"
-          placeholder="Enter your email..."
-          className="h-[50px] placeholder:text-ui-muted w-100 px-4 py-2 border rounded-sm focus:outline-none focus:ring border-ui-border"
-          value={mail}
-          onChange={(e) => setMail(e.target.value)}
-        />
-        {mailError && <div className="text-red-500 text-xs">{mailError}</div>}
-
         <button
           type="submit"
           disabled={!isValid}
@@ -192,7 +203,7 @@ export const SignUp: React.FC<Props> = ({ setData, userData, onNext }) => {
             isValid ? "bg-brand-primary" : "bg-ui-muted/90 cursor-not-allowed"
           }`}
         >
-          {(checkingLogin || mailChecking) ? "Checking..." : "Continue"}
+          {checkingLogin || mailChecking ? "Checking..." : "Continue"}
         </button>
       </div>
 

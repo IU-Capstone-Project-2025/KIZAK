@@ -5,8 +5,6 @@ import Image from "next/image";
 import { TransitionLink } from "@/shared/components/transition/transition-link";
 import { usePageTransition } from "@/shared/components/transition/transition-provider";
 import { API_BASE_URL } from "@/shared/types/types";
-import Link from "next/link";
-
 
 export default function Login() {
   const [login, setLogin] = useState("");
@@ -116,18 +114,19 @@ export default function Login() {
 
         <div className="flex justify-between text-xs text-ui-muted w-full mt-4">
           <TransitionLink
-            delay={300}
+            delay={100}
             href="/onboarding"
             className="hover:underline"
           >
             or Sign up
           </TransitionLink>
-          <Link
+          <TransitionLink
+            delay={100}
             href="/forgot-password"
             className="hover:underline"
           >
             Forgot your password?
-          </Link>
+          </TransitionLink>
         </div>
       </div>
     </div>

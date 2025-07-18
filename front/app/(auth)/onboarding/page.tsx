@@ -111,7 +111,11 @@ export default function OnBoarding() {
           let errorText = "Ошибка при создании пользователя";
           try {
             const errorData = await response.json();
-            if (errorData.detail && typeof errorData.detail === "string" && errorData.detail.includes("Email already registered")) {
+            if (
+              errorData.detail &&
+              typeof errorData.detail === "string" &&
+              errorData.detail.includes("Email already registered")
+            ) {
               errorText = "Email already registered";
             } else {
               errorText = errorData.detail
@@ -131,7 +135,7 @@ export default function OnBoarding() {
           localStorage.removeItem("onboardingUserData");
           localStorage.removeItem("onboardingStep");
         }
-        handleClick(`/main/${userId}`, 0);
+        handleClick(`/main/${userId}?tutorial=1`, 300);
       } catch (error) {
         setErrorMessage("Registration failed. Please try again.");
         console.error("Ошибка при завершении онбординга:", error);
@@ -182,7 +186,9 @@ export default function OnBoarding() {
           </div>
         </div>
         {errorMessage && (
-          <div className="text-red-600 text-center text-sm mb-2">{errorMessage}</div>
+          <div className="text-red-600 text-center text-sm mb-2">
+            {errorMessage}
+          </div>
         )}
         <section className={animating ? "fade-slide-out" : "fade-slide-in"}>
           {screens[displayedStep]}

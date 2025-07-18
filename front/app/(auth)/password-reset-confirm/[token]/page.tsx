@@ -36,14 +36,17 @@ export default function PasswordResetConfirmPage() {
     try {
       const hashedNewPassword = await hashPassword(newPassword);
       const hashedConfirmNewPassword = await hashPassword(confirmNewPassword);
-      const res = await fetch(`${API_BASE_URL}/password-reset-confirm/${token}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          new_password: hashedNewPassword,
-          confirm_new_password: hashedConfirmNewPassword,
-        }),
-      });
+      const res = await fetch(
+        `${API_BASE_URL}/password-reset-confirm/${token}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            new_password: hashedNewPassword,
+            confirm_new_password: hashedConfirmNewPassword,
+          }),
+        }
+      );
       if (!res.ok) {
         let data;
         try {
@@ -68,7 +71,6 @@ export default function PasswordResetConfirmPage() {
 
   const isValid = newPassword.length >= 6 && confirmNewPassword.length >= 6;
 
-  // Add real-time validation for password length
   useEffect(() => {
     if (newPassword.length > 0 && newPassword.length < 6) {
       setPasswordError("Password must be at least 6 characters long");
@@ -83,7 +85,10 @@ export default function PasswordResetConfirmPage() {
         <h2 className="text-center text-lg font-medium text-ui-dark mb-4">
           Set a new password
         </h2>
-        <form className="space-y-4 flex-center flex-col" onSubmit={handleSubmit}>
+        <form
+          className="space-y-4 flex-center flex-col"
+          onSubmit={handleSubmit}
+        >
           <input
             type="password"
             placeholder="New password"
@@ -92,7 +97,11 @@ export default function PasswordResetConfirmPage() {
             onChange={(e) => setNewPassword(e.target.value)}
             required
           />
-          {passwordError && <div className="text-red-600 text-center text-sm mb-2">{passwordError}</div>}
+          {passwordError && (
+            <div className="text-red-600 text-center text-sm mb-2">
+              {passwordError}
+            </div>
+          )}
           <input
             type="password"
             placeholder="Confirm new password"
@@ -118,4 +127,4 @@ export default function PasswordResetConfirmPage() {
       </div>
     </div>
   );
-} 
+}

@@ -14,7 +14,7 @@ const progressColors: Record<Progress, string> = {
 export const NodeProgress: React.FC<Props> = ({ progress }) => {
   return (
     <p
-      className={`text-xs px-3 py-1 border border-ui-border rounded-lg transition-all duration-300 cursor-default hover:bg-bg-subtle ${progressColors[progress]}`}
+      className={`whitespace-nowrap text-xs px-3 py-1 border border-ui-border rounded-lg transition-all duration-300 cursor-default hover:bg-bg-subtle ${progressColors[progress]}`}
     >
       {progress}
     </p>

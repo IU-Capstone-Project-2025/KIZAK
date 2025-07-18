@@ -8,16 +8,14 @@ import {
   Progress,
   PositionedNode,
 } from "../../hooks/useRoadmapLayout";
-import Link from "next/link";
-import { CustomSelect } from "./select";
 import { fetchRoadmapData } from "@/shared/utils/roadmapConverter";
 import { API_BASE_URL, RawLink } from "@/shared/types/types";
 import { ResourceDetails } from "./resource-details";
 
-export const WORLD_SIZE = 5000;
 const SPACING = 30;
 const dotRadius = 1;
 const dotColor = "#ccc";
+const worldHeight = 2500;
 
 interface Props {
   userId: string;
@@ -30,10 +28,9 @@ export const RoadmapNew: React.FC<Props> = ({ userId, initialNodeId }) => {
   const [initialProgress, setInitialProgress] = useState<
     Record<string, Progress>
   >({});
+  const [progressMap, setProgressMap] = useState<Record<string, Progress>>({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const [progressMap, setProgressMap] = useState<Record<string, Progress>>({});
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [isDragging, setDragging] = useState(false);
   const [selectedNode, setSelectedNode] = useState<string | null>(
@@ -41,10 +38,11 @@ export const RoadmapNew: React.FC<Props> = ({ userId, initialNodeId }) => {
   );
   const [roadmapId, setRoadmapId] = useState<string>("");
 
-  const { nodes, measuring, measureElements } = useRoadmapLayout(
+  const { nodes, measuring, measureElements, worldWidth } = useRoadmapLayout(
     rawNodes,
     rawLinks
   );
+
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const lastPos = useRef({ x: 0, y: 0 });
@@ -78,10 +76,10 @@ export const RoadmapNew: React.FC<Props> = ({ userId, initialNodeId }) => {
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
-    ctx.clearRect(0, 0, WORLD_SIZE, WORLD_SIZE);
+    ctx.clearRect(0, 0, worldWidth, worldHeight);
     ctx.fillStyle = dotColor;
-    for (let x = 0; x < WORLD_SIZE; x += SPACING) {
-      for (let y = 0; y < WORLD_SIZE; y += SPACING) {
+    for (let x = 0; x < worldWidth; x += SPACING) {
+      for (let y = 0; y < worldHeight; y += SPACING) {
         ctx.beginPath();
         ctx.arc(x, y, dotRadius, 0, 2 * Math.PI);
         ctx.fill();
@@ -94,8 +92,8 @@ export const RoadmapNew: React.FC<Props> = ({ userId, initialNodeId }) => {
     if (!container) return pos;
     const halfWidth = container.clientWidth;
     return {
-      x: Math.min(0, Math.max(pos.x, halfWidth - WORLD_SIZE)),
-      y: Math.min(0, Math.max(pos.y, container.clientHeight - WORLD_SIZE)),
+      x: Math.min(0, Math.max(pos.x, halfWidth - worldWidth)),
+      y: Math.min(0, Math.max(pos.y, container.clientHeight - worldHeight)),
     };
   };
 
@@ -118,8 +116,6 @@ export const RoadmapNew: React.FC<Props> = ({ userId, initialNodeId }) => {
     const duration = 600;
     const startTime = performance.now();
     const startOffset = offset;
-    const container = containerRef.current;
-    if (!container) return;
 
     const easeInOutQuad = (t: number) =>
       t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
@@ -142,7 +138,6 @@ export const RoadmapNew: React.FC<Props> = ({ userId, initialNodeId }) => {
   const handleOnNodeClick = (nodeId: string) => {
     setPrevOffsetBeforeSelection(offset);
     setSelectedNode(nodeId);
-
     window.history.pushState(null, "", `/roadmap/${userId}/${nodeId}`);
 
     const container = containerRef.current;
@@ -167,12 +162,59 @@ export const RoadmapNew: React.FC<Props> = ({ userId, initialNodeId }) => {
     }
   };
 
+  const handleProgressChange = async (
+    nodeId: string,
+    newProgress: Progress
+  ) => {
+    setProgressMap((prev) => ({ ...prev, [nodeId]: newProgress }));
+
+    try {
+      await fetch(`${API_BASE_URL}/node/`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ node_id: nodeId, progress: newProgress }),
+      });
+    } catch (err) {
+      console.error("Failed to update progress", err);
+    }
+  };
+
+  const selectedNodeData: PositionedNode | null = selectedNode
+    ? nodes.find((n) => n.id === selectedNode) ?? null
+    : null;
+  const selectedRawNode = selectedNode
+    ? rawNodes.find((n) => n.node_id === selectedNode) ?? null
+    : null;
+  const selectedResourceId = selectedRawNode?.resource_id ?? null;
+  const selectedNodeProgress: Progress = selectedNode
+    ? progressMap[selectedNode]
+    : "Not started";
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const container = containerRef.current;
+    if (!canvas || !container) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = worldWidth * dpr;
+    canvas.height = worldHeight * dpr;
+    canvas.style.width = `${worldWidth}px`;
+    canvas.style.height = `${worldHeight}px`;
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(dpr, dpr);
+
+    drawDots();
+    drawLinks();
+  }, [measuring, selectedNode, nodes, worldWidth]);
+
   const drawLinks = () => {
     const canvas = canvasRef.current;
     if (!canvas || measuring) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
-    ctx.clearRect(0, 0, WORLD_SIZE, WORLD_SIZE);
+    ctx.clearRect(0, 0, worldWidth, worldHeight);
     drawDots();
     ctx.strokeStyle = "#ccc";
     ctx.lineWidth = 1.2;
@@ -192,75 +234,18 @@ export const RoadmapNew: React.FC<Props> = ({ userId, initialNodeId }) => {
     });
   };
 
-  const handleProgressChange = async (
-    nodeId: string,
-    newProgress: Progress
-  ) => {
-    setProgressMap((prev) => ({ ...prev, [nodeId]: newProgress }));
-
-    try {
-      await fetch(`${API_BASE_URL}/node/`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          node_id: nodeId,
-          progress: newProgress,
-        }),
-      });
-      console.log("Progress updated");
-    } catch (err) {
-      console.error("Failed to update progress", err);
-    }
-  };
-
-  const selectedNodeData: PositionedNode | null = selectedNode
-    ? nodes.find((n) => n.id === selectedNode) ?? null
-    : null;
-
-  const selectedRawNode = selectedNode
-    ? rawNodes.find((n) => n.node_id === selectedNode) ?? null
-    : null;
-
-  const selectedResourceId = selectedRawNode?.resource_id ?? null;
-
-  const selectedNodeProgress: Progress = selectedNode
-    ? progressMap[selectedNode]
-    : "Not started";
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const container = containerRef.current;
-    if (!canvas || !container) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    const dpr = window.devicePixelRatio || 1;
-    canvas.width = WORLD_SIZE * dpr;
-    canvas.height = WORLD_SIZE * dpr;
-    canvas.style.width = `${WORLD_SIZE}px`;
-    canvas.style.height = `${WORLD_SIZE}px`;
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.scale(dpr, dpr);
-
-    drawDots();
-    drawLinks();
-  }, [measuring, selectedNode, nodes]);
-
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
     const center = {
-      x: container.clientWidth / 2 / 2 - WORLD_SIZE / 2,
-      y: container.clientHeight / 2 - WORLD_SIZE / 2,
+      x: container.clientWidth / 2 / 2 - worldWidth / 2,
+      y: container.clientHeight / 2 - worldHeight / 2,
     };
     setOffset(checkLimit(center));
-  }, []);
+  }, [worldWidth]);
 
   useEffect(() => {
     if (!initialNodeId || measuring) return;
-
     const node = nodes.find((n) => n.id === initialNodeId);
     const container = containerRef.current;
     if (!node || !container) return;
@@ -289,16 +274,16 @@ export const RoadmapNew: React.FC<Props> = ({ userId, initialNodeId }) => {
         <div
           className="absolute origin-center"
           style={{
-            width: WORLD_SIZE,
-            height: WORLD_SIZE,
+            width: worldWidth,
+            height: worldHeight,
             transform: `translate(${offset.x}px, ${offset.y}px)`,
           }}
         >
           <canvas
             ref={canvasRef}
-            width={WORLD_SIZE}
-            height={WORLD_SIZE}
-            style={{ width: WORLD_SIZE, height: WORLD_SIZE }}
+            width={worldWidth}
+            height={worldHeight}
+            style={{ width: worldWidth, height: worldHeight }}
           />
           {measuring && measureElements}
           {!measuring &&
@@ -326,14 +311,14 @@ export const RoadmapNew: React.FC<Props> = ({ userId, initialNodeId }) => {
 
       <div
         className={`
-    absolute top-0 right-0 h-full w-1/2 bg-none p-6 overflow-auto z-10
-    transition-all duration-300
-    ${
-      selectedNode
-        ? "opacity-100 visible pointer-events-auto"
-        : "opacity-0 invisible pointer-events-none"
-    }
-  `}
+        absolute top-0 right-0 h-full w-1/2 bg-none p-6 overflow-auto z-10
+        transition-all duration-300
+        ${
+          selectedNode
+            ? "opacity-100 visible pointer-events-auto"
+            : "opacity-0 invisible pointer-events-none"
+        }
+      `}
       >
         <div className="w-full h-full">
           {selectedNode && (
