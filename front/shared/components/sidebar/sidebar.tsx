@@ -67,8 +67,11 @@ export const Sidebar: React.FC<Props> = ({ className = "" }) => {
           <SidebarButton href={`/onboarding/edit/${user_id}`} delay={100}>
             <RefreshCw width={30} height={32} strokeWidth={1.8} />
           </SidebarButton>
+          <SidebarButton>
+            <Bolt width={30} height={32} strokeWidth={1.8} />
+          </SidebarButton>
           {/* Кнопка выхода */}
-          <SidebarButton onClick={handleLogout delay={100}}>
+          <SidebarButton onClick={handleLogout}>
             <LogOut width={30} height={30} strokeWidth={1.8} />
           </SidebarButton>
         </div>
