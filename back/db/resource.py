@@ -45,37 +45,35 @@ async def retrieve_resource(res_id: UUID, roadmap:UUID) -> ResourceResponse:
         if not row:
             logger.error(f"Resource {res_id} not found")
             raise HTTPException(status_code=404, detail="Resource not found")
+        try:
+            progress = await conn.fetchrow(
+                """
+                    SELECT
+                        progress,
+                        node_id
+                    FROM roadmap_node
+                    WHERE resource_id = $1 AND roadmap_id = $2
+                """,
+                res_id,
+                roadmap
+            )
 
-        progress = await conn.fetchrow(
-            """
-                SELECT
-                    progress,
-                    node_id
-                FROM roadmap_node
-                WHERE resource_id = $1 AND roadmap_id = $2
-            """,
-            res_id,
-            roadmap
-        )
-        if not progress:
-            logger.error(f"Resource {progress} not found")
-            raise HTTPException(status_code=404, detail="Progress not found")
-
-        await conn.execute(
-            """
-                INSERT INTO roadmap_history (
-                    roadmap_id,
-                    node_id,
-                    title, 
-                    progress
-                ) VALUES ($1, $2, $3, $4)
-            """,
-            roadmap,
-            progress['node_id'],
-            row['title'],
-            progress['progress']
-        )
-
+            await conn.execute(
+                """
+                    INSERT INTO roadmap_history (
+                        roadmap_id,
+                        node_id,
+                        title, 
+                        progress
+                    ) VALUES ($1, $2, $3, $4)
+                """,
+                roadmap,
+                progress['node_id'],
+                row['title'],
+                progress['progress']
+            )
+        except:
+            pass
 
         logger.info(f"Retrieved resource {res_id}")
 
