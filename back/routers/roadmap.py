@@ -81,42 +81,13 @@ async def get_roadmap_by_login(login: str) -> RoadmapInfo:
     description="Create and generate roadmap using ML generator",
     status_code=status.HTTP_201_CREATED
 )
-# async def post_roadmap(
-#     new_roadmap: RoadmapCreate, response: Response
-# ) -> RoadmapResponse:
-#     roadmap = await create_roadmap(new_roadmap)
-#     logger.info(f"Created roadmap {roadmap.roadmap_id}")
-#     response.headers["Location"] = f"/roadmap/{roadmap.roadmap_id}"
-#     return roadmap
-
 async def post_roadmap(
-    new_roadmap: RoadmapCreate
-    # response: Response
-) -> RoadmapInfo:
-    logger.info(f"Generating roadmap for user {new_roadmap.user_id}")
-
-    # get user profile
-    profile = await retrieve_user_profile(new_roadmap.user_id)
-
-    # formatting for generator
-    user_role = profile.user.goal_vacancy
-    user_query = profile.user.goals
-    user_skills = profile.user.skills
-
-    # generate from ml
-    roadmap_info = await generate_roadmap(
-        user_id=new_roadmap.user_id,
-        user_role=user_role,
-        user_skills=user_skills,
-        user_query=user_query
-    )
-
-    if roadmap_info is None:
-        logger.error("Roadmap generation failed")
-        raise HTTPException(status_code=500, detail="Roadmap generation failed")
-
-    logger.info(f"Roadmap generated with ID {roadmap_info.roadmap_id}")
-    return roadmap_info
+    new_roadmap: RoadmapCreate, response: Response
+) -> RoadmapResponse:
+    roadmap = await create_roadmap(new_roadmap)
+    logger.info(f"Created roadmap {roadmap.roadmap_id}")
+    response.headers["Location"] = f"/roadmap/{roadmap.roadmap_id}"
+    return roadmap
 
 
 @router.post(
