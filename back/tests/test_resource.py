@@ -44,12 +44,12 @@ async def test_post_resource_db_fail(async_client, fake_resource_data):
 @pytest.mark.asyncio
 async def test_get_resource(async_client, created_resource):
     response = await async_client.get(
-        f"/resources/{created_resource['resource_id']}")
+        f"/resources/{created_resource['resource']['resource_id']}?roadmapId={created_resource['roadmap']['roadmap_id']}")
     json_response = response.json()
     logger.debug(f"Resource retrieved: {json_response}")
     assert response.status_code == 200
     actual = ResourceResponse(**json_response)
-    expected = ResourceResponse(**created_resource)
+    expected = ResourceResponse(**created_resource['resource'])
     assert actual == expected
 
 
@@ -107,7 +107,7 @@ async def test_delete_resource(async_client, created_resource):
     assert response.status_code == 204
 
     response = await async_client.get(
-        f"/resources/{created_resource['resource_id']}")
+        f"/resources/{created_resource['resource']['resource_id']}?roadmapId={created_resource['roadmap']['roadmap_id']}")
     assert response.status_code == 404
 
 
