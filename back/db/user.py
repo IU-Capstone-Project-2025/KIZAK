@@ -208,7 +208,7 @@ async def retrieve_user(user_id: UUID) -> UserResponse:
         raise
 
 
-async def update_user(user: UserUpdate, new_roadmap: UUID) -> UserResponse:
+async def update_user(user: UserUpdate) -> UserResponse:
     try:
         async with db.transaction() as conn:
             updated = False
@@ -327,10 +327,8 @@ async def update_user(user: UserUpdate, new_roadmap: UUID) -> UserResponse:
                     user_roadmap
                 WHERE
                     user_id = $1
-                    AND roadmap_id != $2
             """,
-            user.user_id,
-            new_roadmap
+            user.user_id
             )
 
             return UserResponse(**user_response, skills=skills)
