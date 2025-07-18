@@ -98,33 +98,28 @@ async def created_roadmap(async_client, created_user):
     return json_response
 
 
+
 def generate_fake_resource_data():
     faker = Faker()
     return {
-        "resource": {
-            "resource_type": random.choice(["Course", "Article"]),
-            "title": faker.sentence(),
-            "summary": faker.sentence(),
-            "content": faker.url(),
-            "level": random.choice(
-                ['Beginner', 'Intermediate', 'Advanced', 'All Levels']),
-            "price": faker.random_int(),
-            "language": faker.language_name(),
-            "duration_hours": faker.random_int(),
-            "platform": faker.company(),
-            "rating": faker.random_int(0, 5),
-            "published_date": faker.date(),
-            "certificate_available": random.choice(["true", "false"]),
-            "skills_covered": [
-                faker.word(),
-                faker.word()
-            ]
-        },
-        "roadmap": {
-            "roadmap_id": "1",
-            "user_id": "1s"
-        }
-        }
+        "resource_type": random.choice(["Course", "Article"]),
+        "title": faker.sentence(),
+        "summary": faker.sentence(),
+        "content": faker.url(),
+        "level": random.choice(
+            ['Beginner', 'Intermediate', 'Advanced', 'All Levels']),
+        "price": faker.random_int(),
+        "language": faker.language_name(),
+        "duration_hours": faker.random_int(),
+        "platform": faker.company(),
+        "rating": faker.random_int(0, 5),
+        "published_date": faker.date(),
+        "certificate_available": random.choice(["true", "false"]),
+        "skills_covered": [
+            faker.word(),
+            faker.word()
+        ]
+    }
 
 
 @pytest.fixture
