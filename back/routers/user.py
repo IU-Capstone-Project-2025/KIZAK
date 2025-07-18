@@ -71,12 +71,6 @@ async def put_user(user: UserUpdate) -> UserResponse:
     
     new_user = await update_user(user)
 
-    new_roadmap = await generate_roadmap(
-        user.user_id,
-        user_role=user.goal_vacancy,
-        user_skills=user.skills,
-        user_query=user.goals
-    )
     return new_user
 
 
