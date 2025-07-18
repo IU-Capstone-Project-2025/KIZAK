@@ -155,8 +155,18 @@ export const SignUp: React.FC<Props> = ({ setData, userData, onNext }) => {
           placeholder="Enter your email..."
           className="h-[50px] placeholder:text-ui-muted w-100 px-4 py-2 border rounded-sm focus:outline-none focus:ring border-ui-border"
           value={mail}
-          onChange={(e) => setMail(e.target.value)}
+          onChange={(e) => {
+            const value = e.target.value;
+            setMail(value);
+
+            if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(value)) {
+              setMailError("Invalid email format");
+            } else {
+              setMailError("");
+            }
+          }}
         />
+
         {mailError && <div className="text-red-500 text-xs">{mailError}</div>}
         <input
           type="text"

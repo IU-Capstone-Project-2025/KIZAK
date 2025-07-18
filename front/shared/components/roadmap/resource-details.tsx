@@ -72,7 +72,9 @@ export const ResourceDetails: React.FC<Props> = ({
   useEffect(() => {
     const fetchResource = async () => {
       try {
-        const res = await fetch(`${API_BASE_URL}/resources/${resourceId}?roadmapId=${roadmap_id}`);
+        const res = await fetch(
+          `${API_BASE_URL}/resources/${resourceId}?roadmapId=${roadmap_id}`
+        );
         if (!res.ok) throw new Error("Failed to fetch resource");
         const data = await res.json();
         setResource(data);
@@ -150,7 +152,7 @@ export const ResourceDetails: React.FC<Props> = ({
         {resource.title}
         <button
           onClick={() => setShowDislikeModal(true)}
-          className="w-8 h-8 flex-center text-red-500 hover:text-red-700 transition"
+          className="w-8 h-8 mr-4 flex-center text-red-500 hover:text-red-700 transition"
         >
           <ThumbsDown size={24} />
         </button>
