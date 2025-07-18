@@ -29,20 +29,20 @@ export const UserProfileMain: React.FC<Props> = ({
             <Image
               src={userImage}
               alt={userName}
-              width={120}
-              height={120}
-              className="rounded-xl object-cover"
+              width={240}
+              height={240}
+              className="rounded-xl"
             />
           ) : (
-            <div className="rounded-xl bg-brand-primary w-30 h-30" />
+            <div className="rounded-xl bg-brand-primary w-60 h-60" />
           )}
-          <div className="flex flex-col justify-start max-w-xs">
+          <div className="flex flex-col justify-start">
             <p className="font-semibold text-sm mb-2">User name</p>
-            <p className="bg-bg-subtle w-fit text-md px-2 py-1 rounded-md border border-ui-border truncate break-words max-w-xs">
+            <p className="bg-bg-subtle w-fit text-md px-2 py-1 rounded-md border border-ui-border">
               {userName}
             </p>
             <p className="font-semibold text-sm mb-2 mt-4">User goal</p>
-            <p className="bg-bg-subtle text-md px-2 py-1 rounded-md text-center border border-ui-border break-words max-w-xs whitespace-pre-line">
+            <p className="bg-bg-subtle text-md px-2 py-1 rounded-md text-center border border-ui-border">
               {userGoal}
             </p>
           </div>
