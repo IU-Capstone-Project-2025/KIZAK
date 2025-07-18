@@ -208,7 +208,7 @@ async def retrieve_user(user_id: UUID) -> UserResponse:
         raise
 
 
-async def update_user(user: UserUpdate) -> UserResponse:
+async def update_user(user: UserUpdate, new_roadmap: UUID) -> UserResponse:
     try:
         async with db.transaction() as conn:
             updated = False
@@ -320,6 +320,18 @@ async def update_user(user: UserUpdate) -> UserResponse:
 
             skills = [UserSkill(**s) for s in skills_response]
             skills.sort(key=lambda skill: skill.skill)
+
+            await conn.execute(
+            """
+                DELETE FROM
+                    user_roadmap
+                WHERE
+                    user_id = $1
+                    AND roadmap_id != $2
+            """,
+            user.user_id,
+            new_roadmap
+            )
 
             return UserResponse(**user_response, skills=skills)
     except Exception:
