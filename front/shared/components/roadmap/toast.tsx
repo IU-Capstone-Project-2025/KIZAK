@@ -7,7 +7,7 @@ interface FeedbackToastProps {
 export const FeedbackToast: React.FC<FeedbackToastProps> = ({ show }) => {
   return (
     <div
-      className={`fixed bottom-6 right-6 max-w-xs w-[300px] bg-white shadow-lg rounded-xl border border-ui-border p-4 flex items-start gap-3 transition-transform duration-500 ease-out
+      className={`fixed bottom-6 right-6 w-[500px] bg-white shadow-lg rounded-xl border border-ui-border p-4 flex items-start gap-3 transition-transform duration-500 ease-out
       ${show ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"}`}
     >
       <div className="flex flex-col text-ui-dark">

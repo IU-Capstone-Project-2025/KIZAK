@@ -114,7 +114,7 @@ export const MainContent: React.FC<Props> = ({ className = "", userId }) => {
           <UserProfileMain
             userName={profile.user.login}
             userImage="/userProfile.jpg"
-            className=""
+            className="h-full flex-1"
             userGoal={profile.user.goals}
             tags={profile.user.skills.map((s) => s.skill)}
           />
