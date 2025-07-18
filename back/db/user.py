@@ -327,7 +327,10 @@ async def update_user(user: UserUpdate, new_roadmap: UUID) -> UserResponse:
                     user_roadmap
                 WHERE
                     user_id = $1
-            """, user.user_id
+                    AND roadmap_id != $2
+            """,
+            user.user_id,
+            new_roadmap
             )
 
             return UserResponse(**user_response, skills=skills)
