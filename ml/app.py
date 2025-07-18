@@ -8,6 +8,14 @@ from ranker import CourseRanker
 import json
 import dotenv
 
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s"
+)
+logger = logging.getLogger(__name__)
+
 dotenv.load_dotenv()
 
 with open('./job_skill.json', 'r', encoding='utf-8') as f:
@@ -22,8 +30,8 @@ for role, skills in job_skills_raw.items():
     USER_SKILLS.update(ROLE_TO_SKILLS[role])
 
 search_engine = CourseVectorSearch()
-ranker = CourseRanker(PRIORITIES_BY_ROLE)
-analyzer = SkillGapAnalyzer(ROLE_TO_SKILLS)   
+analyzer = SkillGapAnalyzer(ROLE_TO_SKILLS)
+ranker = CourseRanker(PRIORITIES_BY_ROLE, skill_gap_analyzer=analyzer)
 
 ranks = dict()
 
@@ -36,17 +44,20 @@ async def get_user_skills() -> set:
 @app.post("/generate_roadmap/")
 async def generate_roadmap(data: RoadmapData) -> RoadmapResponse:
     missing_skills = analyzer.compute_gap(data.user_skills, data.user_role)['missing_skills']
+    # upd to search better
     best_courses = search_engine.get_courses(data.user_role, data.user_query, data.user_skills)
-    ranked_courses = ranker.rank_courses(best_courses, missing_skills, data.user_skills, data.user_role)
+    # upd to improved ranking
+    ranked_courses = ranker.rank_with_fallback(best_courses, missing_skills, data.user_skills, data.user_role)
 
     ranks[data.user_id] = ranked_courses
 
+    logger.info(f"Ranked courses sample: {ranked_courses[:3]}")
+
     nodes = []
     for idx, course_entry in enumerate(ranked_courses[:10]):
-        details = course_entry["course"]["details"]
         node = {
             "node_id": idx,
-            "resource_id": details["id"]
+            "resource_id": course_entry["course"]["id"]
         }
         nodes.append(node)
 
@@ -66,14 +77,18 @@ async def generate_roadmap(data: RoadmapData) -> RoadmapResponse:
 
 @app.post("/update_roadmap/")
 async def update_roadmap(data: RoadmapUpdateData) -> RoadmapResponse:
-    ranked_courses = ranker.update_ranking(ranks[data.user_id], data.reason)
+    ranked_courses = ranker.update_ranking(
+        ranks[data.user_id],
+        data.reasons,
+        data.user_skills,
+        data.user_role
+    )
     ranks[data.user_id] = ranked_courses
     nodes = []
     for idx, course_entry in enumerate(ranked_courses[:10]):
-        details = course_entry["course"]["details"]
         node = {
             "node_id": idx,
-            "resource_id": details["id"]
+            "resource_id": course_entry["course"]["id"]
         }
         nodes.append(node)
 
@@ -89,3 +104,10 @@ async def update_roadmap(data: RoadmapUpdateData) -> RoadmapResponse:
         nodes=nodes,
         links=links
     )
+
+# to get courses that marked by user as unavailable
+# @app.get("/buffer_zone/")
+# async def get_buffer_zone():
+#     return ranker.buffer_zone
+
+# todo: func to update known skills after re-ranking

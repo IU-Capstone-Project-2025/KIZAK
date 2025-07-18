@@ -1,5 +1,5 @@
-from typing import List, Dict
-from sklearn.metrics import ndcg_score
+from typing import List, Dict, Any
+import numpy as np
 import re
 import random
 
@@ -55,9 +55,10 @@ class CourseRanker:
     #     todo: add strategies to re-rank based on feedback (if needed)
     }
 
-    def __init__(self, priorities_by_role: Dict[str, Dict[str, int]], rating_max: float = 5.0):
+    def __init__(self, priorities_by_role: Dict[str, Dict[str, int]], skill_gap_analyzer=None, rating_max: float = 5.0):
         self.priorities_by_role = priorities_by_role
         self.rating_max = rating_max
+        self.skill_gap_analyzer = skill_gap_analyzer
 
         # diversity, skill gain and positional bias from last ranking
         self.last_metrics = {}
@@ -66,6 +67,8 @@ class CourseRanker:
         self.skill_gain_threshold = 6.0
         self.diversity_threshold = 2.5
         self.position_bias_threshold = 4.0
+
+        self.buffer_zone = []  # unavailable courses to delete from db
 
     def get_metrics(self):
         return self.last_metrics
@@ -140,6 +143,28 @@ class CourseRanker:
             words.update(splited)
         return words
 
+    def prepare_courses(self, search_results: List[Dict]) -> List[Dict]:
+        """
+        Converts raw search results to format expected by ranking logic
+        while preserving all metadata for re-ranking.
+        """
+        # logger.info(f"Input to prepare_courses (sample): {search_results[:1]}")
+        courses = []
+        for res in search_results:
+            original = res["details"]["original_point"]
+            course = {
+                "id": res["details"]["id"],
+                "title": original.get("title"),
+                "skills": original.get("skills", []),
+                "rating": original.get("rating", 0),
+                "price": original.get("price", 0),
+                "author": original.get("author")
+            }
+            courses.append(course)
+        # logger.info(f"Output from prepare_courses (sample): {courses[:1]}")
+
+        return courses
+
     def rank_courses(self,
                      courses: List[Dict], # from cosine similarity search
                      skill_gap: List[str], #from skillgap
@@ -172,6 +197,8 @@ class CourseRanker:
                     raw_course_skills = []
 
             course_skills = self.get_skill_words(raw_course_skills)
+
+            # logger.info(f"kostilno-normalized skills: {course_skills}")
 
             # course_skills = course.get("skills", [])
 
@@ -282,13 +309,15 @@ class CourseRanker:
         return metrics.get("position_bias", 0) <= self.position_bias_threshold
 
     def rank_with_fallback(self,
-                           courses: List[Dict],
+                           search_res: List[Dict],
                            skill_gap: List[str],
                            known_skills: List[str],
                            target_role: str,
                            max_attempts: int = 5 #attenpt to improve 3 times
                            ) -> List[Dict]:
         """Cyclic ranks with different strategies until offline metrics are better"""
+
+        courses = self.prepare_courses(search_res)
 
         tried_strategies = set()
         strategy = "basic"  # start with basic one
@@ -341,45 +370,81 @@ class CourseRanker:
 
     def update_ranking(self,
                        ranked_courses: List[Dict],
-                       feedback_type: str,  # - "too_easy"
+                       feedback_dict: Dict[int, str],  # - "too_easy"
                                             # - "wrong_skills"
                                             # - "too_hard"
                                             # - "bad_author"
                                             # - "unavailable"
-                       feedback_data: None # course id or mb something else
+                       known_skills: List[str],
+                       user_role: str
                        ) -> List[Dict]:
         """
         Re-ranking based on user feedback (human metric)
         """
         updated_courses = ranked_courses.copy()
+        new_known_skills = set(known_skills) #to update
 
-        if feedback_type == "too_easy":
-            # todo: update known skills and re-rank with new skill gap
-            logger.info(f"Feedback type is 'too_easy'")
-        elif feedback_type == "wrong_skills":
-            # throw out this course and similar ones
-            logger.info('Feedback type is "wrong_skills"')
-            course_id = feedback_data.get("course_id")
-            updated_courses = [c for c in updated_courses if c["course"].get("id") != course_id]
-            # TODO: implement logic of deleting similar courses
-        elif feedback_type == "too_hard":
-            # make course further in roadmap
-            logger.info('Feedback type is "too_hard"')
-            course_id = feedback_data.get("course_id")
-            for i, c in enumerate(updated_courses):
-                if c["course"].get("id") == course_id and i < len(updated_courses) - 1:
-                    updated_courses[i], updated_courses[i + 1] = updated_courses[i + 1], updated_courses[i]
-                    break
-        elif feedback_type == "bad_author":
-            # throw out courses with that author
-            logger.info('Feedback type is "bad_author"')
-            author = feedback_data.get("author")
-            updated_courses = [c for c in updated_courses if c["course"].get("author") != author]
-        elif feedback_type == "unavailable":
-            # TODO: implement alg to delete course from db
-            logger.info('Feedback type is "unavailable"')
-            course_id = feedback_data.get("course_id")
-            updated_courses = [c for c in updated_courses if c["course"].get("id") != course_id]
-        else:
-            logger.info('Unknown feedback type')
+        for node_id, feedback_type in feedback_dict.items():
+            if node_id >= len(updated_courses):
+                continue
+
+            course = updated_courses[node_id]
+            details = course["course"]["details"]
+            original = details.get("original_point", {})
+
+            course_id = details.get("id")
+            course_skills = set(original.get("skills", []))
+            author = original.get("author")
+
+            logger.info(f"Feedback '{feedback_type}' on course {course_id} at node {node_id}")
+
+            if feedback_type == "too_easy":
+                # update known skills
+                new_known_skills.update(course_skills)
+                # throw out course
+                updated_courses = [
+                    c for c in updated_courses
+                    if c["course"]["details"]["id"] != course_id
+                ]
+            elif feedback_type == "wrong_skills":
+                # throw out this course and similar ones
+                updated_courses = [
+                    c for c in updated_courses
+                    if c["course"]["details"]["id"] != course_id and not (
+                            course_skills & set(c["course"]["details"]["original_point"].get("skills", []))
+                    )
+                ]
+            elif feedback_type == "too_hard":
+                # make course further in roadmap
+                logger.info('Feedback type is "too_hard"')
+                if node_id < len(updated_courses):
+                    course = updated_courses.pop(node_id)
+                    new_pos = min(node_id + 3, len(updated_courses))
+                    updated_courses.insert(new_pos, course)
+            elif feedback_type == "bad_author":
+                # throw out courses with that author
+                updated_courses = [
+                    c for c in updated_courses
+                    if c["course"]["details"]["original_point"].get("author") != author
+                ]
+            elif feedback_type == "unavailable":
+                # throw out course and add it to a buffer zone
+                updated_courses = [
+                    c for c in updated_courses
+                    if c["course"]["details"]["id"] != course_id
+                ]
+                self.buffer_zone.append(course)
+            else:
+                logger.warning(f"Unknown feedback type: {feedback_type}")
+
+        # recalculate skill gap and rerank
+        if new_known_skills != set(known_skills) and self.skill_gap_analyzer:
+            missing_skills = self.skill_gap_analyzer.compute_gap(list(new_known_skills), user_role)[
+                "missing_skills"]
+            flattened_courses = [c["course"]["details"]["original_point"] for c in updated_courses]
+            for course in flattened_courses:
+                course["id"] = course.get("id") or course.get("url")  # ensure ID exists
+            updated_courses = self.rank_courses(flattened_courses, missing_skills, list(new_known_skills),
+                                                user_role)
+
         return updated_courses
