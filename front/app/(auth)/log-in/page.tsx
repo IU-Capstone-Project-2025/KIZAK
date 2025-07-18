@@ -36,7 +36,7 @@ export default function Login() {
       formData.append("username", login);
       formData.append("password", hashedPassword);
 
-      const res = await fetch(`${API_BASE_URL}/login`, {
+      const res = await fetch(`${API_BASE_URL}/token`, {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
