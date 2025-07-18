@@ -68,7 +68,14 @@ async def put_user(user: UserUpdate) -> UserResponse:
         user.password = get_password_hash(user.password)
     if user.skills is not None:
         user.skills.sort(key=lambda skill: skill.skill)
-    return await update_user(user)
+    
+    new_roadmap = await generate_roadmap(
+        user.user_id,
+        user_role=user.goal_vacancy,
+        user_skills=user.skills,
+        user_query=user.goals
+    )
+    return await update_user(user, new_roadmap.roadmap_id)
 
 
 @router.delete(
