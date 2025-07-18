@@ -21,9 +21,9 @@ router = APIRouter()
     description="Gets a resource from database based on UUID",
     status_code=status.HTTP_200_OK
 )
-async def get_resource(res_id: UUID):
+async def get_resource(res_id: UUID, roadmapId: UUID):
     logger.info(f"Retrieving resource {res_id}")
-    return await retrieve_resource(res_id)
+    return await retrieve_resource(res_id, roadmapId)
 
 
 @router.post(

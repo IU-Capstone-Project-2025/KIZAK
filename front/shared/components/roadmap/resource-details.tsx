@@ -72,7 +72,7 @@ export const ResourceDetails: React.FC<Props> = ({
   useEffect(() => {
     const fetchResource = async () => {
       try {
-        const res = await fetch(`${API_BASE_URL}/resources/${resourceId}`);
+        const res = await fetch(`${API_BASE_URL}/resources/${resourceId}?roadmapId=${roadmap_id}`);
         if (!res.ok) throw new Error("Failed to fetch resource");
         const data = await res.json();
         setResource(data);
