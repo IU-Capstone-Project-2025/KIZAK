@@ -51,7 +51,7 @@ export const ResourceDetails: React.FC<Props> = ({
 
   const handleDislikeReason = async (reason: string) => {
     try {
-      await fetch(`${API_BASE_URL}/feedback`, {
+      await fetch(`${API_BASE_URL}/feedback/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
