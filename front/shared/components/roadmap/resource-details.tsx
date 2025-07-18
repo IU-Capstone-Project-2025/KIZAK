@@ -6,6 +6,7 @@ import { Progress } from "./node";
 import { ThumbsDown, ThumbsUp, X } from "lucide-react";
 import { DislikeReasonModal } from "./DislikeReasonModal";
 import { API_BASE_URL } from "@/shared/types/types";
+import { FeedbackToast } from "./toast";
 
 type ResourceResponse = {
   resource_type: string;
@@ -48,6 +49,7 @@ export const ResourceDetails: React.FC<Props> = ({
   const [error, setError] = useState<string | null>(null);
   const [showDislikeModal, setShowDislikeModal] = useState(false);
   const [isDisliked, setIsDisliked] = useState(false);
+  const [showToast, setShowToast] = useState(false);
 
   const handleDislikeReason = async (reason: string) => {
     try {
@@ -64,6 +66,9 @@ export const ResourceDetails: React.FC<Props> = ({
         }),
       });
       setIsDisliked(true);
+
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 5000);
     } catch (e) {
       console.error("Ошибка при отправке фидбека", e);
     }
@@ -240,6 +245,7 @@ export const ResourceDetails: React.FC<Props> = ({
           </div>
         </div>
       </div>
+      <FeedbackToast show={showToast} />
     </div>
   );
 };
