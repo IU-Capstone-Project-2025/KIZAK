@@ -72,7 +72,7 @@ class NodeUpdate(BaseModel):
         examples=["123e4567-e89b-12d3-a456-426614174002"]
     )
     progress: Optional[str] = Field(
-        ...,
+        None,
         description="Progress status of the node, e.g., percentage or step number",
         examples=['Not started', 'In progress', 'Done']
     )

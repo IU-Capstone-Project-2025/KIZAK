@@ -20,3 +20,13 @@ async def check_login(login: str) -> dict:
     except HTTPException:
         return {"exists": False}
 
+
+@router.get("/check_email/{email}")
+async def check_email(email: str) -> dict:
+    from db.user import retrieve_user_by_email
+    try:
+        await retrieve_user_by_email(email)
+        return {"exists": True}
+    except Exception:
+        return {"exists": False}
+

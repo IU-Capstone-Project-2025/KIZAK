@@ -197,4 +197,3 @@ async def update_roadmap(
     except requests.exceptions.RequestException as e:
         print(f"Error calling ML service: {e}")
         return None
-

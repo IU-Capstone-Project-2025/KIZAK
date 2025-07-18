@@ -16,6 +16,7 @@ export interface UserSkill {
 export interface OnboardingData {
   login: string;
   password: string;
+  mail: string;
   background: string;
   education: string;
   goals: string;

@@ -50,6 +50,7 @@ async def post_user(new_user: UserCreate, response: Response) -> UserResponse:
         user_skills=user.skills,
         user_query=user.goals
     )
+    user.skills.sort(key=lambda skill: skill.skill)
     user.roadmap = roadmap
     logger.info(f"Created user {user.user_id}")
     response.headers["Location"] = f"/users/{user.user_id}"
@@ -65,6 +66,8 @@ async def put_user(user: UserUpdate) -> UserResponse:
     logger.info(f"Putting user {user.user_id}")
     if user.password is not None:
         user.password = get_password_hash(user.password)
+    if user.skills is not None:
+        user.skills.sort(key=lambda skill: skill.skill)
     return await update_user(user)
 
 

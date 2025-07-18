@@ -16,6 +16,7 @@ os.environ.setdefault("SECRET_KEY", "test-secret-key")
 os.environ.setdefault("JWT_SECRET_KEY", "test-secret-key")
 os.environ.setdefault("PASSWORD_SALT", "test-salt")
 
+
 class FakeTransaction:
     def __init__(self, conn):
         self.conn = conn
@@ -97,6 +98,7 @@ async def created_roadmap(async_client, created_user):
     return json_response
 
 
+
 def generate_fake_resource_data():
     faker = Faker()
     return {
@@ -145,7 +147,7 @@ def generate_fake_node_data():
     return {
         "title": faker.sentence(),
         "summary": faker.sentence(),
-        "progress": faker.random_int(0, 100)
+        "progress": random.choice(["Not started", "In progress", "Done"])
     }
 
 

@@ -40,18 +40,18 @@ async def test_post_resource_db_fail(async_client, fake_resource_data):
                                            json=fake_resource_data)
         assert response.status_code == 500
 
-"""
+
 @pytest.mark.asyncio
 async def test_get_resource(async_client, created_resource):
     response = await async_client.get(
-        f"/resources/{created_resource['resource_id']}")
+        f"/resources/{created_resource['resource_id']}?roadmapId=a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11")
     json_response = response.json()
     logger.debug(f"Resource retrieved: {json_response}")
     assert response.status_code == 200
     actual = ResourceResponse(**json_response)
     expected = ResourceResponse(**created_resource)
     assert actual == expected
-"""
+
 
 @pytest.mark.asyncio
 async def test_get_resource_by_invalid_uuid(async_client):
@@ -69,9 +69,6 @@ async def test_update_resource(async_client, created_resource,
     logger.debug(f"Resource updated: {json_response}")
     assert response.status_code == 200
     actual = ResourceResponse(**json_response)
-    updated_resource["summary_vector"] = created_resource["summary_vector"]
-    updated_resource["skills_covered_vector"] = created_resource[
-        "skills_covered_vector"]
     expected = ResourceResponse(**updated_resource)
     assert actual == expected
 
@@ -102,7 +99,7 @@ async def test_clear_update_resource_json(async_client, created_resource):
     response = await async_client.put(f"/resources/", json=updated_resource)
     assert response.status_code == 400
 
-"""
+
 @pytest.mark.asyncio
 async def test_delete_resource(async_client, created_resource):
     response = await async_client.delete(
@@ -110,9 +107,9 @@ async def test_delete_resource(async_client, created_resource):
     assert response.status_code == 204
 
     response = await async_client.get(
-        f"/resources/{created_resource['resource_id']}")
+        f"/resources/{created_resource['resource_id']}?roadmapId=a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11")
     assert response.status_code == 404
-"""
+
 
 @pytest.mark.asyncio
 async def test_delete_resource_by_invalid_uuid(async_client):

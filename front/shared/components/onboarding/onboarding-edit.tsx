@@ -15,6 +15,7 @@ export function OnBoardingEdit({ isEditing = false, userId }: OnBoardingProps) {
   const defaultUserData: OnboardingData = {
     login: "",
     password: "",
+    mail: "",
     background: "",
     education: "",
     skills: [],
@@ -38,6 +39,7 @@ export function OnBoardingEdit({ isEditing = false, userId }: OnBoardingProps) {
           const loadedData: OnboardingData = {
             login: data.login,
             password: "",
+            mail: "",
             background: data.background || "",
             education: data.education || "",
             skills: data.skills || [],
