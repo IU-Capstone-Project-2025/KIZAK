@@ -1,0 +1,832 @@
+{
+  "go": [
+    [
+      "go",
+      1.0
+    ],
+    [
+      "git",
+      0.95
+    ]
+  ],
+  "bash": [
+    [
+      "bash",
+      1.0
+    ]
+  ],
+  "matlab": [
+    [
+      "matlab",
+      1.0
+    ]
+  ],
+  "data pipelines": [
+    [
+      "data pipelines",
+      1.0
+    ],
+    [
+      "data pipeline",
+      0.99
+    ]
+  ],
+  "pyspark": [
+    [
+      "pyspark",
+      1.0
+    ]
+  ],
+  "1с комплексная автоматизация": [
+    [
+      "automation",
+      0.91
+    ]
+  ],
+  "functional testing": [
+    [
+      "functional testing",
+      1.0
+    ]
+  ],
+  "java ee": [
+    [
+      "jest",
+      0.94
+    ]
+  ],
+  "java se": [
+    [
+      "jest",
+      0.88
+    ]
+  ],
+  "information architecture": [
+    [
+      "information architecture",
+      1.0
+    ]
+  ],
+  "quantitative research": [
+    [
+      "quantitative research",
+      1.0
+    ]
+  ],
+  "html": [
+    [
+      "html5",
+      0.89
+    ]
+  ],
+  "angular": [
+    [
+      "angular",
+      1.0
+    ]
+  ],
+  "responsive design": [
+    [
+      "responsive web design",
+      0.89
+    ]
+  ],
+  "prototyping": [
+    [
+      "prototyping",
+      1.0
+    ],
+    [
+      "rapid prototyping",
+      0.9
+    ]
+  ],
+  "c#": [
+    [
+      "c#",
+      1.0
+    ]
+  ],
+  "usability testing": [
+    [
+      "usability testing",
+      1.0
+    ]
+  ],
+  "test case": [
+    [
+      "test case",
+      1.0
+    ]
+  ],
+  "tcp ip": [
+    [
+      "tcp/ip",
+      0.96
+    ]
+  ],
+  "vue.js": [
+    [
+      "vue.js",
+      1.0
+    ]
+  ],
+  "sql": [
+    [
+      "sql",
+      1.0
+    ],
+    [
+      "sql",
+      1.0
+    ]
+  ],
+  "python": [
+    [
+      "python",
+      1.0
+    ],
+    [
+      "python",
+      1.0
+    ],
+    [
+      "python programming",
+      0.91
+    ]
+  ],
+  "numpy": [
+    [
+      "numpy",
+      1.0
+    ]
+  ],
+  "cybersecurity": [
+    [
+      "cybersecurity",
+      1.0
+    ],
+    [
+      "cyber security",
+      1.0
+    ],
+    [
+      "cyber security strategy",
+      0.94
+    ]
+  ],
+  "siem tools": [
+    [
+      "tooling",
+      0.86
+    ]
+  ],
+  "android": [
+    [
+      "android",
+      1.0
+    ],
+    [
+      "android applications",
+      0.89
+    ]
+  ],
+  "git": [
+    [
+      "git",
+      1.0
+    ],
+    [
+      "go",
+      0.95
+    ]
+  ],
+  "node.js": [
+    [
+      "node.js",
+      1.0
+    ],
+    [
+      "node.js",
+      1.0
+    ]
+  ],
+  "mysql": [
+    [
+      "mysql",
+      1.0
+    ]
+  ],
+  "linux": [
+    [
+      "linux",
+      1.0
+    ],
+    [
+      "linux kernel",
+      0.86
+    ]
+  ],
+  "data cleaning": [
+    [
+      "data cleansing",
+      0.94
+    ]
+  ],
+  "keras": [
+    [
+      "keras",
+      1.0
+    ]
+  ],
+  "qualitative research": [
+    [
+      "qualitative research",
+      1.0
+    ]
+  ],
+  "windows": [
+    [
+      "microsoft windows",
+      0.89
+    ]
+  ],
+  "api gateway": [
+    [
+      "api gateway",
+      1.0
+    ]
+  ],
+  "kubernetes": [
+    [
+      "kubernetes",
+      1.0
+    ]
+  ],
+  "nosql": [
+    [
+      "nosql",
+      1.0
+    ]
+  ],
+  "unix": [
+    [
+      "unix",
+      1.0
+    ]
+  ],
+  "financial modeling": [
+    [
+      "financial modeling",
+      1.0
+    ],
+    [
+      "financial analysis",
+      0.87
+    ]
+  ],
+  "ms sql": [
+    [
+      "sql",
+      0.87
+    ],
+    [
+      "sql",
+      0.87
+    ]
+  ],
+  "presentation": [
+    [
+      "presentations",
+      0.97
+    ]
+  ],
+  "json": [
+    [
+      "json",
+      1.0
+    ]
+  ],
+  "scripting": [
+    [
+      "scripting",
+      1.0
+    ]
+  ],
+  "c++": [
+    [
+      "c++",
+      1.0
+    ]
+  ],
+  "data modeling": [
+    [
+      "data modeling",
+      1.0
+    ]
+  ],
+  "r": [
+    [
+      "r",
+      1.0
+    ]
+  ],
+  "incident response": [
+    [
+      "incident response",
+      1.0
+    ]
+  ],
+  "3d modeling basics": [
+    [
+      "3d modeling",
+      0.95
+    ]
+  ],
+  "cloud architecture": [
+    [
+      "cloud computing architecture",
+      0.97
+    ],
+    [
+      "cloud computing",
+      0.92
+    ],
+    [
+      "cloud engineering",
+      0.9
+    ]
+  ],
+  "database security": [
+    [
+      "database security",
+      1.0
+    ]
+  ],
+  "security": [
+    [
+      "security systems",
+      0.9
+    ],
+    [
+      "security policies",
+      0.88
+    ],
+    [
+      "computer security",
+      0.86
+    ]
+  ],
+  "selenium": [
+    [
+      "selenium",
+      1.0
+    ]
+  ],
+  "ci cd": [
+    [
+      "ci/cd",
+      0.96
+    ]
+  ],
+  "forecasting": [
+    [
+      "forecasting",
+      1.0
+    ],
+    [
+      "prediction",
+      0.86
+    ]
+  ],
+  "data visualization": [
+    [
+      "data visualization",
+      1.0
+    ],
+    [
+      "data visualization software",
+      0.95
+    ],
+    [
+      "interactive data visualization",
+      0.93
+    ]
+  ],
+  "network programming": [
+    [
+      "network computing",
+      0.88
+    ],
+    [
+      "computer networks",
+      0.85
+    ]
+  ],
+  "puppet": [
+    [
+      "puppet",
+      1.0
+    ]
+  ],
+  "penetration testing": [
+    [
+      "penetration testing",
+      1.0
+    ]
+  ],
+  "java": [
+    [
+      "java",
+      1.0
+    ],
+    [
+      "java",
+      1.0
+    ],
+    [
+      "jest",
+      0.87
+    ]
+  ],
+  "mongodb": [
+    [
+      "mongodb",
+      1.0
+    ]
+  ],
+  "design thinking": [
+    [
+      "design thinking",
+      1.0
+    ],
+    [
+      "design theory",
+      0.92
+    ],
+    [
+      "design strategies",
+      0.87
+    ]
+  ],
+  "pytorch": [
+    [
+      "pytorch",
+      1.0
+    ]
+  ],
+  "deep learning": [
+    [
+      "deep learning",
+      1.0
+    ]
+  ],
+  "seaborn": [
+    [
+      "seaborn",
+      1.0
+    ]
+  ],
+  "graphics programming": [
+    [
+      "computer graphics",
+      0.91
+    ]
+  ],
+  "docker": [
+    [
+      "docker",
+      1.0
+    ]
+  ],
+  "cloud security": [
+    [
+      "cloud security",
+      1.0
+    ],
+    [
+      "cloud computing security",
+      0.98
+    ],
+    [
+      "cloud security infrastructure",
+      0.96
+    ]
+  ],
+  "performance tuning": [
+    [
+      "performance tuning",
+      1.0
+    ]
+  ],
+  "rest api": [
+    [
+      "restful api",
+      0.92
+    ],
+    [
+      "restful api",
+      0.92
+    ]
+  ],
+  "angularjs": [
+    [
+      "angular",
+      0.92
+    ]
+  ],
+  "analytics tools": [
+    [
+      "analytics",
+      0.93
+    ],
+    [
+      "advanced analytics",
+      0.92
+    ]
+  ],
+  "bootstrap": [
+    [
+      "bootstrap",
+      1.0
+    ]
+  ],
+  "tensorflow": [
+    [
+      "tensorflow",
+      1.0
+    ],
+    [
+      "tensorflow",
+      1.0
+    ]
+  ],
+  "django": [
+    [
+      "django",
+      1.0
+    ]
+  ],
+  "leadership": [
+    [
+      "leadership",
+      1.0
+    ]
+  ],
+  "flask": [
+    [
+      "flask",
+      1.0
+    ]
+  ],
+  "android sdk": [
+    [
+      "android",
+      0.89
+    ]
+  ],
+  "excel": [
+    [
+      "excel formulas",
+      0.88
+    ],
+    [
+      "microsoft excel",
+      0.87
+    ]
+  ],
+  "markdown": [
+    [
+      "markdown",
+      1.0
+    ]
+  ],
+  "grafana": [
+    [
+      "grafana",
+      1.0
+    ]
+  ],
+  "power bi": [
+    [
+      "power bi",
+      1.0
+    ]
+  ],
+  "system monitoring": [
+    [
+      "system monitoring",
+      1.0
+    ]
+  ],
+  "английский язык": [
+    [
+      "english language",
+      0.96
+    ]
+  ],
+  "scrum": [
+    [
+      "scrum",
+      1.0
+    ]
+  ],
+  "system architecture": [
+    [
+      "systems architecture",
+      0.98
+    ],
+    [
+      "computer architecture",
+      0.86
+    ]
+  ],
+  "encryption": [
+    [
+      "encryption",
+      1.0
+    ],
+    [
+      "cryptography",
+      0.9
+    ]
+  ],
+  "gitlab": [
+    [
+      "gitlab",
+      1.0
+    ]
+  ],
+  "snowflake": [
+    [
+      "snowflake schema",
+      0.9
+    ]
+  ],
+  "scikit learn": [
+    [
+      "scikit learn",
+      1.0
+    ],
+    [
+      "scikit-learn",
+      0.95
+    ]
+  ],
+  "matplotlib": [
+    [
+      "matplotlib",
+      1.0
+    ]
+  ],
+  "pandas": [
+    [
+      "pandas",
+      1.0
+    ]
+  ],
+  "postgresql": [
+    [
+      "postgresql",
+      1.0
+    ]
+  ],
+  "feature engineering": [
+    [
+      "feature engineering",
+      1.0
+    ]
+  ],
+  "jquery": [
+    [
+      "jquery",
+      1.0
+    ]
+  ],
+  "user research": [
+    [
+      "user research",
+      1.0
+    ]
+  ],
+  "vulnerability assessment": [
+    [
+      "vulnerability",
+      0.87
+    ]
+  ],
+  "graphql": [
+    [
+      "graphql",
+      1.0
+    ]
+  ],
+  "gradle": [
+    [
+      "verilog",
+      0.88
+    ],
+    [
+      "grep",
+      0.86
+    ]
+  ],
+  "jest": [
+    [
+      "jest",
+      1.0
+    ],
+    [
+      "java",
+      0.87
+    ],
+    [
+      "java",
+      0.87
+    ]
+  ],
+  "javascript": [
+    [
+      "javascript",
+      1.0
+    ],
+    [
+      "javascript",
+      1.0
+    ]
+  ],
+  "jenkins": [
+    [
+      "jenkins",
+      1.0
+    ]
+  ],
+  "scikit-learn": [
+    [
+      "scikit-learn",
+      1.0
+    ],
+    [
+      "scikit learn",
+      0.95
+    ]
+  ],
+  "performance testing": [
+    [
+      "performance testing",
+      1.0
+    ]
+  ],
+  "github": [
+    [
+      "github",
+      1.0
+    ],
+    [
+      "github",
+      1.0
+    ]
+  ],
+  "ruby": [
+    [
+      "ruby",
+      1.0
+    ]
+  ],
+  "animation basics": [
+    [
+      "animations",
+      0.9
+    ]
+  ],
+  "databricks": [
+    [
+      "databricks",
+      1.0
+    ]
+  ],
+  "ajax": [
+    [
+      "ajax",
+      1.0
+    ]
+  ],
+  "debugging": [
+    [
+      "debugging",
+      1.0
+    ]
+  ],
+  "statistics": [
+    [
+      "statistics",
+      1.0
+    ]
+  ],
+  "unit testing": [
+    [
+      "unit testing",
+      1.0
+    ]
+  ]
+}

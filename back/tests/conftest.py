@@ -98,6 +98,7 @@ async def created_roadmap(async_client, created_user):
     return json_response
 
 
+
 def generate_fake_resource_data():
     faker = Faker()
     return {

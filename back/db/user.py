@@ -472,7 +472,8 @@ async def retrieve_user_profile(user_id: UUID) -> UserProfileResponse:
                 roadmap_history
             WHERE
                 roadmap_id = $1
-            ORDER BY last_opened DESC
+            ORDER BY
+                last_opened DESC;
         """,
         roadmap_row['roadmap_id']
     )

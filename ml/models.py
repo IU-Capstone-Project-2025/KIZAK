@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
 from uuid import UUID
 
 
@@ -12,8 +12,9 @@ class RoadmapData(BaseModel):
 
 class RoadmapUpdateData(BaseModel):
     user_id: UUID
-    nodes: List
-    reason: str
+    reasons: dict[str, str]  # node_id -> reason
+    user_skills: Optional[List[str]] = None
+    user_role: Optional[str] = None
 
 
 class RoadmapResponse(BaseModel):

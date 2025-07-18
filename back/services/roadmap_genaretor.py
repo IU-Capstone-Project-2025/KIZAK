@@ -1,6 +1,8 @@
 from typing import List
 from uuid import UUID
 
+from utils.logger import logger
+
 from db.roadmap import create_roadmap, create_node, create_link, remove_roadmap
 from db.db_connector import db
 
@@ -28,6 +30,8 @@ async def generate_roadmap(
         response = requests.post("http://ml:8001/generate_roadmap/", json=data)
         response.raise_for_status()
         roadmap_info = response.json()
+
+        logger.info(f"ML response: {roadmap_info}")
         
         roadmap = await create_roadmap(
             RoadmapCreate(user_id=user_id)
@@ -35,6 +39,8 @@ async def generate_roadmap(
         
         nodes = []
         for course in roadmap_info["nodes"]:
+            logger.info(f"Looking up resource_id: {course['resource_id']}")
+
             resource_details = await db.fetchrow(
                 """
                 SELECT
@@ -85,21 +91,55 @@ async def update_roadmap(
     roadmap_id: UUID
 ) -> RoadmapInfo:
     try:
-        feedback_row = await db.fetchrow(
+        # feedback_row = await db.fetchrow(
+        #     """
+        #         SELECT
+        #             user_id,
+        #             node_id,
+        #             reason
+        #         WHERE
+        #             user_id = $1
+        #     """,
+        #     user_id
+        # )
+
+        # get feedback
+        feedback_rows = await db.fetch(
             """
-                SELECT
-                    user_id,
-                    node_id,
-                    reason
-                WHERE
-                    user_id = $1
+            SELECT node_id, reason
+            FROM roadmap_feedback
+            WHERE user_id = $1
             """,
             user_id
         )
 
+        # get user's skills
+        user_skills_rows = await db.fetch(
+            """
+            SELECT skill FROM user_skills
+            WHERE user_id = $1
+            """,
+            user_id
+        )
+        user_skills = [row["skill"] for row in user_skills_rows]
+
+        # get user's target vacancy
+        user_row = await db.fetchrow(
+            """
+            SELECT role FROM users
+            WHERE user_id = $1
+            """,
+            user_id
+        )
+        user_role = user_row["role"] if user_row else None
+
+        reasons = {str(row["node_id"]): row["reason"] for row in feedback_rows}
+
         data = {
-            "user_id": user_id,
-            "reason": feedback_row["reason"]
+            "user_id": str(user_id),
+            "reasons": reasons,
+            "user_skills": user_skills,
+            "user_role": user_role
         }
 
         response = requests.post("http://ml:8001/update_roadmap/", json=data)

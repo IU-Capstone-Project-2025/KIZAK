@@ -39,10 +39,10 @@ services:
       backend:
         condition: service_started
     env_file:
-      - path: ./.env.example
-        required: True
       - path: ./.env
-        required: false
+        required: True
+#      - path: ./.env.example
+#        required: false
   frontend:
     build:
       context: ./front
