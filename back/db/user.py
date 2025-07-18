@@ -361,15 +361,6 @@ async def update_user(user: UserUpdate) -> UserResponse:
                     user.user_id,
                     roadmap_id
                 )
-                await conn.execute(
-                """
-                    DELETE FROM
-                        roadmap_feedback
-                    WHERE
-                        user_id = $1
-                """,
-                user.user_id
-                )
 
             return UserResponse(**user_response, skills=skills)
     except Exception:
