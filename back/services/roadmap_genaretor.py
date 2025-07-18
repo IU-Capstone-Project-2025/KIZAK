@@ -24,7 +24,7 @@ async def generate_roadmap(
         data = {
             "user_id": str(user_id),
             "user_role": user_role,
-            "user_skills": [skill.skill for skill in user_skills],
+            "user_skills": [skill.skill for skill in user_skills if skill.is_goal],
             "user_query": user_query
         }
         response = requests.post("http://ml:8001/generate_roadmap/", json=data)
