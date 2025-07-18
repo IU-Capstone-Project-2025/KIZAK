@@ -1,8 +1,8 @@
-
 "use client";
 
 import React, { useState } from "react";
 import { API_BASE_URL } from "@/shared/types/types";
+import { TransitionLink } from "@/shared/components/transition/transition-link";
 
 export default function ForgotPassword() {
   const [login, setLogin] = useState("");
@@ -53,7 +53,10 @@ export default function ForgotPassword() {
         <h2 className="text-center text-lg font-medium text-ui-dark mb-4">
           Reset your password
         </h2>
-        <form className="space-y-4 flex-center flex-col" onSubmit={handleSendResetLink}>
+        <form
+          className="space-y-4 flex-center flex-col"
+          onSubmit={handleSendResetLink}
+        >
           <input
             type="text"
             placeholder="Enter your email ..."
@@ -77,14 +80,15 @@ export default function ForgotPassword() {
         {message && <div className="text-green-600 text-center">{message}</div>}
         {error && <div className="text-red-600 text-center">{error}</div>}
         <div className="flex justify-center mt-4">
-          <a
+          <TransitionLink
+            delay={100}
             href="/log-in"
             className="text-xs text-ui-muted hover:underline"
           >
             Back to login
-          </a>
+          </TransitionLink>
         </div>
       </div>
     </div>
   );
-} 
+}

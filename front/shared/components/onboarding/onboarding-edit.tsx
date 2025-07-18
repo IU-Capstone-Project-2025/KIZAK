@@ -39,7 +39,7 @@ export function OnBoardingEdit({ isEditing = false, userId }: OnBoardingProps) {
           const loadedData: OnboardingData = {
             login: data.login,
             password: "",
-            mail: "",
+            mail: data.mail || "",
             background: data.background || "",
             education: data.education || "",
             skills: data.skills || [],
@@ -133,9 +133,12 @@ export function OnBoardingEdit({ isEditing = false, userId }: OnBoardingProps) {
       try {
         if (isEditing && userId) {
           const updatedUserData = {
-            ...userData,
+            background: userData.background,
+            education: userData.education,
+            skills: userData.skills,
+            goals: userData.goals,
+            goal_vacancy: userData.goal_vacancy,
             user_id: userId,
-            password: undefined,
           };
 
           const response = await fetch(`${API_BASE_URL}/users/`, {

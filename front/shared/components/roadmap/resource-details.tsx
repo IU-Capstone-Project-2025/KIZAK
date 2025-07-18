@@ -72,7 +72,9 @@ export const ResourceDetails: React.FC<Props> = ({
   useEffect(() => {
     const fetchResource = async () => {
       try {
-        const res = await fetch(`${API_BASE_URL}/resources/${resourceId}?roadmapId=${roadmap_id}`);
+        const res = await fetch(
+          `${API_BASE_URL}/resources/${resourceId}?roadmapId=${roadmap_id}`
+        );
         if (!res.ok) throw new Error("Failed to fetch resource");
         const data = await res.json();
         setResource(data);
@@ -86,7 +88,22 @@ export const ResourceDetails: React.FC<Props> = ({
     fetchResource();
   }, [resourceId]);
 
-  if (loading) return <div className="p-6">Загрузка...</div>;
+  if (loading)
+    return (
+      <div
+        className="relative flex flex-col h-full p-6 rounded-md shadow-md overflow-auto
+        bg-bg-main text-ui-dark border border-ui-border"
+      >
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 w-8 h-8 flex-center rounded-full
+          text-ui-muted hover:text-ui-dark transition"
+        >
+          <X size={20} />
+        </button>
+        Загрузка...
+      </div>
+    );
   if (error || !resource)
     return (
       <div
@@ -100,6 +117,7 @@ export const ResourceDetails: React.FC<Props> = ({
         >
           <X size={20} />
         </button>
+        {error}
       </div>
     );
 
@@ -134,7 +152,7 @@ export const ResourceDetails: React.FC<Props> = ({
         {resource.title}
         <button
           onClick={() => setShowDislikeModal(true)}
-          className="w-8 h-8 flex-center text-red-500 hover:text-red-700 transition"
+          className="w-8 h-8 mr-4 flex-center text-red-500 hover:text-red-700 transition"
         >
           <ThumbsDown size={24} />
         </button>

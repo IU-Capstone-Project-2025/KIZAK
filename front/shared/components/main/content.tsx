@@ -8,6 +8,8 @@ import { MainTasks } from "./tasks";
 import { TransitionLink } from "../transition/transition-link";
 import { UserProfileMain } from "./user-profile-main";
 import { API_BASE_URL, Progress } from "@/shared/types/types";
+import { useRouter, useSearchParams } from "next/navigation";
+import { TutorialOverlay } from "./TutorialOverlay";
 
 interface UserSkill {
   skill: string;
@@ -48,6 +50,16 @@ export const MainContent: React.FC<Props> = ({ className = "", userId }) => {
   const [profile, setProfile] = useState<ProfileResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showTutorial, setShowTutorial] = useState(false);
+  const router = useRouter();
+
+  const params = useSearchParams();
+
+  useEffect(() => {
+    if (params.get("tutorial") === "1") {
+      setShowTutorial(true);
+    }
+  }, [params]);
 
   useEffect(() => {
     async function fetchProfile() {
@@ -59,7 +71,8 @@ export const MainContent: React.FC<Props> = ({ className = "", userId }) => {
         const data: ProfileResponse = await res.json();
         setProfile(data);
       } catch (err: unknown) {
-        const errorMessage = err instanceof Error ? err.message : "Unknown error";
+        const errorMessage =
+          err instanceof Error ? err.message : "Unknown error";
         setError(errorMessage);
       } finally {
         setLoading(false);
@@ -68,6 +81,14 @@ export const MainContent: React.FC<Props> = ({ className = "", userId }) => {
     fetchProfile();
   }, [userId]);
 
+  const finishTutorial = () => {
+    setShowTutorial(false);
+
+    const url = new URL(window.location.href);
+    url.searchParams.delete("tutorial");
+    router.replace(url.pathname + url.search);
+  };
+
   if (loading) return <div>Loading user profile...</div>;
   if (error) return <div>Error: {error}</div>;
   if (!profile) return <div>No profile data</div>;
@@ -75,23 +96,33 @@ export const MainContent: React.FC<Props> = ({ className = "", userId }) => {
   return (
     <div className={`h-full flex flex-col gap-y-4 flex-1 ${className}`}>
       <MainTop user_name={profile.user.login} />
-      <TransitionLink delay={2000} href={`/roadmap/${userId}`}>
-        <MainRoadmap userId={userId} />
+      <TransitionLink delay={300} href={`/roadmap/${userId}`}>
+        {" "}
+        <div id="main-roadmap">
+          <MainRoadmap userId={userId} />
+        </div>
       </TransitionLink>
       <div className="flex-1 flex flex-wrap gap-4">
-        <MainProgress
-          progress={profile.progress}
-          className="basis-[300px] grow"
-          userId={userId}
-        />
-        <UserProfileMain
-          userName={profile.user.login}
-          userImage="/userProfile.jpg"
-          className="basis-[300px] grow"
-          userGoal={profile.user.goals}
-          tags={profile.user.skills.map((s) => s.skill)}
-        />
-        <div className="flex flex-col gap-y-3 basis-[300px] grow">
+        <div className="basis-[300px] grow" id="main-progress">
+          <MainProgress
+            progress={profile.progress}
+            className="h-full flex-1"
+            userId={userId}
+          />
+        </div>
+        <div className="basis-[300px] grow" id="user-profile">
+          <UserProfileMain
+            userName={profile.user.login}
+            userImage="/userProfile.jpg"
+            className=""
+            userGoal={profile.user.goals}
+            tags={profile.user.skills.map((s) => s.skill)}
+          />
+        </div>
+        <div
+          id="main-tasks"
+          className="flex flex-1 flex-col gap-y-3 basis-[300px] grow"
+        >
           <MainTasks
             histotyItems={profile.history}
             className="flex-1"
@@ -99,6 +130,7 @@ export const MainContent: React.FC<Props> = ({ className = "", userId }) => {
           />
         </div>
       </div>
+      {showTutorial && <TutorialOverlay onFinish={finishTutorial} />}
     </div>
   );
 };
