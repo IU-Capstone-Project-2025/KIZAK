@@ -13,6 +13,31 @@ interface Props {
 
 export const RoadmapNode = forwardRef<HTMLDivElement, Props>(
   ({ className = "", title, description, progress, onClick }, ref) => {
+    let trimmedText =
+      description.length > 100
+        ? description.slice(0, 100).trim() + "..."
+        : description;
+
+    const wrapTextByWords = (text: string, maxLength: number): string => {
+      const words = text.split(" ");
+      let lines: string[] = [];
+      let currentLine = "";
+
+      for (const word of words) {
+        if ((currentLine + " " + word).trim().length <= maxLength) {
+          currentLine += (currentLine ? " " : "") + word;
+        } else {
+          lines.push(currentLine);
+          currentLine = word;
+        }
+      }
+      if (currentLine) lines.push(currentLine);
+
+      return lines.join("\n");
+    };
+
+    const formattedDescription = wrapTextByWords(trimmedText, 50);
+
     return (
       <article
         onClick={onClick}
@@ -26,11 +51,10 @@ export const RoadmapNode = forwardRef<HTMLDivElement, Props>(
         <p
           className="text-ui-dark/80 text-sm font-light roadmap-preview-description"
           style={{
-            whiteSpace: 'pre-line',
-            overflow: 'visible',
+            whiteSpace: "pre-line"
           }}
         >
-          {description}
+          {formattedDescription}
         </p>
       </article>
     );

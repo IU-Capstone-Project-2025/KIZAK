@@ -10,7 +10,7 @@ from models.user import UserUpdate, UserSkill, UserPassword
 from models.user import UserProfileResponse
 from db.db_connector import db
 from db.roadmap import get_roadmap_progress
-
+from services.roadmap_genaretor import generate_roadmap, update_roadmap
 
 async def create_user(user: UserCreate) -> UserResponse:
     try:
@@ -330,6 +330,37 @@ async def update_user(user: UserUpdate) -> UserResponse:
             """,
             user.user_id
             )
+
+            feedback_rows = await conn.fetch(
+                """
+                SELECT node_id, reason
+                FROM roadmap_feedback
+                WHERE user_id = $1
+                """,
+                user.user_id
+            )
+
+            roadmap_id = await conn.fetchval(
+                """
+                SELECT roadmap_id
+                FROM user_roadmap
+                WHERE user_id = $1
+                """,
+                user.user_id
+            )
+
+            if feedback_rows == [] or feedback_rows is None:
+                new_roadmap = await generate_roadmap(
+                    user.user_id,
+                    user_role=user.goal_vacancy,
+                    user_skills=user.skills,
+                    user_query=user.goals
+                )
+            else:
+                new_roadmap = await update_roadmap(
+                    user.user_id,
+                    roadmap_id
+                )
 
             return UserResponse(**user_response, skills=skills)
     except Exception:
