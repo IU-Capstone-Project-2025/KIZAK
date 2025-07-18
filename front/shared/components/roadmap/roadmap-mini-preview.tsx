@@ -13,8 +13,7 @@ interface Props {
 
 export const RoadmapMiniPreview: React.FC<Props> = ({ userId }) => {
   const { containerRef, nodesRef, positions } = useNodePositions();
-  const keys = Object.keys(positions);
-  
+
   const [roadmapData, setRoadmapData] = useState<{
     rawNodes: RawNode[];
     rawLinks: RawLink[];
@@ -59,10 +58,8 @@ export const RoadmapMiniPreview: React.FC<Props> = ({ userId }) => {
     );
   }
 
-  // Показываем только первые 3 узла для превью
   const previewNodes = roadmapData.rawNodes.slice(0, 3);
 
-  // Если нет узлов, показываем сообщение
   if (previewNodes.length === 0) {
     return (
       <div className="absolute w-full h-full p-4 flex items-center justify-center">
@@ -70,6 +67,8 @@ export const RoadmapMiniPreview: React.FC<Props> = ({ userId }) => {
       </div>
     );
   }
+
+  const previewKeys = previewNodes.map((_, index) => `node-${index + 1}`);
 
   return (
     <div
@@ -84,18 +83,17 @@ export const RoadmapMiniPreview: React.FC<Props> = ({ userId }) => {
             }}
             title={node.title}
             description={node.summary}
-            progress={roadmapData.initialProgress[node.node_id] || "Not started"}
+            progress={
+              roadmapData.initialProgress[node.node_id] || "Not started"
+            }
           />
-          
           {index < previewNodes.length - 1 && <div className="w-50" />}
         </React.Fragment>
       ))}
 
-      {/* Линки между узлами */}
-      {keys.length > 1 &&
-        keys.slice(0, -1).map((_, i) => {
-          const node1 = keys[i];
-          const node2 = keys[i + 1];
+      {previewKeys.length > 1 &&
+        previewKeys.slice(0, -1).map((node1, i) => {
+          const node2 = previewKeys[i + 1];
           if (!positions[node1] || !positions[node2]) return null;
           return (
             <NodeLink
@@ -107,4 +105,4 @@ export const RoadmapMiniPreview: React.FC<Props> = ({ userId }) => {
         })}
     </div>
   );
-}; 
+};

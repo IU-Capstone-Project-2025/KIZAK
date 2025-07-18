@@ -86,7 +86,22 @@ export const ResourceDetails: React.FC<Props> = ({
     fetchResource();
   }, [resourceId]);
 
-  if (loading) return <div className="p-6">Загрузка...</div>;
+  if (loading)
+    return (
+      <div
+        className="relative flex flex-col h-full p-6 rounded-md shadow-md overflow-auto
+        bg-bg-main text-ui-dark border border-ui-border"
+      >
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 w-8 h-8 flex-center rounded-full
+          text-ui-muted hover:text-ui-dark transition"
+        >
+          <X size={20} />
+        </button>
+        Загрузка...
+      </div>
+    );
   if (error || !resource)
     return (
       <div
@@ -100,6 +115,7 @@ export const ResourceDetails: React.FC<Props> = ({
         >
           <X size={20} />
         </button>
+        {error}
       </div>
     );
 

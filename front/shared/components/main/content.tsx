@@ -59,7 +59,8 @@ export const MainContent: React.FC<Props> = ({ className = "", userId }) => {
         const data: ProfileResponse = await res.json();
         setProfile(data);
       } catch (err: unknown) {
-        const errorMessage = err instanceof Error ? err.message : "Unknown error";
+        const errorMessage =
+          err instanceof Error ? err.message : "Unknown error";
         setError(errorMessage);
       } finally {
         setLoading(false);
@@ -75,7 +76,7 @@ export const MainContent: React.FC<Props> = ({ className = "", userId }) => {
   return (
     <div className={`h-full flex flex-col gap-y-4 flex-1 ${className}`}>
       <MainTop user_name={profile.user.login} />
-      <TransitionLink delay={2000} href={`/roadmap/${userId}`}>
+      <TransitionLink delay={300} href={`/roadmap/${userId}`}>
         <MainRoadmap userId={userId} />
       </TransitionLink>
       <div className="flex-1 flex flex-wrap gap-4">

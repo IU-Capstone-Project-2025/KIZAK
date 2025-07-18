@@ -2,18 +2,10 @@
 import React from "react";
 import Image from "next/image";
 import { SidebarButton } from "./sidebar-button";
-import {
-  Bolt,
-  House,
-  LogOut,
-  Map,
-  MessageCircle,
-  RefreshCw,
-} from "lucide-react";
+import { House, LogOut, Map, RefreshCw } from "lucide-react";
 const userProfile = "/userProfile.jpg";
 import { TransitionLink } from "../transition/transition-link";
 import { useParams } from "next/navigation";
-import { useRouter } from "next/navigation";
 
 interface Props {
   className?: string;
@@ -21,11 +13,9 @@ interface Props {
 
 export const Sidebar: React.FC<Props> = ({ className = "" }) => {
   const { user_id } = useParams() as { user_id?: string };
-  const router = useRouter();
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    router.push("/log-in");
   };
 
   return (
@@ -50,7 +40,7 @@ export const Sidebar: React.FC<Props> = ({ className = "" }) => {
           {/* <SidebarButton href={`/main/${user_id}`}>
             <MessageCircle width={32} height={32} strokeWidth={1.8} />
           </SidebarButton> */}
-          <SidebarButton href={`/roadmap/${user_id}`} delay={2000}>
+          <SidebarButton href={`/roadmap/${user_id}`} delay={300}>
             <Map width={32} height={30} strokeWidth={1.8} />
           </SidebarButton>
         </div>
@@ -67,11 +57,7 @@ export const Sidebar: React.FC<Props> = ({ className = "" }) => {
           <SidebarButton href={`/onboarding/edit/${user_id}`} delay={100}>
             <RefreshCw width={30} height={32} strokeWidth={1.8} />
           </SidebarButton>
-          <SidebarButton>
-            <Bolt width={30} height={32} strokeWidth={1.8} />
-          </SidebarButton>
-          {/* Кнопка выхода */}
-          <SidebarButton onClick={handleLogout}>
+          <SidebarButton href={`/log-in`} onClick={handleLogout} delay={100}>
             <LogOut width={30} height={30} strokeWidth={1.8} />
           </SidebarButton>
         </div>

@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useRef, useState, useMemo } from "react";
 import { RoadmapNode } from "../components/roadmap/node";
-import { WORLD_SIZE } from "../components/roadmap/roadmap-new";
 
 export type RawNode = {
   node_id: string;
@@ -31,6 +30,7 @@ export type PositionedNode = {
 export const useRoadmapLayout = (rawNodes: RawNode[], rawLinks: RawLink[]) => {
   const [nodes, setNodes] = useState<PositionedNode[]>([]);
   const [measuring, setMeasuring] = useState<boolean>(true);
+  const [worldWidth, setWorldWidth] = useState<number>(3000);
 
   const refs = useRef(new Map<string, HTMLDivElement | null>());
 
@@ -80,16 +80,21 @@ export const useRoadmapLayout = (rawNodes: RawNode[], rawLinks: RawLink[]) => {
     if (result.length === 0) return;
 
     const padding = 60;
+    const leftRightPadding = 500;
+
     const totalWidth =
       result.reduce((acc, node) => acc + node.width, 0) +
       padding * (result.length - 1);
 
-    const startX = WORLD_SIZE / 2 - totalWidth / 2;
+    const worldWidthCalculated = totalWidth + 2 * leftRightPadding;
+    setWorldWidth(worldWidthCalculated);
+
+    const startX = leftRightPadding;
 
     let currentX = startX;
     result.forEach((el) => {
       el.x = currentX;
-      el.y = WORLD_SIZE / 2 - el.height / 2;
+      el.y = 2500 / 2 - el.height / 2;
       currentX += el.width + padding;
     });
 
@@ -97,5 +102,5 @@ export const useRoadmapLayout = (rawNodes: RawNode[], rawLinks: RawLink[]) => {
     setMeasuring(false);
   }, [rawNodes, rawLinks]);
 
-  return { nodes, measuring, measureElements };
+  return { nodes, measuring, measureElements, worldWidth };
 };
