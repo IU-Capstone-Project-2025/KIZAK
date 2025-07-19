@@ -1,7 +1,7 @@
 "use client";
 import { OnboardingData } from "@/shared/types/types";
 import { ArrowLeft } from "lucide-react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 interface Props {
   title: string;
@@ -28,6 +28,12 @@ export const BigString: React.FC<Props> = ({
     typeof userData[fieldKey] === "string" ? (userData[fieldKey] as string) : ""
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (typeof userData[fieldKey] === "string") {
+      setText(userData[fieldKey] as string);
+    }
+  }, [userData, fieldKey]);
 
   const isValid = text.trim() !== "";
 

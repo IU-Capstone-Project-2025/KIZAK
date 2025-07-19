@@ -21,6 +21,12 @@ export const SignUp: React.FC<Props> = ({ setData, userData, onNext }) => {
   const [mailChecking, setMailChecking] = useState(false);
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
+  useEffect(() => {
+    setLogin(userData.login);
+    setPassword(userData.password);
+    setMail(userData.mail || "");
+  }, [userData]);
+
   async function checkLoginExists(login: string) {
     setCheckingLogin(true);
     try {
