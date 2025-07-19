@@ -20,3 +20,9 @@ class RoadmapUpdateData(BaseModel):
 class RoadmapResponse(BaseModel):
     nodes: List
     links: List
+    
+class ResourceSend(BaseModel):
+    resource_id: UUID
+    title: str
+    description: str
+    skills: List[str]

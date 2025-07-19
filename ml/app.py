@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from models import RoadmapData, RoadmapResponse, RoadmapUpdateData
+from models import ResourceSend, RoadmapData, RoadmapResponse, RoadmapUpdateData
 
 from vector_search import CourseVectorSearch
 from skipGapAnalyzer import SkillGapAnalyzer
@@ -7,6 +7,7 @@ from ranker import CourseRanker
 
 import json
 import dotenv
+import os
 
 import logging
 
@@ -17,6 +18,8 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 dotenv.load_dotenv()
+
+os.environ["HF_HOME"] = "/models"
 
 with open('./job_skill.json', 'r', encoding='utf-8') as f:
     job_skills_raw = json.load(f)
@@ -40,6 +43,10 @@ app = FastAPI()
 @app.get("/user_skills/")
 async def get_user_skills() -> set:
     return USER_SKILLS
+
+@app.post("/courses/")
+async def create_course(course: ResourceSend):
+    search_engine.insert_resource(course)
 
 @app.post("/generate_roadmap/")
 async def generate_roadmap(data: RoadmapData) -> RoadmapResponse:
