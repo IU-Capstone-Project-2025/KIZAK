@@ -110,9 +110,6 @@ KIZAK is an AI-powered learning assistant designed to guide users through their 
 docker-compose -v
 # Docker Compose version v2.24.0-desktop.1
 ```
-**Note that your locally deployed database will not have any data. You can run [./db/db_populate](https://github.com/IU-Capstone-Project-2025/KIZAK/blob/main/db/db_populate.py) script that will fill up data with courses from our dataset**
-
-**In case you deployed our app earlier, to update database schema delete ./db/pg_data folder and run [./db/db_populate](https://github.com/IU-Capstone-Project-2025/KIZAK/blob/main/db/db_populate.py) script**
 
 ### Deploy
 
@@ -173,6 +170,10 @@ docker-compose up --build
 ```
 
 **Note that build may take long time! (>10 minutes)**
+
+**Note that your locally deployed database will not have any data. You can run [./db/db_populate](https://github.com/IU-Capstone-Project-2025/KIZAK/blob/main/db/db_populate.py) script that will fill up data with courses from our dataset**
+
+**In case you deployed our app earlier, to update database schema delete ./db/pg_data folder and rebuild docker-compose**
 
 Visit [localhost:8000/docs](http://localhost:8000/docs) to access KIZAK API docs or [localhost:3000](http://localhost:3000) to see front part
 
