@@ -349,7 +349,7 @@ async def update_user(user: UserUpdate) -> UserResponse:
                 user.user_id
             )
 
-            if users_update_fields['password'] is None:
+            if 'password' not in users_update_fields.keys():
                 if feedback_rows == [] or feedback_rows is None:
                     new_roadmap = await generate_roadmap(
                         user.user_id,
