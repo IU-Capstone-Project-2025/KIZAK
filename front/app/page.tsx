@@ -25,11 +25,6 @@ export default function Page() {
       description: "Get the most relevant tasks based on your progress",
       icon: <BotMessageSquare size={50} strokeWidth={1.8} />,
     },
-    {
-      title: "Continuous AI Support",
-      description: "Ask questions and get help anytime with AI mentorship",
-      icon: <ChartArea size={50} strokeWidth={1.8} />,
-    },
   ];
 
   const cardData2 = [
@@ -39,15 +34,10 @@ export default function Page() {
       icon: <Scroll width={50} height={52} strokeWidth={1.8} />,
     },
     {
-      title: "Get Your Learning Plan",
-      description: "Receive a personalized roadmap built by AI",
-      icon: <NotebookPen size={50} strokeWidth={1.8} />,
-    },
-    {
-      title: "Build Your AI-Powered Resume",
+      title: "Get Weekly Updated Courses",
       description:
-        "KIZAK helps you create a job-ready resume based on your real skills and progress",
-      icon: <FileUser width={50} height={54} strokeWidth={1.8} />,
+        "Access fresh, updated learning paths tailored to your goals every week",
+      icon: <NotebookPen size={50} strokeWidth={1.8} />,
     },
   ];
 
