@@ -22,7 +22,9 @@ export const MainProgress: React.FC<Props> = ({
       </h2>
       <div className="flex flex-col items-center justify-center flex-1 p-4">
         <ProgressCircle progress={progress} size={300} strokeWidth={16} />
-        <p className="text-2xl mt-10 mb-4 text-center">You're almost done!</p>
+        <p className="text-2xl mt-10 mb-4 text-center">
+          {progress < 100 ? `You're almost done!` : "Good job!"}
+        </p>
         <TransitionLink
           delay={2000}
           className="underline text-ui-muted text-xl"

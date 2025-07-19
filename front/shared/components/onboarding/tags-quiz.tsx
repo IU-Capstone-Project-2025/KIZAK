@@ -1,5 +1,10 @@
 "use client";
-import { API_BASE_URL, OnboardingData, UserSkill } from "@/shared/types/types";
+import {
+  API_BASE_URL,
+  OnboardingData,
+  SkillLevels,
+  UserSkill,
+} from "@/shared/types/types";
 import { ArrowLeft } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
@@ -31,7 +36,7 @@ export const Tags: React.FC<TagsProps> = ({
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
 
-  const isValid = skills.length > 0;
+  const isValid = skills.length > 0 && !error;
 
   useEffect(() => {
     const fetchSkills = async () => {
@@ -43,7 +48,6 @@ export const Tags: React.FC<TagsProps> = ({
         console.error("Failed to load skills:", err);
       }
     };
-
     fetchSkills();
   }, []);
 
@@ -52,41 +56,35 @@ export const Tags: React.FC<TagsProps> = ({
   }, [userData, isGoal]);
 
   useEffect(() => {
-    const allSkills = isGoal
-      ? userData.skills.filter((s) => !s.is_goal).map((s) => s.skill)
-      : userData.skills.filter((s) => s.is_goal).map((s) => s.skill);
-    const overlap = skills.some((s) => allSkills.includes(s.skill));
-    if (overlap) {
-      setError("Skill tags and Goal tags must not overlap");
-    } else {
-      setError("");
-    }
+    const oppositeSkills = userData.skills
+      .filter((s) => s.is_goal !== isGoal)
+      .map((s) => s.skill);
+    const hasConflict = skills.some((s) => oppositeSkills.includes(s.skill));
+    setError(hasConflict ? "Skill tags and Goal tags must not overlap" : "");
   }, [skills, userData.skills, isGoal]);
 
   function handleAcceptData() {
-    if (error) return;
-    if (isValid) {
-      setData((prev) => {
-        const filtered = prev.skills.filter((s) => s.is_goal !== isGoal);
-        return {
-          ...prev,
-          skills: [...filtered, ...skills],
-        };
-      });
-      onNext();
-    }
+    if (!isValid) return;
+    setData((prev) => {
+      const filtered = prev.skills.filter((s) => s.is_goal !== isGoal);
+      return {
+        ...prev,
+        skills: [...filtered, ...skills],
+      };
+    });
+    onNext();
   }
 
   const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setText(value);
 
-    if (value.trim().length > 0) {
+    if (value.trim()) {
       const filt = allTags.filter((skill) =>
         skill.toLowerCase().includes(value.toLowerCase().trim())
       );
       setFilteredSkills(filt);
-      setShowDropdown(true);
+      setShowDropdown(filt.length > 0);
     } else {
       setFilteredSkills([]);
       setShowDropdown(false);
@@ -102,10 +100,15 @@ export const Tags: React.FC<TagsProps> = ({
       return;
     }
 
-    setSkills((prev) => [
-      ...prev,
-      { skill: tag, is_goal: isGoal, skill_level: "Beginner" },
-    ]);
+    setSkills((prev) => {
+      const newSkill: UserSkill = {
+        skill: tag,
+        is_goal: isGoal,
+        skill_level: "Beginner" as SkillLevels,
+      };
+
+      return singleChoice ? [newSkill] : [...prev, newSkill];
+    });
 
     setText("");
     setShowDropdown(false);
@@ -131,7 +134,7 @@ export const Tags: React.FC<TagsProps> = ({
 
           <ul
             className={`absolute z-10 w-full py-1 bg-white border border-ui-border rounded-lg mt-2 transition-all duration-200 overflow-y-auto max-h-100 ${
-              showDropdown && filteredSkills.length > 0
+              showDropdown
                 ? "opacity-100 scale-100 visible"
                 : "opacity-0 scale-95 invisible"
             } origin-top`}
@@ -180,7 +183,7 @@ export const Tags: React.FC<TagsProps> = ({
         <div className="flex-between gap-x-1">
           <button
             onClick={onBack}
-            className={`h-[50px] flex-center gap-x-2 w-50 py-2 bg-bg-main border border-ui-border shadow-sm hover:bg-bg-subtle text-ui-dark/70 font-semibold rounded-md transition-all duration-300`}
+            className="h-[50px] flex-center gap-x-2 w-50 py-2 bg-bg-main border border-ui-border shadow-sm hover:bg-bg-subtle text-ui-dark/70 font-semibold rounded-md transition-all duration-300"
             type="submit"
           >
             <ArrowLeft size={18} /> Back
@@ -188,17 +191,16 @@ export const Tags: React.FC<TagsProps> = ({
 
           <button
             type="submit"
-            disabled={!isValid || !!error}
+            disabled={!isValid}
             onClick={handleAcceptData}
             className={`h-[50px] w-50 py-2 text-white font-semibold rounded-md transition-all duration-300 ${
-              isValid && !error
-                ? "bg-brand-primary"
-                : "bg-ui-muted/90 cursor-not-allowed"
+              isValid ? "bg-brand-primary" : "bg-ui-muted/90 cursor-not-allowed"
             }`}
           >
             Continue
           </button>
         </div>
+
         {error && <div className="text-red-500 text-xs mt-2">{error}</div>}
       </div>
     </article>
