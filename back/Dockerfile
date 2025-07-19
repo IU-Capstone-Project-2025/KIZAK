@@ -8,7 +8,6 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl=7.88.1-10+deb12u12 \
     build-essential=12.9 \
-    # Playwright dependencies
     libglib2.0-0 \
     libnss3 \
     libnspr4 \
