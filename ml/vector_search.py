@@ -6,6 +6,10 @@ from qdrant_client.models import SearchRequest, NamedVector, Batch, Query
 from collections import defaultdict
 import torch
 import os
+import json
+import pandas as pd
+import re
+import requests
 
 import logging
 
@@ -15,6 +19,67 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger(__name__)
+
+class CourseDataProcessor:
+    def __init__(self, json_path, csv_path, mapping_path=None):
+        self.json_path = json_path
+        self.csv_path = csv_path
+        self.mapping_path = mapping_path
+        self.mapping = {}
+        self.courses = pd.DataFrame()
+
+
+    def load_json(self):
+        with open(self.json_path, 'r', encoding='utf-8') as f:
+            raw_data = json.load(f)
+        self.courses = pd.DataFrame(raw_data)
+        logger.info(f"Read data from {self.json_path}")
+
+    def clean_skill(self, skill: str) -> str:
+        skill = skill.lower()
+        skill = re.sub(r'#+', '', skill)
+        skill = skill.replace("-", " ")
+        skill = re.sub(r'\s+', ' ', skill)
+        skill = re.sub(r'[^\w\s]', '', skill)
+        return skill.strip()
+
+    def clean_skills(self, cell: str) -> str:
+        skills = [self.clean_skill(s) for s in cell.split(",")]
+        logger.info(f"Perform skills to normal form")
+        return ", ".join(skills)
+
+    def apply_mapping(self):
+        if not self.mapping_path:
+            return
+        with open(self.mapping_path, 'r', encoding='utf-8') as f:
+            self.mapping = json.load(f)
+
+        for column, replace_map in self.mapping.items():
+            if column in self.courses.columns:
+                self.courses[column] = self.courses[column].replace(replace_map)
+
+        logger.info(f"Apply mapping for skills using {self.mapping_path}")
+
+    def check_invalid_links(self):
+        invalid_urls = []
+
+        for course_url in self.courses['url']:
+            try:
+                print(f"Checking: {course_url}")
+                response = requests.head(course_url, allow_redirects=True, timeout=25)
+                if response.status_code >= 400:
+                    invalid_urls.append(course_url)
+            except Exception as e:
+                invalid_urls.append(course_url)
+
+        self.courses = self.courses[~self.courses['url'].isin(invalid_urls)]
+        logger.info(f"Clean from invalid url")
+
+    def run(self):
+        self.load_json()
+        self.apply_mapping()
+        self.courses['skills'] = self.courses['skills'].apply(self.clean_skills)
+        self.export_to_csv()
 
 
 class CourseVectorSearch:
