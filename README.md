@@ -112,6 +112,8 @@ docker-compose -v
 ```
 **Note that your locally deployed database will not have any data. You can run [./db/db_populate](https://github.com/IU-Capstone-Project-2025/KIZAK/blob/main/db/db_populate.py) script that will fill up data with courses from our dataset**
 
+**In case you deployed our app earlier, to update database schema delete ./db/pg_data folder and run [./db/db_populate](https://github.com/IU-Capstone-Project-2025/KIZAK/blob/main/db/db_populate.py) script**
+
 ### Deploy
 
 First, clone the project:
