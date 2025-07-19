@@ -144,9 +144,7 @@ async def verify_user_account(token: str):
 async def password_reset_request(mail_data: PasswordResetRequestModel):
     token = create_url_safe_token({"mail": mail_data.mail})
 
-    # Use frontend domain for the reset link
-    frontend_domain = "http://localhost:3000"  # Change to your actual frontend domain in production
-    link = f"{frontend_domain}/password-reset-confirm/{token}"
+    link = f"http://{Config.DOMAIN}/password-reset-confirm/{token}"
 
     html_message = f"""
         <h1>Reset Your Password</h1>
