@@ -172,3 +172,9 @@ class ResourceUpdate(BaseModel):
         description="Updated list of skills covered by the resource",
         examples=[["Decorators", "Generators"]]
     )
+
+class ResourceSend(BaseModel):
+    resource_id: UUID
+    title: str
+    description: str
+    skills: List[str]

@@ -1,1 +1,0 @@
-SELECT * FROM resource WHERE title LIKE '%Scala%'

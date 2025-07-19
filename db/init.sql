@@ -28,7 +28,7 @@ CREATE TABLE resource (
     resource_type VARCHAR(20) CHECK (resource_type IN ('Course', 'Article')),
     title VARCHAR(100) NOT NULL,
     summary TEXT,
-    content TEXT NOT NULL,
+    content TEXT NOT NULL UNIQUE,
     level VARCHAR(20) CHECK (
         level IN (
             'Beginner',
