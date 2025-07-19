@@ -162,6 +162,8 @@ Also create _.env.local_ in ./front/ folder:
 NEXT_PUBLIC_API_URL=http://localhost:8000
 ```
 
+**In case you need our production env files contact @mrbrtg**
+
 Then build and run the project using Docker Compose:
 
 ```bash
