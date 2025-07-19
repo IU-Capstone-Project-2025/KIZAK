@@ -7,8 +7,6 @@ import Image from "next/image";
 import {
   BotMessageSquare,
   BrainCircuit,
-  ChartArea,
-  FileUser,
   NotebookPen,
   Scroll,
 } from "lucide-react";
