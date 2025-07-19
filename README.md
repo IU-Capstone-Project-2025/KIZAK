@@ -21,7 +21,7 @@
 
 </div>
 
-KIZAK is an AI-powered learning assistant designed to guide users through their journey in the IT field. It builds personalized learning paths, recommends daily and weekly tasks, and supports users with a smart AI coach—all while keeping track of their skills and progress.
+KIZAK is an AI-powered learning assistant designed to guide users through their journey in the IT field. It builds personalized learning paths while keeping track of their skills and progress.
 
 ---
 
@@ -42,6 +42,7 @@ KIZAK is an AI-powered learning assistant designed to guide users through their 
 - **Onboarding:** Personalized user profile creation with topic selection and skill assessment  
 - **Personal Recommendations:** Daily/weekly curated courses and tasks from platforms like Coursera, Stepik or EDX
 - **Personal Roadmaps** generated specially for each user
+- **Weekly updated courses:** Courses automatically updates each week
 
 ---
 
@@ -55,7 +56,6 @@ KIZAK is an AI-powered learning assistant designed to guide users through their 
 - **React** ⚛️ - **Fast and popular** JavaScript library for building dynamic, component-based user interfaces.
 - **Next.js** ▲ - React framework for **server-side renderin**g, static sites, and **scalable web apps**.
 - **Tailwind CSS** 🎨 - Utility-first CSS framework for **rapid UI development** with minimal custom CSS.
-- **Redux** 🔄 - **State management** library for predictable global state in JavaScript apps.
 
 ### **ML / AI**  
 - **Transformers** 🤗 - Hugging Face’s library for state-of-the-art NLP models
@@ -105,12 +105,12 @@ KIZAK is an AI-powered learning assistant designed to guide users through their 
 
 ### Requirements
 
-**To run this project make sure that your docker-compose version is 2.24.0 or higher**
+**To run this project make sure that your docker-compose version is 2.24.0 or higher and you running Ubuntu 22.04 or higher**
 ```
 docker-compose -v
 # Docker Compose version v2.24.0-desktop.1
 ```
-**Note that your locally deployed database will not have any data. You can run [db_populate](https://github.com/IU-Capstone-Project-2025/KIZAK/blob/main/db/db_populate.py) script that will fill up data with our courses**
+**Note that your locally deployed database will not have any data. You can run [./db/db_populate](https://github.com/IU-Capstone-Project-2025/KIZAK/blob/main/db/db_populate.py) script that will fill up data with courses from our dataset**
 
 ### Deploy
 
@@ -121,21 +121,18 @@ git clone https://github.com/IU-Capstone-Project-2025/KIZAK
 cd KIZAK
 ```
 
-Now set up _.env_ file:
+Now set up _.env_ file in root project directory:
 
 ```bash
 # Database configuration
-DB_HOST=db
-DB_PORT=5432
-DB_USER=user
-DB_PASSWORD=password
-DB_NAME=db
+DB_HOST=<your_host>
+DB_PORT=<your_port>
+DB_USER=<your_user>
+DB_PASSWORD=<your_password>
+DB_NAME=<your_name>
 
-QD_API_KEY=1234apikey
-QD_URL=url
-
-# CORS configuration
-CORS_ORIGINS=http://localhost
+QD_API_KEY=<your_qdrant_api_key>
+QD_URL=<your_qdrant_url>
 
 # API configuration
 API_HOST=backend
@@ -146,21 +143,21 @@ FRONTEND_HOST=frontend
 FRONTEND_PORT=3000
 FRONTEND_HOST_PORT=3000
 
-SECRET_KEY=ApplicationSecretKey
+SECRET_KEY=<ApplicationSecretKey>
 ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=1440
 
-MAIL_USERNAME=kizak.inno
-MAIL_PASSWORD=qhdz uxqj wxuf ubkp
-MAIL_FROM=kizak.inno@gmail.com
+MAIL_USERNAME=<your_mail_user>
+MAIL_PASSWORD=<your_mail_pswrd>
+MAIL_FROM=<your_mail>
 MAIL_PORT=587
 MAIL_SERVER=smtp.gmail.com
-MAIL_FROM_NAME=KIZAK Team
+MAIL_FROM_NAME=<your_name>
 
 DOMAIN=localhost:8000
 ```
 
-Also create _.env.local_ in front folder:
+Also create _.env.local_ in ./front/ folder:
 ```bash
 NEXT_PUBLIC_API_URL=http://localhost:8000
 ```
@@ -170,6 +167,8 @@ Then build and run the project using Docker Compose:
 ```bash
 docker-compose up --build
 ```
+
+**Note that build may take long time! (>10 minutes)**
 
 Visit [localhost:8000/docs](http://localhost:8000/docs) to access KIZAK API docs or [localhost:3000](http://localhost:3000) to see front part
 
