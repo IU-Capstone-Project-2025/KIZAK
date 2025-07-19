@@ -85,7 +85,10 @@ export default function OnBoarding() {
     }
   }, [step]);
 
-  const goToNextStep = async () => {
+  const goToNextStep = async (updatedData?: OnboardingData) => {
+    const currentData = updatedData || userData;
+    if (updatedData) setUserData(updatedData);
+
     if (step < screens.length - 1) {
       setAnimating(true);
       setTimeout(() => {
@@ -96,8 +99,8 @@ export default function OnBoarding() {
     } else {
       try {
         setErrorMessage(null);
-        const hashedPassword = await hashPassword(userData.password);
-        const payload = { ...userData, password: hashedPassword };
+        const hashedPassword = await hashPassword(currentData.password);
+        const payload = { ...currentData, password: hashedPassword };
 
         const response = await fetch(`${API_BASE_URL}/users/`, {
           method: "POST",
@@ -111,17 +114,9 @@ export default function OnBoarding() {
           let errorText = "Ошибка при создании пользователя";
           try {
             const errorData = await response.json();
-            if (
-              errorData.detail &&
-              typeof errorData.detail === "string" &&
-              errorData.detail.includes("Email already registered")
-            ) {
-              errorText = "Email already registered";
-            } else {
-              errorText = errorData.detail
-                ? JSON.stringify(errorData.detail)
-                : JSON.stringify(errorData);
-            }
+            errorText = errorData.detail
+              ? JSON.stringify(errorData.detail)
+              : JSON.stringify(errorData);
           } catch {
             errorText = await response.text();
           }

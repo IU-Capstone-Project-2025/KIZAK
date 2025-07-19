@@ -1,7 +1,6 @@
 import React from "react";
 import { OnboardingData } from "../types/types";
 import {
-  SliderLevel,
   SignUp,
   SingleString,
   BigString,
@@ -95,36 +94,9 @@ export const getScreens = (
       userData={userData}
       onNext={goToNextStep}
       onBack={goToPreviousStep}
+      isLastStep={true}
     />
   );
 
-  const generateSkillLevelScreens = () => {
-    return skillOrder.map((skillName, index) => {
-      const skillData = userData.skills.find(
-        (s) => s.skill === skillName && !s.is_goal
-      );
-
-      return (
-        <SliderLevel
-          key={`skill_level_${skillName}`}
-          tag={skillName}
-          skillLevel={skillData?.skill_level}
-          userData={userData}
-          setData={setUserData}
-          onNext={goToNextStep}
-          onBack={goToPreviousStep}
-          isLastStep={index === skillOrder.length - 1}
-        />
-      );
-    });
-  };
-
-  return [
-    ...screens,
-    ...generateSkillLevelScreens().map((screen, index, arr) =>
-      React.cloneElement(screen, {
-        isLastStep: index === arr.length - 1,
-      })
-    ),
-  ];
+  return screens;
 };

@@ -1,7 +1,7 @@
 "use client";
 import { OnboardingData } from "@/shared/types/types";
 import { ArrowLeft } from "lucide-react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 interface Props {
   title: string;
@@ -9,8 +9,9 @@ interface Props {
   setData: (value: React.SetStateAction<OnboardingData>) => void;
   fieldKey: keyof Pick<OnboardingData, "goals" | "background">;
   userData: OnboardingData;
-  onNext: () => void;
+  onNext: (updatedData: OnboardingData) => void;
   onBack: () => void;
+  isLastStep?: boolean;
 }
 
 export const BigString: React.FC<Props> = ({
@@ -21,18 +22,33 @@ export const BigString: React.FC<Props> = ({
   onNext,
   onBack,
   fieldKey,
+  isLastStep = false,
 }) => {
   const [text, setText] = useState<string>(
     typeof userData[fieldKey] === "string" ? (userData[fieldKey] as string) : ""
   );
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (typeof userData[fieldKey] === "string") {
+      setText(userData[fieldKey] as string);
+    }
+  }, [userData, fieldKey]);
 
   const isValid = text.trim() !== "";
 
-  function handleAcceptData() {
-    if (isValid) {
-      setData({ ...userData, [fieldKey]: text });
-      onNext();
+  async function handleAcceptData() {
+    if (!isValid) return;
+
+    const updatedData = { ...userData, [fieldKey]: text };
+    setData(updatedData);
+
+    if (isLastStep) {
+      setIsSubmitting(true);
+      await new Promise((res) => setTimeout(res, 50));
     }
+
+    onNext(updatedData);
   }
 
   return (
@@ -51,19 +67,45 @@ export const BigString: React.FC<Props> = ({
             onClick={onBack}
             className="h-[50px] flex-center gap-x-2 w-50 py-2 bg-bg-main border border-ui-border shadow-sm hover:bg-bg-subtle text-ui-dark/70 font-semibold rounded-md transition-all duration-300"
             type="button"
+            disabled={isSubmitting}
           >
             <ArrowLeft size={18} /> Back
           </button>
 
           <button
             type="button"
-            disabled={!isValid}
+            disabled={!isValid || isSubmitting}
             onClick={handleAcceptData}
-            className={`h-[50px] w-50 py-2 text-white font-semibold rounded-md transition-all duration-300 ${
-              isValid ? "bg-brand-primary" : "bg-ui-muted/90 cursor-not-allowed"
+            className={`h-[50px] w-50 py-2 text-white font-semibold rounded-md transition-all duration-300 flex items-center justify-center ${
+              isValid && !isSubmitting
+                ? "bg-brand-primary"
+                : "bg-ui-muted/90 cursor-not-allowed"
             }`}
           >
-            Continue
+            {isSubmitting ? (
+              <svg
+                className="animate-spin h-5 w-5 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-20"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
+                <path
+                  className="opacity-80"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                />
+              </svg>
+            ) : (
+              "Continue"
+            )}
           </button>
         </div>
       </div>

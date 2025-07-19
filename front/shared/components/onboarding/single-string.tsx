@@ -1,7 +1,7 @@
 "use client";
 import { OnboardingData } from "@/shared/types/types";
 import { ArrowLeft } from "lucide-react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { usePageTransition } from "../transition/transition-provider";
 
 interface Props {
@@ -32,6 +32,12 @@ export const SingleString: React.FC<Props> = ({
   );
 
   const { handleClick } = usePageTransition();
+
+  useEffect(() => {
+    if (typeof userData[fieldKey] === "string") {
+      setText(userData[fieldKey] as string);
+    }
+  }, [userData, fieldKey]);
 
   const isValid = typeof text === "string" && text.trim() !== "";
 
