@@ -58,7 +58,7 @@ export default function OnBoarding() {
         (prev || []).filter((s) => currentSkills.includes(s))
       );
     }
-  }, [userData.skills]);
+  }, [userData.skills, skillOrder]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
