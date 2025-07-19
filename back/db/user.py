@@ -349,18 +349,19 @@ async def update_user(user: UserUpdate) -> UserResponse:
                 user.user_id
             )
 
-            if feedback_rows == [] or feedback_rows is None:
-                new_roadmap = await generate_roadmap(
-                    user.user_id,
-                    user_role=user.goal_vacancy,
-                    user_skills=user.skills,
+            if 'password' not in users_update_fields.keys():
+                if feedback_rows == [] or feedback_rows is None:
+                    new_roadmap = await generate_roadmap(
+                        user.user_id,
+                        user_role=user.goal_vacancy,
+                        user_skills=user.skills,
                     user_query=user.goals
                 )
-            else:
-                new_roadmap = await update_roadmap(
-                    user.user_id,
-                    roadmap_id
-                )
+                else:
+                    new_roadmap = await update_roadmap(
+                        user.user_id,
+                        roadmap_id
+                    )
 
             return UserResponse(**user_response, skills=skills)
     except Exception:
