@@ -1,7 +1,7 @@
 from sentence_transformers import SentenceTransformer
 from qdrant_client import QdrantClient
 from qdrant_client.models import NamedVector, SearchRequest
-from qdrant_client.http.models import QueryRequest, NamedVector
+from qdrant_client.http.models import QueryRequest, NamedVector, PointStruct
 from qdrant_client.models import SearchRequest, NamedVector, Batch, Query
 from collections import defaultdict
 import torch
@@ -12,6 +12,8 @@ import re
 import requests
 
 import logging
+
+from models import ResourceSend
 
 logging.basicConfig(
     level=logging.INFO,
@@ -114,6 +116,30 @@ class CourseVectorSearch:
             self.skills_model.encode(", ".join(user_skills))
         )
         return results
+
+    def insert_resource(self, resource: ResourceSend):
+        logger.info(f"Inserting resource: {resource.title}")
+        title_vec = self.skills_model.encode(resource.title or "")
+        desc_vec = self.skills_model.encode(resource.description or "")
+        skills_vec = self.skills_model.encode(", ".join(resource.skills))
+        self.client.upsert(
+            collection_name=self.collection_name,
+            points=[
+            PointStruct(
+                id=str(resource.resource_id),
+                vector={
+                "title": title_vec,
+                "description": desc_vec,
+                "skills": skills_vec
+                },
+                payload={
+                "title": resource.title,
+                "description": resource.description,
+                "skills": resource.skills
+                }
+            )
+            ]
+        )
 
     def search_courses_batch_weighted(self, title_vector, description_vector, skills_vector,
                                       weights={'title': 0.2, 'description': 0.1, 'skills': 0.7}, limit=30):

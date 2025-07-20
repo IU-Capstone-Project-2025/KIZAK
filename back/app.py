@@ -1,5 +1,6 @@
 import uvicorn
 from db.db_connector import db
+from utils.logger import logger
 
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
@@ -13,17 +14,31 @@ from routers.utils import router as UtilsRouter
 from routers.feedback import router as FeedbackRouter
 from routers.mail import router as MailRouter
 
+from services.course_scrapper import Scraper
+
 import dotenv
 import os
+import asyncio
 
 dotenv.load_dotenv()
 
-os.environ["HF_HOME"] = "/models"
+async def periodic_scrape():
+    scraper = Scraper()
+    logger.info("Starting to scrape")
+    await asyncio.sleep(60) 
+    while True:
+        try:
+            await scraper.scrape_courses()
+            await scraper.add_to_db()
+            logger.info("Scraping completed successfully. Waiting for next run...")
+        except Exception as e:
+            logger.error(f"Error in periodic scrape: {e}")
+        await asyncio.sleep(24 * 60 * 60) 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await db.connect()
-
+    asyncio.create_task(periodic_scrape())
     yield
     await db.close()
 

@@ -14,7 +14,6 @@ jobs:
     strategy:
       matrix:
         dockerfile:
-          - back/Dockerfile
           - ml/Dockerfile
           - front/Dockerfile
 
