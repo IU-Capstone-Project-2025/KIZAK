@@ -33,7 +33,7 @@ async def periodic_scrape():
             logger.info("Scraping completed successfully. Waiting for next run...")
         except Exception as e:
             logger.error(f"Error in periodic scrape: {e}")
-        await asyncio.sleep(24 * 60 * 60) 
+        await asyncio.sleep(7 * 24 * 60 * 60) 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
