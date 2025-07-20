@@ -9,6 +9,8 @@ from itertools import islice
 
 embedding_model = SentenceTransformer('sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2')
 
+# To run this script insert your cridentials in corresponding fields
+
 # --- 1. Connect to PostgreSQL ---
 pg_conn = psycopg2.connect(
     dbname="db",
@@ -51,7 +53,7 @@ with open('courses_final.csv', 'r', encoding='utf-8') as f:
             level = 'Beginner'
         price = float(row['price']) if row['price'] else 0.0
         platform = row['source']
-        rating = float(row['rating']) if row['rating'] else None
+        rating = float(row['rating']) if row['rating'] else 5,0
         skills = ast.literal_eval(row['skills']) if row['skills'] else []
         print("Inserting resource: ", title)
         # --- INSERT INTO POSTGRES ---
