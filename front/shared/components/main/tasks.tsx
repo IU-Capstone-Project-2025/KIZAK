@@ -20,8 +20,8 @@ export const MainTasks: React.FC<Props> = ({
       <h2 className="text-ui-dark text-md w-full pl-3 py-2 border-b border-ui-border">
         Last opened
       </h2>
-      <div className="flex-1 flex flex-col gap-y-2 py-2 max-h-120 overflow-y-auto">
-        {histotyItems.map((el) => (
+      <div className="flex-1 flex flex-col gap-y-2 py-2">
+        {histotyItems.slice(0, 8).map((el) => (
           <TaskItem
             key={el.node_id}
             userId={userId}
