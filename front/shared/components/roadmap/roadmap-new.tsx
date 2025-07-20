@@ -33,9 +33,7 @@ export const RoadmapNew: React.FC<Props> = ({ userId, initialNodeId }) => {
   const [error, setError] = useState<string | null>(null);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [isDragging, setDragging] = useState(false);
-  const [selectedNode, setSelectedNode] = useState<string | null>(
-    initialNodeId || null
-  );
+  const [selectedNode, setSelectedNode] = useState<string | null>(null);
   const [roadmapId, setRoadmapId] = useState<string>("");
 
   const { nodes, measuring, measureElements, worldWidth } = useRoadmapLayout(
@@ -60,6 +58,13 @@ export const RoadmapNew: React.FC<Props> = ({ userId, initialNodeId }) => {
         setInitialProgress(data.initialProgress);
         setProgressMap(data.initialProgress);
         setRoadmapId(data.roadmapId);
+
+        if (
+          initialNodeId &&
+          data.rawNodes.some((n) => n.node_id === initialNodeId)
+        ) {
+          setSelectedNode(initialNodeId);
+        }
       } catch (err) {
         setError("Failed to load roadmap data");
         console.error("Error loading roadmap data:", err);
@@ -69,7 +74,7 @@ export const RoadmapNew: React.FC<Props> = ({ userId, initialNodeId }) => {
     };
 
     loadData();
-  }, [userId]);
+  }, [userId, initialNodeId]);
 
   const drawDots = () => {
     const canvas = canvasRef.current;
@@ -245,8 +250,8 @@ export const RoadmapNew: React.FC<Props> = ({ userId, initialNodeId }) => {
   }, [worldWidth]);
 
   useEffect(() => {
-    if (!initialNodeId || measuring) return;
-    const node = nodes.find((n) => n.id === initialNodeId);
+    if (!selectedNode || measuring) return;
+    const node = nodes.find((n) => n.id === selectedNode);
     const container = containerRef.current;
     if (!node || !container) return;
 
@@ -257,8 +262,7 @@ export const RoadmapNew: React.FC<Props> = ({ userId, initialNodeId }) => {
     const targetY = container.clientHeight / 2 - centerY;
 
     animateTo(targetX, targetY);
-    setSelectedNode(initialNodeId);
-  }, [initialNodeId, measuring, nodes]);
+  }, [selectedNode, measuring, nodes]);
 
   return (
     <div
@@ -314,16 +318,16 @@ export const RoadmapNew: React.FC<Props> = ({ userId, initialNodeId }) => {
         absolute top-0 right-0 h-full w-1/2 bg-none p-6 overflow-auto z-10
         transition-all duration-300
         ${
-          selectedNode
+          selectedNode && selectedResourceId
             ? "opacity-100 visible pointer-events-auto"
             : "opacity-0 invisible pointer-events-none"
         }
       `}
       >
         <div className="w-full h-full">
-          {selectedNode && (
+          {selectedNode && selectedResourceId && (
             <ResourceDetails
-              resourceId={selectedResourceId ?? ""}
+              resourceId={selectedResourceId}
               onClose={handleClose}
               progress={selectedNodeProgress}
               onProgressChange={(val) =>

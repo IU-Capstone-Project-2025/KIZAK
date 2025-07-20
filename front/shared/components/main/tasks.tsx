@@ -21,7 +21,7 @@ export const MainTasks: React.FC<Props> = ({
         Last opened
       </h2>
       <div className="flex-1 flex flex-col gap-y-2 py-2">
-        {histotyItems.map((el) => (
+        {histotyItems.slice(0, 8).map((el) => (
           <TaskItem
             key={el.node_id}
             userId={userId}
