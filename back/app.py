@@ -24,6 +24,8 @@ dotenv.load_dotenv()
 
 async def periodic_scrape():
     scraper = Scraper()
+    logger.info("Starting to scrape")
+    await asyncio.sleep(60) 
     while True:
         try:
             await scraper.scrape_courses()
